@@ -1,7 +1,7 @@
 <div id="top" align="center">
-<h1>qt_desktop-gallery</h1>
+<h1>web-gallery_desktop-gallery</h1>
 
-<p>Desktop gallery-app for Linux, MacOS, Windows to show/edit Exif/IPTC/XMP and export to WebP</p>
+<p>Linux, MacOs, Windows Desktop-Frontend for Web-Gallery</p>
 
 [Report Issue](https://github.com/Zheng-Bote/qt_desktop-gallery/issues) [Request Feature](https://github.com/Zheng-Bote/qt_desktop-gallery/pulls)
 
@@ -14,10 +14,11 @@
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 **Table of Contents**
 
 - [Description](#description)
-    - [Features](#features)
+  - [Features](#features)
   - [Status](#status)
     - [Application / Tool](#application--tool)
 - [Documentation](#documentation)
@@ -43,13 +44,13 @@
 ![QT](https://img.shields.io/badge/Community-6-41CD52?logo=qt)
 ![CXX](https://img.shields.io/badge/C++-23-blue?logo=cplusplus)
 
-Desktop Gallery-Application for Linux, MacOS and Windows to show/edit Exif-/IPTC-/XMP- Metadata and export to WebP
+Desktop Gallery-Application for Linux, MacOS and Windows to show/edit Exif-/IPTC-/XMP- Metadata, Reverse Geocoding and export to WebP
 
 Optimized for large Albums (multithreaded iterations)
 
 ### Features
 
-- \[ ] advanced-super-extra-special feature xyz
+- \[X] advanced-super-extra-special feature xyz
 
   <br>
 
@@ -78,6 +79,16 @@ Optimized for large Albums (multithreaded iterations)
 - \[x] Muli-Language support (i18n)
 - \[x] some Image editing (rotate, export to several WebP sizes)
 - \[x] edit Exif-/IPTC-/XMP- Metadata
+
+✅ Datenbank-gestützte Galerie mit (performanten) Thumbnails.
+
+✅ Bulk-Export nach WebP (inkl. verschiedenem Resizing & optionalen Watermark).
+
+✅ Mächtiger Metadaten-Editor mit Synchronisation (EXIF ↔ IPTC ↔ XMP).
+
+✅ Intelligentes Umbenennen basierend auf Zeitstempeln.
+
+✅ Reverse Geocoding (GPS zu Adresse) via OpenStreetMap.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -228,6 +239,7 @@ SOFTWARE.
 **Github structure**
 
 <!-- readme-tree start -->
+
 ```
 .
 ├── .github
@@ -348,6 +360,7 @@ SOFTWARE.
 
 14 directories, 102 files
 ```
+
 <!-- readme-tree end -->
 
 <hr>

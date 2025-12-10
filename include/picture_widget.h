@@ -6,7 +6,7 @@
 #include <QTableWidgetItem>
 #include <QWidget>
 
-#include "includes/rz_photo.hpp"
+#include "rz_photo.hpp"
 
 namespace Ui {
 class PictureWidget;
@@ -21,6 +21,10 @@ public:
     ~PictureWidget();
 
     void setImage(QString pathToFile);
+
+    // NEU: Signal, wenn sich das Bild geändert hat
+signals:
+    void imageChanged(const QString& path);
 
 private slots:
     void on_closeBtn_clicked();
@@ -37,6 +41,8 @@ private slots:
     void exportSrcImgToWebP(int size);
 
     void on_tabWidget_tabBarClicked(int index);
+
+    void on_saveBtn_clicked();
 
 private:
     Ui::PictureWidget *ui;
@@ -74,7 +80,6 @@ private:
     void disableMetaTabs(int tab);
     const void readSrcExif();
     void markIptc(QString searchFor);
-    void markIptcCopyrightCell();
     void markExif(QString searchFor);
     const void readSrcIptc();
 

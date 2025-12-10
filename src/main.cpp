@@ -1,32 +1,48 @@
 /**
  * @file main.cpp
- * @author ZHENG Robert (robert.hase-zheng.net)
- * @brief Desktop gallery-app for Linux, MacOS, Windows to show/edit Exif/IPTC/XMP and export to WebP
- * @version 0.23.0
- * @date 2025-01-01
- *
- * @copyright Copyright (c) 2025 ZHENG Robert
- *
+ * @author ZHENG Robert
+ * @brief Entry point
  */
 #include <QApplication>
+#include <QLocale>
+#include <QTranslator>
+#include <QDebug>
 
-#include "includes/rz_config.h"
-#include "mainwindow.h"
+#include "rz_config.hpp" // Falls du Version/Name dort definiert hast
+#include "MainWindow.hpp"
+
+// Fallback, falls rz_config.hpp fehlt
+#ifndef PROJECT_NAME
+#define PROJECT_NAME "Desktop-Gallery"
+#endif
+#ifndef PROJECT_VERSION
+#define PROJECT_VERSION "0.24.0"
+#endif
+#ifndef PROJECT_ORGANIZATION_NAME
+#define PROJECT_ORGANIZATION_NAME "ZHENG Robert"
+#endif
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::setApplicationName(PROG_EXEC_NAME);
-    qApp->setApplicationDisplayName(PROG_NAME);
-    QCoreApplication::setApplicationVersion(PROG_VERSION);
-    QCoreApplication::setOrganizationName(PROG_ORGANIZATION_NAME);
-    QCoreApplication::setOrganizationDomain(PROG_ORGANIZATION_DOMAIN);
-
     QApplication a(argc, argv);
+
+    // WICHTIG: Metadaten setzen, BEVOR irgendwelche Pfade (QStandardPaths) abgerufen werden!
+    // DatabaseManager nutzt dies für den Cache-Pfad.
+    QCoreApplication::setApplicationName(PROJECT_NAME);
+    QCoreApplication::setApplicationVersion(PROJECT_VERSION);
+    QCoreApplication::setOrganizationName(PROJECT_ORGANIZATION_NAME);
+    // QCoreApplication::setOrganizationDomain("hase-zheng.net");
+
+    // Icon setzen
     QApplication::setWindowIcon(QIcon(":/resources/img/qt_desktop-gallery_32x31.png"));
+
     MainWindow w;
 
-    QString locale = QLocale::system().name();
-    locale.truncate(locale.lastIndexOf('_'));
+    // Sprache laden (Systemsprache erkennen)
+    QString locale = QLocale::system().name(); // z.B. "de_DE"
+    locale.truncate(locale.lastIndexOf('_'));  // z.B. "de"
+    
+    // Initiales Laden der Sprache
     w.loadLanguage(locale);
 
     w.show();
