@@ -239,7 +239,6 @@ SOFTWARE.
 **Github structure**
 
 <!-- readme-tree start -->
-
 ```
 .
 ├── .github
@@ -262,9 +261,15 @@ SOFTWARE.
 │       ├── repo-create_doctoc_md.yml
 │       └── repo-create_tree_readme.yml
 ├── .gitignore
+├── CMakeLists.txt
 ├── LICENSE
 ├── README.md
+├── configure
+│   ├── CMakeLists.txt
+│   └── rz_config.hpp.in
 ├── docs
+│   ├── GeoCoding.md
+│   ├── features.md
 │   ├── img
 │   │   ├── 00_en.png
 │   │   ├── 01_en.png
@@ -287,80 +292,75 @@ SOFTWARE.
 │   │   ├── webp_en.png
 │   │   └── xmp_en_1.png
 │   └── sbom_v0.23.0.json
-├── src
-│   ├── CMakeLists.txt
-│   ├── configure
-│   │   ├── ClangTidy.cmake
-│   │   ├── Doxygen.cmake
-│   │   ├── extra_headers
-│   │   └── rz_config.h.in
-│   ├── defaultmeta_widget.cpp
-│   ├── defaultmeta_widget.h
-│   ├── defaultmeta_widget.ui
-│   ├── i18n
-│   │   ├── de.png
-│   │   ├── en.png
-│   │   ├── qt_de.qm
-│   │   ├── qt_desktop-gallery_de.qm
-│   │   ├── qt_desktop-gallery_de.ts
-│   │   ├── qt_desktop-gallery_en.qm
-│   │   ├── qt_desktop-gallery_en.ts
-│   │   ├── qt_en.qm
-│   │   ├── qtbase_de.qm
-│   │   └── qtbase_en.qm
-│   ├── includes
-│   │   ├── rz_config.h
-│   │   ├── rz_hwinfo.cpp
-│   │   ├── rz_hwinfo.h
-│   │   ├── rz_metadata.hpp
-│   │   ├── rz_myevent.hpp
-│   │   ├── rz_photo.cpp
-│   │   └── rz_photo.hpp
-│   ├── main.cpp
-│   ├── mainwindow.cpp
-│   ├── mainwindow.h
-│   ├── mainwindow.ui
-│   ├── picture_widget.cpp
+├── i18n
+│   ├── de.png
+│   ├── en.png
+│   ├── gallery_de.ts
+│   └── gallery_en.ts
+├── include
+│   ├── DatabaseManager.hpp
+│   ├── DefaultMetaWidget.hpp
+│   ├── ImageIndexer.hpp
+│   ├── MainWindow copy.hpp
+│   ├── MainWindow.hpp
+│   ├── ThumbnailDelegate.hpp
 │   ├── picture_widget.h
+│   ├── rz_config.h
+│   ├── rz_config.hpp
+│   ├── rz_hwinfo.h
+│   ├── rz_metadata.hpp
+│   └── rz_photo.hpp
+├── resources
+│   └── img
+│       ├── icons8-add-file-50.png
+│       ├── icons8-arrow-pointing-left-50.png
+│       ├── icons8-ausgang-48.png
+│       ├── icons8-available-updates-50.png
+│       ├── icons8-delete-file-50.png
+│       ├── icons8-delete-folder-50.png
+│       ├── icons8-delete-list-50.png
+│       ├── icons8-edit-file-50.png
+│       ├── icons8-file-elements-50.png
+│       ├── icons8-file-submodule-50.png
+│       ├── icons8-image-file-50.png
+│       ├── icons8-image-file-add-50.png
+│       ├── icons8-image-file-remove-50.png
+│       ├── icons8-images-folder-50.png
+│       ├── icons8-info-48.png
+│       ├── icons8-opened-folder-50.png
+│       ├── icons8-page-orientation-50.png
+│       ├── icons8-regular-document-50.png
+│       ├── icons8-rotate-left-50.png
+│       ├── icons8-rotate-right-50.png
+│       ├── icons8-security-document-50.png
+│       ├── icons8-send-file-50.png
+│       ├── icons8-symlink-file-50.png
+│       ├── icons8-trash-can-50.png
+│       ├── icons8-view-50.png
+│       ├── qt_desktop-gallery.jpg
+│       ├── qt_desktop-gallery.png
+│       ├── qt_desktop-gallery_32x31.png
+│       ├── reduced_copy.png
+│       └── translate.png
+├── resources.qrc
+├── src
+│   ├── DatabaseManager.cpp
+│   ├── DefaultMetaWidget.cpp
+│   ├── DefaultMetaWidget.ui
+│   ├── ImageIndexer.cpp
+│   ├── MainWindow copy.cpp
+│   ├── MainWindow.cpp
+│   ├── MainWindow.ui
+│   ├── ThumbnailDelegate.cpp
+│   ├── main.cpp
+│   ├── picture_widget.cpp
 │   ├── picture_widget.ui
-│   ├── resources
-│   │   └── img
-│   │       ├── icons8-add-file-50.png
-│   │       ├── icons8-arrow-pointing-left-50.png
-│   │       ├── icons8-ausgang-48.png
-│   │       ├── icons8-available-updates-50.png
-│   │       ├── icons8-delete-file-50.png
-│   │       ├── icons8-delete-folder-50.png
-│   │       ├── icons8-delete-list-50.png
-│   │       ├── icons8-edit-file-50.png
-│   │       ├── icons8-file-elements-50.png
-│   │       ├── icons8-file-submodule-50.png
-│   │       ├── icons8-image-file-50.png
-│   │       ├── icons8-image-file-add-50.png
-│   │       ├── icons8-image-file-remove-50.png
-│   │       ├── icons8-images-folder-50.png
-│   │       ├── icons8-info-48.png
-│   │       ├── icons8-opened-folder-50.png
-│   │       ├── icons8-page-orientation-50.png
-│   │       ├── icons8-regular-document-50.png
-│   │       ├── icons8-rotate-left-50.png
-│   │       ├── icons8-rotate-right-50.png
-│   │       ├── icons8-security-document-50.png
-│   │       ├── icons8-send-file-50.png
-│   │       ├── icons8-symlink-file-50.png
-│   │       ├── icons8-trash-can-50.png
-│   │       ├── icons8-view-50.png
-│   │       ├── qt_desktop-gallery.jpg
-│   │       ├── qt_desktop-gallery.png
-│   │       ├── qt_desktop-gallery_32x31.png
-│   │       ├── reduced_copy.png
-│   │       └── translate.png
-│   └── resources.qrc
+│   ├── rz_hwinfo.cpp
+│   └── rz_photo.cpp
 └── tree.bak
 
-14 directories, 102 files
+14 directories, 104 files
 ```
-
 <!-- readme-tree end -->
 
 <hr>
