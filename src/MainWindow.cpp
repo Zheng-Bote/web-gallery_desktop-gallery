@@ -8,6 +8,7 @@
 #include "DefaultMetaWidget.hpp"
 #include "ImageIndexer.hpp"
 #include "LoginDialog.hpp"
+#include "MapWindow.hpp"
 #include "ThumbnailDelegate.hpp"
 #include "picture_widget.h"
 #include "rz_config.hpp"
@@ -236,6 +237,10 @@ void MainWindow::createMenu() {
   actShowCopyright->setCheckable(true);
   actShowGps = viewMenu->addAction("");
   actShowGps->setCheckable(true);
+  // Map Action
+  actViewMap = viewMenu->addAction(tr("Show selected on Map..."));
+  connect(actViewMap, &QAction::triggered, this,
+          &MainWindow::showMapForSelection);
 
   auto updateDelegate = [this]() {
     ThumbnailDelegate *del =
@@ -310,6 +315,8 @@ void MainWindow::retranslateUi() {
   viewMenu->setTitle(tr("View Options"));
   actShowCopyright->setText(tr("Display Copyright Owner"));
   actShowGps->setText(tr("Display GPS Data"));
+
+  actViewMap->setText(tr("Show selected on Map..."));
 
   webpMenu->setTitle(tr("WebP Export"));
   actWebpOversize->setText(tr("Increase too small pictures"));
@@ -1043,4 +1050,24 @@ void MainWindow::uploadSelectedImages() {
 
   // Login starten
   m_uploader->login(loginDlg.getUser(), loginDlg.getPass());
+}
+
+void MainWindow::showMapForSelection() {
+  QList<QString> files = getSelectedFilePaths();
+  if (files.isEmpty()) {
+    QMessageBox::information(this, tr("Map View"), tr("No images selected."));
+    return;
+  }
+
+  // Fenster erstellen (Delete on close, damit Speicher frei wird)
+  MapWindow *mapWin =
+      new MapWindow(this); // 'this' als Parent macht es zum Unterfenster
+  mapWin->setAttribute(Qt::WA_DeleteOnClose);
+  mapWin->show();
+
+  // Bilder laden
+  mapWin->showImages(files);
+
+  // Hinweis, wenn keine GPS Daten gefunden wurden
+  // (Kann man optional machen, indem MapWindow einen Rückgabewert liefert)
 }

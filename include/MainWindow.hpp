@@ -1,6 +1,7 @@
 #pragma once
 
 #include "LoginDialog.hpp"
+#include "MapWindow.hpp"
 #include "UploadManager.hpp"
 
 #include <QEvent> // Wichtig für changeEvent
@@ -64,6 +65,8 @@ private slots:
   void updateDbMetadata(const QString &path);
 
   void uploadSelectedImages();
+
+  void showMapForSelection();
 
   // --- GEONAMES / SETTINGS ---
   void openSettingsDialog();
@@ -141,6 +144,7 @@ private:
   // Picture Actions
   QAction *actSelectAll;
   QAction *actRename;
+  QAction *actViewMap;
 
   // View Options
   QAction *actShowCopyright;

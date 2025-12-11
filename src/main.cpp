@@ -23,6 +23,14 @@
 #endif
 
 int main(int argc, char *argv[]) {
+
+  // FIX: Hardware-Beschleunigung für WebEngine deaktivieren, um Crashs (GBM is
+  // not supported with the current configuration.) zu vermeiden. Das zwingt
+  // Chromium in den Software-Rendering-Modus.
+  qputenv("QTWEBENGINE_CHROMIUM_FLAGS", "--disable-gpu");
+  // if it still chrashes with your graphic card, here the hardcore version:
+  // qputenv("QT_XCB_GL_INTEGRATION", "none");
+
   QApplication a(argc, argv);
 
   // WICHTIG: Metadaten setzen, BEVOR irgendwelche Pfade (QStandardPaths)

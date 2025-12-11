@@ -16,7 +16,7 @@ set(CMAKE_AUTORCC ON)
 
 # --- Dependencies ---
 # WICHTIG: LinguistTools für Übersetzungen, Sql für Datenbank, Concurrent für Threads
-find_package(Qt6 REQUIRED COMPONENTS Widgets Gui Sql Concurrent LinguistTools Network)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Gui Sql Concurrent LinguistTools Network WebEngineWidgets)
 find_package(exiv2lib REQUIRED CONFIG NAMES exiv2)
 
 # --- Configure ---
@@ -60,7 +60,7 @@ set(PROJECT_SOURCES
     src/DefaultMetaWidget.cpp
     src/picture_widget.cpp
     src/UploadManager.cpp
-   # src/LoginDialog.cpp
+    src/MapWindow.cpp
 
     # Header Files (Zwingend notwendig für MOC!)
     include/MainWindow.hpp
@@ -75,6 +75,7 @@ set(PROJECT_SOURCES
     include/rz_config.hpp
     include/LoginDialog.hpp
     include/UploadManager.hpp
+    include/MapWindow.hpp
 
     # ui
     src/picture_widget.ui
@@ -98,6 +99,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt6::Sql
     Qt6::Concurrent
     Qt6::Network
+    Qt6::WebEngineWidgets
     Exiv2::exiv2lib
 )
 

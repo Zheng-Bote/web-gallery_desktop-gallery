@@ -13,6 +13,9 @@
 #include <QInputDialog>
 #include <QMessageBox>
 
+#include <QPointF>
+#include <QWebEngineView>
+
 // Exiv2 und QtConcurrent Includes
 #include <QFuture>
 #include <QFutureWatcher>
@@ -34,6 +37,12 @@ PictureWidget::PictureWidget(QWidget *parent)
       QIcon(":/resources/img/icons8-send-file-50.png"));
 
   picture = nullptr;
+
+  // --- MAP VIEW INITIALISIEREN ---
+  m_mapView = new QWebEngineView(this);
+  // Wir fügen den Tab programmatisch hinzu (Index 3 oder 4, je nachdem was im
+  // UI File ist)
+  ui->tabWidget->addTab(m_mapView, tr("GPS Map"));
 
   createRotateMenu();
   createExportMenu();
@@ -75,8 +84,74 @@ void PictureWidget::setImage(QString pathToFile) {
       QtConcurrent::run(&PictureWidget::readSrcIptc, this);
   QFuture<void> futureXmp = QtConcurrent::run(&PictureWidget::readSrcXmp, this);
 
+  // Karte laden (Das machen wir im GUI Thread, da WebEngine das mag)
+  loadMap();
+
   ui->tabWidget->adjustSize();
   ui->tabWidget->setCurrentWidget(0);
+}
+
+void PictureWidget::loadMap() {
+  Photo p(pathToImage);
+  QPointF gps = p.getGpsLatLon();
+
+  // Index des Map-Tabs finden
+  int mapIndex = ui->tabWidget->indexOf(m_mapView);
+
+  // Check: Haben wir gültige Koordinaten?
+  // (0.0/0.0 ist "Null Island" vor Afrika, meistens ungültig)
+  if (qAbs(gps.x()) < 0.0001 && qAbs(gps.y()) < 0.0001) {
+    // Tab deaktivieren oder Platzhalter anzeigen
+    ui->tabWidget->setTabVisible(mapIndex, false); // Oder setEnabled(false)
+    return;
+  }
+
+  // Tab sichtbar machen
+  ui->tabWidget->setTabVisible(mapIndex, true);
+
+  // HTML für EINEN Marker generieren
+  double lat = gps.x();
+  double lng = gps.y();
+  QString title = QFileInfo(pathToImage).fileName();
+
+  QString html = R"(
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <style> 
+            body, html, #map { height: 100%; margin: 0; padding: 0; } 
+            /* Optional: Etwas CSS damit es hübsch aussieht */
+        </style>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    </head>
+    <body>
+        <div id="map"></div>
+        <script>
+            // Karte auf die Koordinaten zentrieren, Zoom 15 (Detail)
+            var map = L.map('map').setView([)" +
+                 QString::number(lat, 'f', 6) + ", " +
+                 QString::number(lng, 'f', 6) + R"(], 15);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Marker setzen
+            L.marker([)" +
+                 QString::number(lat, 'f', 6) + ", " +
+                 QString::number(lng, 'f', 6) + R"(])
+             .addTo(map)
+             .bindPopup("<b>)" +
+                 title + R"(</b>")
+             .openPopup();
+        </script>
+    </body>
+    </html>
+    )";
+
+  m_mapView->setHtml(html);
 }
 
 void PictureWidget::on_closeBtn_clicked() { this->close(); }

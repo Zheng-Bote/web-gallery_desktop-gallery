@@ -8,6 +8,8 @@
 
 #include "rz_photo.hpp"
 
+class QWebEngineView;
+
 namespace Ui {
 class PictureWidget;
 }
@@ -72,6 +74,9 @@ private:
   bool dataModified_bool{false};
   QString pathToImage;
   QPixmap *picture;
+
+  QWebEngineView *m_mapView;
+  void loadMap();
 
   void updateSyncTarget(QTableWidget *targetTable, const QString &targetKey,
                         const QString &newValue);
