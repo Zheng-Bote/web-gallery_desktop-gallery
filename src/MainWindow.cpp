@@ -7,6 +7,7 @@
 #include "DatabaseManager.hpp"
 #include "DefaultMetaWidget.hpp"
 #include "ImageIndexer.hpp"
+#include "LoginDialog.hpp"
 #include "ThumbnailDelegate.hpp"
 #include "picture_widget.h"
 #include "rz_config.hpp"
@@ -80,6 +81,9 @@ static void synchronizeMetaStruct(RzMetadata::DefaultMetaStruct &meta) {
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   m_statusLabel = new QLabel(this);
   statusBar()->addWidget(m_statusLabel);
+
+  m_uploadProgressDlg = nullptr;
+  m_uploader = new UploadManager(this);
 
   // Settings Pfad (ConfigLocation ist sicherer als AppDir)
   QString configDir =
@@ -262,6 +266,10 @@ void MainWindow::createMenu() {
   actExportWebp = webpMenu->addAction("");
   connect(actExportWebp, &QAction::triggered, this,
           &MainWindow::exportSelectedToWebP);
+
+  QAction *uploadAct = picMenu->addAction(tr("Upload to Server..."));
+  connect(uploadAct, &QAction::triggered, this,
+          &MainWindow::uploadSelectedImages);
 
   picMenu->addSeparator();
   actSelectAll = picMenu->addAction("");
@@ -962,4 +970,77 @@ void MainWindow::showAboutDialog() {
           .arg(QString::fromStdString(CMAKE_CXX_STANDARD));
   QMessageBox::about(
       this, tr("About") + " " + QString::fromStdString(PROG_LONGNAME), info);
+}
+
+void MainWindow::uploadSelectedImages() {
+  QList<QString> files = getSelectedFilePaths();
+  if (files.isEmpty()) {
+    QMessageBox::information(this, tr("Upload"), tr("No images selected."));
+    return;
+  }
+
+  QString url =
+      m_settings->value("Server/uploadUrl", "http://localhost:8080").toString();
+  m_uploader->setServerUrl(url);
+
+  LoginDialog loginDlg(this);
+  if (loginDlg.exec() != QDialog::Accepted)
+    return;
+
+  // --- CRASH FIX: Alten Dialog sicher löschen ---
+  if (m_uploadProgressDlg) {
+    delete m_uploadProgressDlg;
+    m_uploadProgressDlg = nullptr;
+  }
+
+  m_uploadProgressDlg = new QProgressDialog(tr("Logging in..."), tr("Cancel"),
+                                            0, files.size(), this);
+  m_uploadProgressDlg->setWindowModality(Qt::WindowModal);
+  m_uploadProgressDlg->setMinimumDuration(0);
+  m_uploadProgressDlg->setValue(0);
+
+  m_uploader->disconnect(); // Alte Connections löschen
+
+  // NEU: Pfad aus Dialog holen
+  QString targetPath = loginDlg.getPath();
+
+  // Signale verbinden
+  connect(m_uploader, &UploadManager::loginSuccessful, this,
+          [this, files, targetPath]() {
+            m_uploadProgressDlg->setLabelText(tr("Starting upload..."));
+
+            // KORREKTUR: Pfad übergeben
+            m_uploader->uploadFiles(files, targetPath);
+          });
+
+  connect(m_uploader, &UploadManager::loginFailed, this,
+          [this](const QString &msg) {
+            m_uploadProgressDlg->close();
+            QMessageBox::warning(this, tr("Login Failed"), msg);
+          });
+
+  connect(m_uploader, &UploadManager::uploadProgress, this,
+          [this](int current, int total, int percent) {
+            m_uploadProgressDlg->setLabelText(
+                tr("Uploading image %1 of %2 (%3%)")
+                    .arg(current)
+                    .arg(total)
+                    .arg(percent));
+            m_uploadProgressDlg->setValue(current - 1);
+            if (m_uploadProgressDlg->wasCanceled()) {
+              // Todo: Cancel logic
+            }
+          });
+
+  connect(m_uploader, &UploadManager::allFinished, this, [this, files]() {
+    m_uploadProgressDlg->setValue(files.size());
+    m_uploadProgressDlg->close();
+    QMessageBox::information(this, tr("Upload"),
+                             tr("Upload completed successfully."));
+  });
+
+  m_uploadProgressDlg->show();
+
+  // Login starten
+  m_uploader->login(loginDlg.getUser(), loginDlg.getPass());
 }

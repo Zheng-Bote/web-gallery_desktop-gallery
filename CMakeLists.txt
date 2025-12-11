@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.23)
 
 project(
   web-gallery_desktop-gallery
-  VERSION 0.25.0
+  VERSION 0.26.0
   DESCRIPTION "Desktop-Gallery for Linux, MacOS and Windows. Part of the Crow Web-Gallery project."
   HOMEPAGE_URL "https://github.com/Zheng-Bote/web-gallery_desktop-gallery"
   LANGUAGES CXX)
@@ -59,6 +59,8 @@ set(PROJECT_SOURCES
     src/rz_hwinfo.cpp
     src/DefaultMetaWidget.cpp
     src/picture_widget.cpp
+    src/UploadManager.cpp
+   # src/LoginDialog.cpp
 
     # Header Files (Zwingend notwendig für MOC!)
     include/MainWindow.hpp
@@ -71,6 +73,8 @@ set(PROJECT_SOURCES
     include/picture_widget.h
     include/rz_metadata.hpp
     include/rz_config.hpp
+    include/LoginDialog.hpp
+    include/UploadManager.hpp
 
     # ui
     src/picture_widget.ui

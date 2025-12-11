@@ -1,4 +1,8 @@
 #pragma once
+
+#include "LoginDialog.hpp"
+#include "UploadManager.hpp"
+
 #include <QEvent> // Wichtig für changeEvent
 #include <QFutureWatcher>
 #include <QLabel>
@@ -6,6 +10,7 @@
 #include <QMainWindow>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QProgressDialog>
 #include <QQueue>
 #include <QSettings>
 #include <QSplitter>
@@ -57,6 +62,8 @@ private slots:
   void setAllAsDefaultFromCurrent();
 
   void updateDbMetadata(const QString &path);
+
+  void uploadSelectedImages();
 
   // --- GEONAMES / SETTINGS ---
   void openSettingsDialog();
@@ -148,4 +155,8 @@ private:
 
   // Help Actions
   QAction *aboutAct; // NEU
+
+  // Uploads
+  UploadManager *m_uploader;
+  QProgressDialog *m_uploadProgressDlg;
 };

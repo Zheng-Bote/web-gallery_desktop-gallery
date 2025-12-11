@@ -19,9 +19,9 @@ static const std::string PROJECT_DESCRIPTION = "Desktop-Gallery for Linux, MacOS
 
 static const std::string PROJECT_EXECUTABLE = "web-gallery_desktop-gallery";
 
-static const std::string PROJECT_VERSION = "0.25.0";
+static const std::string PROJECT_VERSION = "0.26.0";
 static const std::int32_t PROJECT_VERSION_MAJOR{0};
-static const std::int32_t PROJECT_VERSION_MINOR{25};
+static const std::int32_t PROJECT_VERSION_MINOR{26};
 static const std::int32_t PROJECT_VERSION_PATCH{0};
 
 static const std::string PROJECT_HOMEPAGE_URL = "https://github.com/Zheng-Bote/web-gallery_desktop-gallery";
