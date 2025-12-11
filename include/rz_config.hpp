@@ -14,22 +14,22 @@
 #include <string>
 
 static const std::string PROJECT_NAME = "web-gallery_desktop-gallery";
-static const std::string PROG_LONGNAME = "Crow Web-Gallery Server";
-static const std::string PROJECT_DESCRIPTION = "Web-Gallery Desktop-Gallery";
+static const std::string PROG_LONGNAME = "Desktop-Gallery";
+static const std::string PROJECT_DESCRIPTION = "Desktop-Gallery for Linux, MacOS and Windows. Part of the Crow Web-Gallery project.";
 
 static const std::string PROJECT_EXECUTABLE = "web-gallery_desktop-gallery";
 
-static const std::string PROJECT_VERSION = "0.24.0";
+static const std::string PROJECT_VERSION = "0.25.0";
 static const std::int32_t PROJECT_VERSION_MAJOR{0};
-static const std::int32_t PROJECT_VERSION_MINOR{24};
+static const std::int32_t PROJECT_VERSION_MINOR{25};
 static const std::int32_t PROJECT_VERSION_PATCH{0};
 
-static const std::string PROJECT_HOMEPAGE_URL = "https://github.com/Zheng-Bote/web-gallery_webserver";
+static const std::string PROJECT_HOMEPAGE_URL = "https://github.com/Zheng-Bote/web-gallery_desktop-gallery";
 static const std::string PROG_AUTHOR = "ZHENG Bote";
 static const std::string PROG_CREATED = "2025";
 static const std::string PROG_ORGANIZATION_NAME = "ZHENG Robert";
 static const std::string PROG_ORGANIZATION_DOMAIN = "net.hase-zheng";
 
 static const std::string CMAKE_CXX_STANDARD = "c++23";
-static const std::string CMAKE_CXX_COMPILER = "Clang 20.1.8";
-static const std::string CMAKE_QT_VERSION = "6.10.0";
+static const std::string CMAKE_CXX_COMPILER = "GNU 15.2.0";
+static const std::string CMAKE_QT_VERSION = "6.9.2";

@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.23)
 
 project(
   web-gallery_desktop-gallery
-  VERSION 0.24.0
-  DESCRIPTION "Web-Gallery Desktop-Gallery"
-  HOMEPAGE_URL "https://github.com/Zheng-Bote/web-gallery_webserver"
+  VERSION 0.25.0
+  DESCRIPTION "Desktop-Gallery for Linux, MacOS and Windows. Part of the Crow Web-Gallery project."
+  HOMEPAGE_URL "https://github.com/Zheng-Bote/web-gallery_desktop-gallery"
   LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
@@ -21,7 +21,7 @@ find_package(exiv2lib REQUIRED CONFIG NAMES exiv2)
 
 # --- Configure ---
 set(EXECUTABLE_NAME "${PROJECT_NAME}")
-set(PROG_LONGNAME "Crow Web-Gallery Server")
+set(PROG_LONGNAME "Desktop-Gallery")
 set(PROG_CREATED "2025")
 set(PROG_AUTHOR "ZHENG Bote")
 set(PROG_ORGANIZATION_NAME "ZHENG Robert")
