@@ -42,7 +42,7 @@
 #include <QNetworkRequest>
 #include <QUrlQuery>
 
-// --- Helper für Sync der Default-Struktur ---
+// --- Helper for syncing the default structure ---
 static void synchronizeMetaStruct(RzMetadata::DefaultMetaStruct &meta) {
   // EXIF -> XMP & IPTC
   QHashIterator<QString, QString> iE(meta.exifDefault);
@@ -106,18 +106,18 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   setupUi();
   createMenu();
 
-  // --- SPRACHE LADEN ---
+  // --- LOAD LANGUAGE ---
   QString sysLang = QLocale::system().name().left(2).toLower();
   if (sysLang != "de")
     sysLang = "en";
 
-  // Wichtig: Default Wert muss sysLang sein, falls Key nicht existiert
+  // Important: Default value must be sysLang if key does not exist
   QString savedLang = m_settings->value("Language/current", sysLang).toString();
 
   qDebug() << "[Init] Language Detection: System=" << sysLang
            << " | Saved in INI=" << savedLang;
 
-  // Hier wird die Sprache angewendet
+  // Here the language is applied
   loadLanguage(savedLang);
 
   resize(1200, 800);
@@ -196,13 +196,13 @@ void MainWindow::createMenu() {
   langMenu = settingsMenu->addMenu("");
   actLangEn = langMenu->addAction("English");
   connect(actLangEn, &QAction::triggered, this, [this]() {
-    qDebug() << "[Menu] Manuell auf Englisch geklickt";
+    qDebug() << "[Menu] Manually clicked on English";
     loadLanguage("en");
   });
 
   actLangDe = langMenu->addAction("Deutsch");
   connect(actLangDe, &QAction::triggered, this, [this]() {
-    qDebug() << "[Menu] Manuell auf Deutsch geklickt";
+    qDebug() << "[Menu] Manually clicked on German";
     loadLanguage("de");
   });
 
@@ -338,9 +338,9 @@ void MainWindow::retranslateUi() {
 // --- LANGUAGE LOGIC ---
 
 void MainWindow::loadLanguage(const QString &rLanguage) {
-  // Debug Ausgabe: Wer ruft mich mit was auf?
-  qDebug() << "[loadLanguage] Aufgerufen mit:" << rLanguage
-           << " | Aktuell:" << m_currLang;
+  // Debug Output: Who calls me with what?
+  qDebug() << "[loadLanguage] Called with:" << rLanguage
+           << " | Current:" << m_currLang;
 
   if (m_currLang != rLanguage) {
     m_currLang = rLanguage;
@@ -354,7 +354,7 @@ void MainWindow::loadLanguage(const QString &rLanguage) {
     if (!QFile::exists(langPath))
       langPath = ":/i18n";
 
-    // Translator laden
+    // Load Translator
     bool loadedApp =
         m_translator.load(QString("gallery_%1").arg(rLanguage), langPath);
     bool loadedQt =
@@ -373,10 +373,10 @@ void MainWindow::loadLanguage(const QString &rLanguage) {
     if (m_settings) {
       m_settings->setValue("Language/current", rLanguage);
       m_settings->sync();
-      qDebug() << "[loadLanguage] Gespeichert in INI:" << rLanguage;
+      qDebug() << "[loadLanguage] Saved in INI:" << rLanguage;
     }
   } else {
-    qDebug() << "[loadLanguage] Sprache ist bereits aktiv, kein Wechsel.";
+    qDebug() << "[loadLanguage] Language is already active, no change.";
   }
 }
 

@@ -1,3 +1,8 @@
+/**
+ * @file UploadManager.cpp
+ * @author ZHENG Robert
+ * @brief Implementation of the UploadManager class.
+ */
 #include "UploadManager.hpp"
 #include "rz_photo.hpp"
 
@@ -37,7 +42,7 @@ void UploadManager::login(const QString &user, const QString &pass) {
   m_netManager->post(request, QJsonDocument(json).toJson());
 }
 
-// KORREKTUR: Pfad speichern
+// CORRECTION: Store path
 void UploadManager::uploadFiles(const QList<QString> &filePaths,
                                 const QString &serverPath) {
   if (m_jwtToken.isEmpty()) {
@@ -45,7 +50,7 @@ void UploadManager::uploadFiles(const QList<QString> &filePaths,
     return;
   }
 
-  m_targetServerPath = serverPath; // Speichern für später
+  m_targetServerPath = serverPath; // Save for later
 
   m_queue.clear();
   for (const QString &path : filePaths) {
@@ -98,7 +103,7 @@ void UploadManager::startNextUpload() {
   file->setParent(multiPart);
   multiPart->append(imagePart);
 
-  // 2. NEU: Server Path Part (falls vorhanden)
+  // 2. NEW: Server Path Part (if present)
   if (!m_targetServerPath.isEmpty()) {
     QHttpPart pathPart;
     pathPart.setHeader(QNetworkRequest::ContentDispositionHeader,

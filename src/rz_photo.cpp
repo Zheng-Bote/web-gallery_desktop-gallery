@@ -1,7 +1,7 @@
 /**
  * @file rz_photo.cpp
  * @author ZHENG Robert
- * @brief Implementation of Photo operations
+ * @brief Implementation of Photo operations.
  */
 #include "rz_photo.hpp"
 #include <QBuffer>
@@ -51,12 +51,12 @@ bool Photo::hasMetadataSupport() {
                                             Qt::CaseInsensitive);
 }
 
-// --- HELPER: TIMESTAMP ERMITTELN ---
+// --- HELPER: DETERMINE TIMESTAMP ---
 
 QString Photo::determineTimestamp() {
   QDateTime finalDate;
 
-  // 1. Metadaten (wenn unterstützt)
+  // 1. Metadata (if supported)
   if (hasMetadataSupport()) {
     try {
       auto image =
@@ -86,7 +86,7 @@ QString Photo::determineTimestamp() {
     }
   }
 
-  // 2. Fallback Dateisystem
+  // 2. Fallback Filesystem
   if (!finalDate.isValid()) {
     QFileInfo fi(imgStruct.fileAbsolutePath);
     finalDate = fi.birthTime();
@@ -100,7 +100,7 @@ QString Photo::determineTimestamp() {
   return "";
 }
 
-// --- WEBP KONVERTIERUNG ---
+// --- WEBP CONVERSION ---
 
 const bool Photo::convertImages(const int &quality) {
   bool allSuccess = true;
@@ -123,7 +123,7 @@ const bool Photo::convertImage(const int &targetSize, const int &quality) {
   if (!createWebpPath())
     return false;
 
-  // Namens-Logik (Timestamp Rename)
+  // Name Logic (Timestamp Rename)
   QString targetBasename = imgStruct.fileBasename;
   if (renameToTimestamp_bool) {
     QString ts = determineTimestamp();
@@ -350,7 +350,7 @@ QString Photo::getRawTagValue(const QString &key) {
   return "";
 }
 
-// FIX: Liefert wieder exakt das, was in der Datei steht. Kein Cleanup.
+// FIX: Returns exactly what is in the file. No cleanup.
 QString Photo::getCopyright() {
   if (!hasMetadataSupport())
     return "";
@@ -359,7 +359,7 @@ QString Photo::getCopyright() {
         Exiv2::ImageFactory::open(imgStruct.fileAbsolutePath.toStdString());
     image->readMetadata();
 
-    // 1. Priorität: XMP
+    // 1. Priority: XMP
     Exiv2::XmpData &xmpData = image->xmpData();
     if (xmpData.findKey(Exiv2::XmpKey("Xmp.plus.CopyrightOwner")) !=
         xmpData.end())
@@ -370,7 +370,7 @@ QString Photo::getCopyright() {
     if (xmpData.findKey(Exiv2::XmpKey("Xmp.dc.creator")) != xmpData.end())
       return QString::fromStdString(xmpData["Xmp.dc.creator"].toString());
 
-    // 2. Priorität: IPTC
+    // 2. Priority: IPTC
     Exiv2::IptcData &iptcData = image->iptcData();
     if (iptcData.findKey(Exiv2::IptcKey("Iptc.Application2.Copyright")) !=
         iptcData.end())
@@ -381,7 +381,7 @@ QString Photo::getCopyright() {
       return QString::fromStdString(
           iptcData["Iptc.Application2.Byline"].toString());
 
-    // 3. Priorität: EXIF
+    // 3. Priority: EXIF
     Exiv2::ExifData &exifData = image->exifData();
     if (exifData.findKey(Exiv2::ExifKey("Exif.Image.Copyright")) !=
         exifData.end())
@@ -402,7 +402,7 @@ bool Photo::writeToAllCopyrightOwner(const QString &owner) {
   ok &= writeXmp("Xmp.plus.CopyrightOwner", owner);
   ok &= writeXmp("Xmp.dc.creator", owner);
   ok &= writeXmp("Xmp.dc.rights",
-                 owner); // Normaler Text, User kann © hinzufügen wenn er will
+                 owner); // Normal text, user can add © if they want
 
   ok &= writeExif("Exif.Image.Artist", owner);
   ok &= writeExif("Exif.Image.Copyright", owner);

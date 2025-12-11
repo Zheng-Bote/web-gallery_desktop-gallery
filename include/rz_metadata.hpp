@@ -9,8 +9,16 @@
 #include <QMap>
 #include <QString>
 
+/**
+ * @namespace RzMetadata
+ * @brief Contains definitions and mapping rules for image metadata.
+ */
 namespace RzMetadata {
 
+/**
+ * @struct DefaultMetaStruct
+ * @brief Holds default metadata values for XMP, EXIF, and IPTC.
+ */
 struct DefaultMetaStruct {
   QHash<QString, QString> xmpDefault{};
   QHash<QString, QString> exifDefault{};
@@ -18,7 +26,7 @@ struct DefaultMetaStruct {
 };
 
 // --- MAPPINGS (Sync Rules) ---
-// Diese Tabellen steuern, welche Felder automatisch abgeglichen werden.
+// These tables control which fields are automatically synchronised.
 
 // EXIF -> XMP
 static const QHash<QString, QString> exif_to_xmp = {
@@ -51,7 +59,7 @@ static const QHash<QString, QString> xmp_to_iptc = {
     {"Xmp.dc.title", "Iptc.Application2.ObjectName"},
     {"Xmp.dc.subject", "Iptc.Application2.Keywords"},
     {"Xmp.plus.CopyrightOwner", "Iptc.Application2.Copyright"},
-    // Adress-Sync
+    // Address-Sync
     {"Xmp.photoshop.City", "Iptc.Application2.City"},
     {"Xmp.photoshop.State", "Iptc.Application2.ProvinceState"},
     {"Xmp.photoshop.Country", "Iptc.Application2.CountryName"},
@@ -65,7 +73,7 @@ static const QHash<QString, QString> iptc_to_xmp = {
     {"Iptc.Application2.Byline", "Xmp.dc.creator"},
     {"Iptc.Application2.ObjectName", "Xmp.dc.title"},
     {"Iptc.Application2.Keywords", "Xmp.dc.subject"},
-    // Adress-Sync
+    // Address-Sync
     {"Iptc.Application2.City", "Xmp.photoshop.City"},
     {"Iptc.Application2.ProvinceState", "Xmp.photoshop.State"},
     {"Iptc.Application2.CountryName", "Xmp.photoshop.Country"},
@@ -79,7 +87,7 @@ static const QHash<QString, QString> iptc_to_exif = {
     {"Iptc.Application2.ObjectName", "Exif.Image.DocumentName"},
     {"Iptc.Application2.Byline", "Exif.Image.Artist"}};
 
-// --- DESCRIPTIONS (Anzeigetexte) ---
+// --- DESCRIPTIONS (Display Texts) ---
 
 static const QHash<QString, QString> xmpTagDescriptions = {
     {"Xmp.dc.title", "Short title or name of the image."},
@@ -122,8 +130,8 @@ static const QHash<QString, QString> iptcTagDescriptions = {
     {"Iptc.Application2.CountryCode", "Country Code (ISO)."},
     {"Iptc.Application2.SubLocation", "Location / Street."}};
 
-// --- DEFAULT VALUES LISTE (Für DefaultMetaWidget) ---
-// Diese Listen definieren, welche Zeilen im Default-Editor angezeigt werden.
+// --- DEFAULT VALUES LIST (For DefaultMetaWidget) ---
+// These lists define which rows are displayed in the default editor.
 
 static const QMap<QString, QString> xmpDefaultTagsList = {
     {"Xmp.dc.creator", "Robert Zheng"},

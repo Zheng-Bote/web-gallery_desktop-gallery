@@ -1,367 +1,307 @@
 <div id="top" align="center">
-<h1>web-gallery_desktop-gallery</h1>
+<h1>Desktop-Gallery (Qt6 / C++23)</h1>
 
-<p>Linux, MacOs, Windows Desktop-Frontend for Web-Gallery</p>
+<p>A high-performance, professional Desktop Frontend (for the Crow Web-Gallery Project).</p>
+<p>Developed for Linux, macOS, and Windows.</p>
 
-[Report Issue](https://github.com/Zheng-Bote/qt_desktop-gallery/issues) [Request Feature](https://github.com/Zheng-Bote/qt_desktop-gallery/pulls)
+[Report Issue](https://github.com/Zheng-Bote/qt_desktop-gallery/issues) · [Request Feature](https://github.com/Zheng-Bote/qt_desktop-gallery/pulls)
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+[![Qt6](https://img.shields.io/badge/Qt-6.9-41CD52?logo=qt)](https://www.qt.io/)
+[![C++23](https://img.shields.io/badge/C++-23-blue?logo=cplusplus)](https://en.cppreference.com/w/cpp/23)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/Zheng-Bote/qt_desktop-gallery?logo=GitHub)](https://github.com/Zheng-Bote/qt_desktop-gallery/releases)
 
 </div>
 
 <hr>
-
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
 - [Description](#description)
-    - [Features](#features)
-  - [Status](#status)
-    - [Application / Tool](#application--tool)
-- [Documentation](#documentation)
-  - [Screenshots](#screenshots)
-    - [Album view](#album-view)
-    - [Image detail view](#image-detail-view)
-      - [Image rotate](#image-rotate)
-      - [Image export to WebP](#image-export-to-webp)
-      - [Image Exif data show/edit](#image-exif-data-showedit)
-      - [Image IPTC data show/edit](#image-iptc-data-showedit)
-      - [Image XMP data show/edit](#image-xmp-data-showedit)
+  - [Key Features](#key-features)
+    - [🚀 Performance \& Core](#-performance--core)
+    - [🌍 Geo-Intelligence](#-geo-intelligence)
+    - [📝 Metadata Management](#-metadata-management)
+    - [☁️ Export \& Cloud](#️-export--cloud)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Build Instructions](#build-instructions)
+    - [Usage Workflow](#usage-workflow)
+      - [Import](#import)
+      - [Organize](#organize)
+      - [Edit Metadata](#edit-metadata)
+      - [Geocode](#geocode)
+      - [Visualize](#visualize)
+      - [Export/Upload](#exportupload)
+- [Documentation \& Screenshots](#documentation--screenshots)
+  - [Album View](#album-view)
+  - [Metadata Editor \& Sync](#metadata-editor--sync)
+  - [Map View](#map-view)
+  - [WebP Export](#webp-export)
+  - [Internationalization (i18n)](#internationalization-i18n)
+  - [Project Structure](#project-structure)
+- [Architecture](#architecture)
+  - [Architecture Overview](#architecture-overview)
+    - [Presentation Layer (UI)](#presentation-layer-ui)
+    - [Business Logic Layer](#business-logic-layer)
+    - [Data Layer](#data-layer)
+    - [System Architecture Diagram](#system-architecture-diagram)
+      - [Detailed Component Breakdown](#detailed-component-breakdown)
 - [Authors and License](#authors-and-license)
-  - [License](#license)
-  - [Authors](#authors)
-    - [Code Contributors](#code-contributors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-<hr>
+  <hr>
 
 # Description
 
-![QT](https://img.shields.io/badge/Community-6-41CD52?logo=qt)
-![CXX](https://img.shields.io/badge/C++-23-blue?logo=cplusplus)
+**Desktop-Gallery** is a powerful image management tool built with **C++23** and **Qt6**. It is designed to handle large photo collections efficiently using a multithreaded architecture and a local SQLite database.
 
-Desktop Gallery-Application for Linux, MacOS and Windows to show/edit Exif-/IPTC-/XMP- Metadata, Reverse Geocoding and export to WebP
+Beyond viewing images, it serves as a comprehensive **Metadata Editor** and **Workflow Tool**, allowing photographers to synchronize EXIF/IPTC/XMP data, geocode images via OpenStreetMap, visualize locations on an interactive map, and bulk-export assets to WebP or upload them directly to a CrowQtServer ([Crow Web-Gallery](https://github.com/Zheng-Bote/web-gallery_webserver)) instance.
 
-Optimized for large Albums (multithreaded iterations)
+## Key Features
 
-### Features
+### 🚀 Performance & Core
 
-- \[X] advanced-super-extra-special feature xyz
+- **Database-Driven:** High-performance SQLite backend with caching for instant search and filtering.
+- **Multithreading:** Asynchronous recursive folder scanning and thumbnail generation.
+- **Cross-Platform:** Runs natively on Linux, macOS, and Windows.
 
-  <br>
+### 🌍 Geo-Intelligence
 
-- \[x] FOSS and license
-- \[x] works as designed
-- \[ ] no bugs
+- **Reverse Geocoding:** Automatically fetch address data (City, Street, Country) based on GPS coordinates using **OpenStreetMap (Nominatim)**.
+- **Interactive Map View:** Visualize selected images on a map using Leaflet.js integration.
+- **GPS Data Management:** Read, write, and propagate GPS metadata.
 
-<br>
+### 📝 Metadata Management
 
-- \[x] some more or less usefull Github Actions for GH-repo, GH-pages, GH-wiki, CI/CD-Pipelines
-- \[ ] Packagemanager
-- \[ ] Installation routine
-- \[ ] portable application
+- **Comprehensive Editor:** View and edit **EXIF**, **IPTC**, and **XMP** data.
+- **Smart Synchronization:** Automatically syncs metadata between standards (e.g., changing EXIF Copyright updates IPTC and XMP fields instantly).
+- **Bulk Operations:** Write default metadata (Copyright, Author) to multiple selected images at once.
+- **Smart Rename:** Bulk rename files based on their creation timestamp.
 
-<br>
+### ☁️ Export & Cloud
 
-- \[x] runs on DOS/Windows
-- \[x] runs on MacOS
-- \[x] runs on Linux
-- \[ ] runs on iOS
-- \[ ] runs on Android
-- \[ ] runs on HarmonyOS
-
-<br/>
-
-- \[x] Muli-Language support (i18n)
-- \[x] some Image editing (rotate, export to several WebP sizes)
-- \[x] edit Exif-/IPTC-/XMP- Metadata
-
-✅ Datenbank-gestützte Galerie mit (performanten) Thumbnails.
-
-✅ Bulk-Export nach WebP (inkl. verschiedenem Resizing & optionalen Watermark).
-
-✅ Mächtiger Metadaten-Editor mit Synchronisation (EXIF ↔ IPTC ↔ XMP).
-
-✅ Intelligentes Umbenennen basierend auf Zeitstempeln.
-
-✅ Reverse Geocoding (GPS zu Adresse) via OpenStreetMap.
+- **WebP Bulk Export:** Convert images to WebP with customizable quality, resizing, and watermarking.
+- **Cloud Upload Client:** Integrated client to upload images and metadata to a CrowQtServer (supports JWT Auth & Refresh Tokens).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-## Status
+# Getting Started
 
-### Application / Tool
+## Prerequisites
 
-![Status](https://img.shields.io/badge/Status-useable-green)
-![GitHub Release Date](https://img.shields.io/github/release-date/Zheng-Bote/qt_desktop-gallery)
+To build this project, you need the following dependencies installed:
 
-![GitHub Issues](https://img.shields.io/github/issues/Zheng-Bote/qt_desktop-gallery)
-![GitHub Pull Requests](https://img.shields.io/github/issues-pr/Zheng-Bote/qt_desktop-gallery)
+- **CMake** (3.16+)
+- **C++ Compiler** supporting C++23 (GCC 13+, Clang 16+, MSVC 2022)
+- **Qt6** (Core, Gui, Widgets, Sql, Concurrent, Network, WebEngineWidgets, LinguistTools)
+- **Exiv2** (Library for image metadata)
 
-# Documentation
+## Build Instructions
 
-## Screenshots
+```bash
+# 1. Clone the repository
+git clone [https://github.com/Zheng-Bote/qt_desktop-gallery.git](https://github.com/Zheng-Bote/qt_desktop-gallery.git)
+cd qt_desktop-gallery
 
-### Album view
+# 2. Create build directory
+mkdir build && cd build
 
-MacOS (older screenshot)
+# 3. Configure with CMake
+cmake ..
 
-![App Screenshot](./docs/img/00_en.png)
+# 4. Build
+cmake --build .
+```
 
-import pictures (MacOS, older screenshot)
+### Usage Workflow
 
-![App Screenshot](./docs/img/01_en.png)
+#### Import
 
-import pictures (Linux)
+Use File -> Open Folder (Recursive) to scan your image library.
 
-![App Screenshot](./docs/img/import.png)
+#### Organize
 
-Album context menu
+Select images to view details. Use the context menu to copy GPS data or paths.
 
-![App Screenshot](./docs/img/album-context_en_01.png)
+#### Edit Metadata
 
-Album menu
+Double-click metadata fields to edit. Use Metadata -> Write default... for bulk updates.
 
-![App Screenshot](./docs/img/album-pictures_en_01.png)
+#### Geocode
 
-show GPS main data in Album
+Select images with GPS data and run Metadata -> Address lookup to auto-fill location tags.
 
-![App Screenshot](./docs/img/album_show_gps.png)
+#### Visualize
 
-show Picture Owner in Album
+Use Pictures -> Show selected on Map to see locations.
 
-![App Screenshot](./docs/img/album_show_owner.png)
+#### Export/Upload
 
-![App Screenshot](./docs/img/album-export_en_01.png)
+Use the WebP Export menu for local conversion or Upload to Server to push to your web gallery.
 
-Languages and flags are loaded from external i18n folder, so adding additional languages / translations would be easy
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-![App Screenshot](./docs/img/album-i18n_en_01.png)
+# Documentation & Screenshots
 
-![App Screenshot](./docs/img/album-metadata_en_01.png)
+## Album View
 
-![App Screenshot](./docs/img/album-info_en_01.png)
+Main interface showing the database-driven thumbnail grid.
 
-### Image detail view
+## Metadata Editor & Sync
 
-_double click a picture to open picture details view_
+Edit EXIF, IPTC, and XMP data with automatic synchronization.
 
-#### Image rotate
+## Map View
 
-MacOS (older screenshot)
+Interactive map showing the location of selected images (Leaflet/OSM).
 
-![App Screenshot](./docs/img/rotate_en.png)
+## WebP Export
 
-#### Image export to WebP
+Bulk conversion tool with resizing and watermarking options.
 
-MacOS (older screenshot)
+## Internationalization (i18n)
 
-![App Screenshot](./docs/img/webp_en.png)
+Live language switching (English/German).
 
-Linux
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-![App Screenshot](./docs/img/details_webp_en.png)
+## Project Structure
 
-#### Image Exif data show/edit
+```
+.
+├── CMakeLists.txt # Main build configuration
+├── LICENSE # MIT License
+├── README.md # Project documentation
+├── configure
+│   └── rz_config.hpp.in # Version and Project defines
+├── i18n # Translation files (.ts and .qm)
+│   ├── gallery_de.ts
+│   └── gallery_en.ts
+├── include # Header files (.hpp)
+│   ├── DatabaseManager.hpp # SQLite encapsulation
+│   ├── LoginDialog.hpp # Server Auth UI
+│   ├── MapWindow.hpp # QWebEngine Map View
+│   ├── MainWindow.hpp # Main GUI Logic
+│   ├── UploadManager.hpp # Network/Upload Logic
+│   ├── rz_metadata.hpp # Metadata Definitions & Mappings
+│   └── rz_photo.hpp # Image & Exiv2 Wrapper
+├── resources # Icons and Assets
+│   └── img
+├── src # Source files (.cpp)
+│   ├── DatabaseManager.cpp
+│   ├── ImageIndexer.cpp # Multithreaded Scanner
+│   ├── MainWindow.cpp
+│   ├── MapWindow.cpp
+│   ├── ThumbnailDelegate.cpp # Custom Grid Rendering
+│   ├── UploadManager.cpp
+│   ├── main.cpp # Entry Point
+│   ├── picture_widget.cpp # Detail View
+│   └── rz_photo.cpp # Exiv2 Implementation
+```
 
-_(double click a row to edit/modify value)_
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-MacOS (older screenshot)
+# Architecture
 
-![App Screenshot](./docs/img/exif_en.png)
+Based on the codebase we have built, the architecture of Desktop-Gallery is a modular, event-driven desktop application leveraging Qt's Model-View-Controller (MVC) framework.
 
-**mark important fields, with explanation**
+## Architecture Overview
 
-![App Screenshot](./docs/img/exif_en_2.png)
+The application is structured into three main layers:
 
-#### Image IPTC data show/edit
+### Presentation Layer (UI)
 
-_(double click a row to edit/modify value)_
+Handles user interaction, views (Gallery, Map, Details), and dialogs. It uses Qt Widgets.
 
-![App Screenshot](./docs/img/exif_meta_edit.png)
+### Business Logic Layer
 
-**mark important fields, with explanation** _(double click a row to edit/modify value)_
+Handles the "heavy lifting" like image processing, metadata editing, uploading, and geocoding. This layer is often multithreaded.
 
-![App Screenshot](./docs/img/iptc_en_1.png)
+### Data Layer
 
-#### Image XMP data show/edit
+Manages persistent storage (SQLite database), file system access, and configuration settings.
 
-_(double click a row to edit/modify value)_
+### System Architecture Diagram
 
-![App Screenshot](./docs/img/xmp_en_1.png)
+This diagram visualizes how the different classes and modules interact with each other.
+
+#### Detailed Component Breakdown
+
+1. Main Window & Navigation (The Controller)
+   MainWindow: The central hub. It orchestrates the entire application flow. It initializes the database, manages the layout (QSplitter), creates menus, and handles global events (like language switching).
+
+LoginDialog: A modal dialog for authenticating with the CrowQtServer.
+
+2. Data Models (The "M" in MVC)
+   DatabaseManager: A Singleton class that wraps the SQLite database (gallery_cache.db). It handles connection opening/closing and schema creation.
+
+QSqlTableModel: A Qt class that provides a direct link between the SQLite database and the UI views. It holds the image data (path, metadata, etc.).
+
+QStandardItemModel: Manages the folder structure tree view on the left side.
+
+3. Views & Delegates (The "V" in MVC)
+   QListView (Gallery View): Displays the grid of images.
+
+ThumbnailDelegate: A custom painter that renders the thumbnails, borders, and text overlays (Copyright/GPS) directly onto the QListView. It uses QPixmapCache for performance.
+
+QTreeView: Displays the file system folder hierarchy.
+
+MapWindow: Embeds a QWebEngineView to display OpenStreetMap/Leaflet.js for visualizing GPS coordinates.
+
+4. Workers & Logic (Business Logic)
+   ImageIndexer: A QRunnable (runs in a background thread via QThreadPool). It recursively scans folders for images, extracts metadata, and populates the database. This prevents the UI from freezing during large imports.
+
+UploadManager: Handles the communication with the CrowQtServer. It manages the upload queue, performs authentication (JWT/Refresh tokens), and builds Multipart HTTP requests.
+
+Photo (Wrapper): A utility class that wraps Exiv2. It provides a high-level API to read/write EXIF, IPTC, and XMP metadata, rotate images, and export to WebP.
+
+rz_metadata: A static configuration namespace defining valid tags, mappings (Sync Rules), and default values.
+
+5. External Services
+   Nominatim (OSM): Accessed via QNetworkAccessManager for Reverse Geocoding (converting GPS coords to Address).
+
+CrowQtServer: The remote backend (REST API) for uploading images.
+
+Data Flow Example: Importing Images
+User Action: User clicks "Open Folder (Recursive)".
+
+Controller: MainWindow starts an ImageIndexer task in the global QThreadPool.
+
+Worker: ImageIndexer iterates through files.
+
+Helper: For each file, Photo reads metadata (EXIF/XMP).
+
+Database: ImageIndexer inserts records into the SQLite DB via DatabaseManager.
+
+View Update: The QSqlTableModel detects changes in the DB and signals the QListView.
+
+Rendering: ThumbnailDelegate paints the new thumbnails in the grid.
+
+**Technology Stack**
+
+Language: C++23
+
+Framework: Qt 6.9 (Core, Gui, Widgets, Sql, Network, Concurrent, WebEngineWidgets)
+
+Metadata Library: Exiv2
+
+Database: SQLite (via QtSql)
+
+Build System: CMake
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 # Authors and License
 
-## License
+**License**
+Distributed under the MIT License. See LICENSE for more information.
 
-**MIT License**
+Copyright (c) 2025 ZHENG Robert
 
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+**Authors**
 
-Copyright (c) 2024 ZHENG Robert
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-## Authors
-
-- [![Zheng Robert](https://img.shields.io/badge/Github-Zheng_Robert-black?logo=github)](https://www.github.com/Zheng-Bote)
-
-### Code Contributors
-
-![Contributors](https://img.shields.io/github/contributors/Zheng-Bote/repo-template?color=dark-green)
-
-[![Zheng Robert](https://img.shields.io/badge/Github-Zheng_Robert-black?logo=github)](https://www.github.com/Zheng-Bote)
+ZHENG Robert - Core Development - Github Profile
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-**Github structure**
-
-<!-- readme-tree start -->
-```
-.
-├── .github
-│   ├── actions
-│   │   └── doctoc
-│   │       ├── README.md
-│   │       ├── action.yml
-│   │       └── dist
-│   │           ├── index.js
-│   │           ├── index.js.map
-│   │           ├── licenses.txt
-│   │           └── sourcemap-register.js
-│   └── workflows
-│       ├── ghp-call_Readme.yml
-│       ├── ghp-create_doctoc.yml
-│       ├── ghp-markdown_index.yml
-│       ├── repo-actions_docu.yml
-│       ├── repo-call_Readme.yml
-│       ├── repo-create_doctoc.yml_
-│       ├── repo-create_doctoc_md.yml
-│       └── repo-create_tree_readme.yml
-├── .gitignore
-├── CMakeLists.txt
-├── LICENSE
-├── README.md
-├── configure
-│   ├── CMakeLists.txt
-│   └── rz_config.hpp.in
-├── docs
-│   ├── GeoCoding.md
-│   ├── features.md
-│   ├── img
-│   │   ├── 00_en.png
-│   │   ├── 01_en.png
-│   │   ├── album-context_en_01.png
-│   │   ├── album-export_en_01.png
-│   │   ├── album-i18n_en_01.png
-│   │   ├── album-info_en_01.png
-│   │   ├── album-metadata_en_01.png
-│   │   ├── album-pictures_en_01.png
-│   │   ├── album_show_gps.png
-│   │   ├── album_show_owner.png
-│   │   ├── details_rotate_en.png
-│   │   ├── details_webp_en.png
-│   │   ├── exif_en.png
-│   │   ├── exif_en_2.png
-│   │   ├── exif_meta_edit.png
-│   │   ├── import.png
-│   │   ├── iptc_en_1.png
-│   │   ├── rotate_en.png
-│   │   ├── webp_en.png
-│   │   └── xmp_en_1.png
-│   └── sbom_v0.23.0.json
-├── i18n
-│   ├── de.png
-│   ├── en.png
-│   ├── gallery_de.ts
-│   └── gallery_en.ts
-├── include
-│   ├── DatabaseManager.hpp
-│   ├── DefaultMetaWidget.hpp
-│   ├── ImageIndexer.hpp
-│   ├── MainWindow copy.hpp
-│   ├── MainWindow.hpp
-│   ├── ThumbnailDelegate.hpp
-│   ├── picture_widget.h
-│   ├── rz_config.h
-│   ├── rz_config.hpp
-│   ├── rz_hwinfo.h
-│   ├── rz_metadata.hpp
-│   └── rz_photo.hpp
-├── resources
-│   └── img
-│       ├── icons8-add-file-50.png
-│       ├── icons8-arrow-pointing-left-50.png
-│       ├── icons8-ausgang-48.png
-│       ├── icons8-available-updates-50.png
-│       ├── icons8-delete-file-50.png
-│       ├── icons8-delete-folder-50.png
-│       ├── icons8-delete-list-50.png
-│       ├── icons8-edit-file-50.png
-│       ├── icons8-file-elements-50.png
-│       ├── icons8-file-submodule-50.png
-│       ├── icons8-image-file-50.png
-│       ├── icons8-image-file-add-50.png
-│       ├── icons8-image-file-remove-50.png
-│       ├── icons8-images-folder-50.png
-│       ├── icons8-info-48.png
-│       ├── icons8-opened-folder-50.png
-│       ├── icons8-page-orientation-50.png
-│       ├── icons8-regular-document-50.png
-│       ├── icons8-rotate-left-50.png
-│       ├── icons8-rotate-right-50.png
-│       ├── icons8-security-document-50.png
-│       ├── icons8-send-file-50.png
-│       ├── icons8-symlink-file-50.png
-│       ├── icons8-trash-can-50.png
-│       ├── icons8-view-50.png
-│       ├── qt_desktop-gallery.jpg
-│       ├── qt_desktop-gallery.png
-│       ├── qt_desktop-gallery_32x31.png
-│       ├── reduced_copy.png
-│       └── translate.png
-├── resources.qrc
-├── src
-│   ├── DatabaseManager.cpp
-│   ├── DefaultMetaWidget.cpp
-│   ├── DefaultMetaWidget.ui
-│   ├── ImageIndexer.cpp
-│   ├── MainWindow copy.cpp
-│   ├── MainWindow.cpp
-│   ├── MainWindow.ui
-│   ├── ThumbnailDelegate.cpp
-│   ├── main.cpp
-│   ├── picture_widget.cpp
-│   ├── picture_widget.ui
-│   ├── rz_hwinfo.cpp
-│   └── rz_photo.cpp
-└── tree.bak
-
-14 directories, 104 files
-```
-<!-- readme-tree end -->
-
-<hr>
-
-:vulcan_salute: <p align="right">(<a href="#top">back to top</a>)</p>

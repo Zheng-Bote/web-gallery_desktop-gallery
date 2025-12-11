@@ -14,17 +14,33 @@ namespace Ui {
 class PictureWidget;
 }
 
+/**
+ * @class PictureWidget
+ * @brief Window for viewing and editing details of a single image.
+ *
+ * Provides functionalities to view image content, edit detailed metadata
+ * (EXIF/IPTC/XMP), view location on a map, and perform single-image operations.
+ */
 class PictureWidget : public QWidget {
   Q_OBJECT
 
 public:
+  /**
+   * @brief Constructor.
+   * @param parent The parent widget.
+   */
   explicit PictureWidget(QWidget *parent = nullptr);
   ~PictureWidget();
 
+  /**
+   * @brief Set the image to display.
+   * @param pathToFile Absolute path to the image file.
+   */
   void setImage(QString pathToFile);
 
-  // NEU: Signal, wenn sich das Bild geändert hat
+  // NEW: Signal when the image has changed
 signals:
+  /** @brief Signal emitted when the image data is modified. */
   void imageChanged(const QString &path);
 
 private slots:

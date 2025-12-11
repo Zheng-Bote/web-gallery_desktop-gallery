@@ -1,6 +1,11 @@
+/**
+ * @file ImageIndexer.cpp
+ * @author ZHENG Robert
+ * @brief Implementation of the ImageIndexer class.
+ */
 #include "ImageIndexer.hpp"
 #include "DatabaseManager.hpp"
-#include "rz_photo.hpp" // WICHTIG: Hat gefehlt!
+#include "rz_photo.hpp" // IMPORTANT: Was missing!
 
 #include <QDebug>
 #include <QDir>
@@ -15,7 +20,7 @@ ImageIndexer::ImageIndexer(const QString &folderPath)
     : m_folderPath(folderPath) {}
 
 void ImageIndexer::run() {
-  qDebug() << "[Indexer] Starte Thread für:" << m_folderPath;
+  qDebug() << "[Indexer] Starting thread for:" << m_folderPath;
 
   QString connectionName =
       QString::number((quint64)QThread::currentThread(), 16);
@@ -25,7 +30,7 @@ void ImageIndexer::run() {
     db.setDatabaseName(DatabaseManager::instance().getDatabasePath());
 
     if (!db.open()) {
-      qCritical() << "[Indexer] CRITICAL: Kann DB nicht öffnen!"
+      qCritical() << "[Indexer] CRITICAL: Cannot open DB!"
                   << db.lastError().text();
       return;
     }
@@ -36,20 +41,19 @@ void ImageIndexer::run() {
 
     db.transaction();
 
-    // Query erweitert um Metadaten-Spalten (9 Parameter)
+    // Query extended with metadata columns (9 parameters)
     QSqlQuery query(db);
     query.prepare("INSERT OR IGNORE INTO images "
                   "(path, filename, folder_path, file_size, exif_datetime, "
                   "exif_make, exif_model, copyright, gps_decimal) "
                   "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    // Filter: Case-Insensitive ist hier nicht möglich im Iterator-Konstruktor
-    // unter Linux, daher filtern wir "alle Dateien" manuell in der Schleife
-    // (siehe unten) oder nehmen Standard-Extensions. Da rz_photo.cpp jetzt eine
-    // robuste Filter-Methode hat, nutzen wir hier einen breiten Filter oder
-    // verlassen uns darauf, dass wir später keine 'falschen' Dateien
-    // indizieren. Für Performance im Indexer nutzen wir erst mal
-    // Standard-Filter:
+    // Filter: Case-Insensitive is not possible in the Iterator constructor here
+    // under Linux, so we filter "all files" manually in the loop
+    // (see below) or use standard extensions. Since rz_photo.cpp now has a
+    // robust filter method, we use a broad filter here or rely on the fact that
+    // we don't index 'wrong' files later. For performance in the Indexer we use
+    // standard filters for now:
     QStringList filters;
     filters << "*.jpg" << "*.jpeg" << "*.png" << "*.webp" << "*.tiff"
             << "*.bmp";
@@ -64,25 +68,25 @@ void ImageIndexer::run() {
 
     while (it.hasNext()) {
       if (QThread::currentThread()->isInterruptionRequested()) {
-        qDebug() << "[Indexer] Abbruch angefordert.";
+        qDebug() << "[Indexer] Abort requested.";
         break;
       }
 
       it.next();
       QFileInfo fi = it.fileInfo();
 
-      // Pfad normalisieren
+      // Normalize path
       QString absPath = QDir::cleanPath(fi.absoluteFilePath());
       QString folderPath = QDir::cleanPath(fi.absolutePath());
 
-      // --- Metadaten lesen ---
+      // --- Read Metadata ---
       Photo p(absPath);
       QString copyright = p.getCopyright();
       QString gps = p.getGpsDecimalString();
-      QString date = ""; // Datum lassen wir erst mal leer für Speed, oder:
+      QString date = ""; // Leave date empty for speed for now, or:
                          // p.getDateTime()...
 
-      // Bindings (Reihenfolge beachten!)
+      // Bindings (Observe order!)
       query.addBindValue(absPath);       // 1. path
       query.addBindValue(fi.fileName()); // 2. filename
       query.addBindValue(folderPath);    // 3. folder_path
@@ -98,12 +102,12 @@ void ImageIndexer::run() {
         if (errorCount == 1) {
           qCritical() << "[Indexer] SQL INSERT ERROR:"
                       << query.lastError().text();
-          // KORREKTUR: absPath statt absFilePath verwenden
-          qCritical() << "[Indexer] Bei Datei:" << absPath;
+          // CORRECTION: Use absPath instead of absFilePath
+          qCritical() << "[Indexer] At file:" << absPath;
         }
       }
 
-      // Batch Update für GUI (nicht zu oft)
+      // Batch Update for GUI (not too often)
       if (++count % 500 == 0) {
         emit progress(count);
       }
@@ -112,7 +116,7 @@ void ImageIndexer::run() {
     if (!db.commit()) {
       qCritical() << "[Indexer] COMMIT FAILED:" << db.lastError().text();
     } else {
-      qDebug() << "[Indexer] Commit erfolgreich. Anzahl Dateien:" << count;
+      qDebug() << "[Indexer] Commit successful. Number of files:" << count;
     }
 
     db.close();

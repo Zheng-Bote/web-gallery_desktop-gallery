@@ -1,3 +1,8 @@
+/**
+ * @file ThumbnailDelegate.cpp
+ * @author ZHENG Robert
+ * @brief Implementation of the ThumbnailDelegate class.
+ */
 #include "ThumbnailDelegate.hpp"
 #include <QAbstractItemModel>
 #include <QApplication>
@@ -12,7 +17,7 @@
 
 ThumbnailDelegate::ThumbnailDelegate(QObject *parent)
     : QStyledItemDelegate(parent) {
-  // Cache auf ca. 300 MB erhöhen
+  // Increase cache to approx. 300 MB
   QPixmapCache::setCacheLimit(300 * 1024);
 }
 
@@ -58,7 +63,7 @@ void ThumbnailDelegate::paint(QPainter *painter,
     f.setPointSize(8);
     painter->setFont(f);
     painter->drawText(option.rect.adjusted(0, -20, 0, 0), Qt::AlignCenter,
-                      "Lade...");
+                      "Loading...");
 
     QWidget *viewport = const_cast<QWidget *>(option.widget);
 
@@ -105,7 +110,7 @@ void ThumbnailDelegate::paint(QPainter *painter,
   overlayFont.setBold(true);
   painter->setFont(overlayFont);
 
-  // Copyright (Rot) - Mit smarter Anzeige
+  // Copyright (Red) - With smart display
   if (m_showCopyright) {
     QModelIndex idx = index.model()->index(index.row(), COL_COPYRIGHT);
     QString cp = idx.data().toString();
@@ -115,9 +120,8 @@ void ThumbnailDelegate::paint(QPainter *painter,
       rect.setBottom(textY);
       rect.setTop(textY - 15);
 
-      // LOGIK FIX: Nur "© " hinzufügen, wenn es nicht schon da ist.
-      // Erlaubt dem User, "© Name", "Copyright Name" oder nur "Name" zu
-      // verwenden.
+      // LOGIC FIX: Only add "© " if it's not already there.
+      // Allows user to use "© Name", "Copyright Name" or just "Name".
       QString displayText = cp;
       if (!displayText.startsWith(QChar(0x00A9)) && // © Symbol
           !displayText.startsWith("(c)", Qt::CaseInsensitive) &&
@@ -130,7 +134,7 @@ void ThumbnailDelegate::paint(QPainter *painter,
     }
   }
 
-  // GPS (Dunkelgrün)
+  // GPS (DarkGreen)
   if (m_showGps) {
     QModelIndex idx = index.model()->index(index.row(), COL_GPS);
     QString gps = idx.data().toString();

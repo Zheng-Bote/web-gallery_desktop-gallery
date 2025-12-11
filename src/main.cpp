@@ -1,7 +1,7 @@
 /**
  * @file main.cpp
  * @author ZHENG Robert
- * @brief Entry point
+ * @brief Entry point of the Desktop-Gallery application.
  */
 #include <QApplication>
 #include <QDebug>
@@ -9,9 +9,9 @@
 #include <QTranslator>
 
 #include "MainWindow.hpp"
-#include "rz_config.hpp" // Falls du Version/Name dort definiert hast
+#include "rz_config.hpp" // If version/name is defined there
 
-// Fallback, falls rz_config.hpp fehlt
+// Fallback if rz_config.hpp is missing
 #ifndef PROJECT_NAME
 #define PROJECT_NAME "Desktop-Gallery"
 #endif
@@ -24,34 +24,34 @@
 
 int main(int argc, char *argv[]) {
 
-  // FIX: Hardware-Beschleunigung für WebEngine deaktivieren, um Crashs (GBM is
-  // not supported with the current configuration.) zu vermeiden. Das zwingt
-  // Chromium in den Software-Rendering-Modus.
+  // FIX: Disable hardware acceleration for WebEngine to avoid crashes
+  // (GBM is not supported with the current configuration).
+  // This forces Chromium into software rendering mode.
   qputenv("QTWEBENGINE_CHROMIUM_FLAGS", "--disable-gpu");
-  // if it still chrashes with your graphic card, here the hardcore version:
+  // if it still crashes with your graphic card, here the hardcore version:
   // qputenv("QT_XCB_GL_INTEGRATION", "none");
 
   QApplication a(argc, argv);
 
-  // WICHTIG: Metadaten setzen, BEVOR irgendwelche Pfade (QStandardPaths)
-  // abgerufen werden! DatabaseManager nutzt dies für den Cache-Pfad.
+  // IMPORTANT: Set metadata BEFORE accessing any paths (QStandardPaths)!
+  // DatabaseManager uses this for the cache path.
   QCoreApplication::setApplicationName(PROJECT_NAME);
   QCoreApplication::setApplicationVersion(PROJECT_VERSION);
   QCoreApplication::setOrganizationName(PROJECT_ORGANIZATION_NAME);
   // QCoreApplication::setOrganizationDomain("hase-zheng.net");
 
-  // Icon setzen
+  // Set Icon
   QApplication::setWindowIcon(
       QIcon(":/resources/img/qt_desktop-gallery_32x31.png"));
 
   MainWindow w;
 
-  /* wir nutzen die vom Anwender gewählte Sprache
+  /* We use the language selected by the user
   // Sprache laden (Systemsprache erkennen)
   QString locale = QLocale::system().name(); // z.B. "de_DE"
   locale.truncate(locale.lastIndexOf('_'));  // z.B. "de"
 
-  // Initiales Laden der Sprache
+  // Initial load of the language
   w.loadLanguage(locale);
   */
 

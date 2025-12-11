@@ -26,9 +26,16 @@ struct ImageConvertStruct {
   QList<int> webpSizes = {480, 680, 800, 1024, 1280};
 };
 
+/**
+ * @class Photo
+ * @brief Main class for image manipulation and metadata handling.
+ *
+ * Provides an interface to read/write EXIF/IPTC/XMP metadata using libexiv2,
+ * as well as utilities for image conversion (WebP), rotation, and renaming.
+ */
 class Photo {
 public:
-  // --- ZENTRALE DEFINITIONEN ---
+  // --- CENTRAL DEFINITIONS ---
   inline static const QStringList allSupportedTypes = {
       "jpg", "jpeg", "png", "webp", "tiff", "tif", "bmp"};
 
@@ -52,7 +59,7 @@ public:
   bool writeExif(const QString &key, const QString &value);
   bool writeIptc(const QString &key, const QString &value);
 
-  // NEU: Bulk Write Support
+  // NEW: Bulk Write Support
   bool writeAllMetadata(const RzMetadata::DefaultMetaStruct &metaData);
   QString getRawTagValue(const QString &key);
 
@@ -91,7 +98,7 @@ public:
   QString getSuffix() const { return imgStruct.fileSuffix; }
   QString getImgNewTimestampName() const;
 
-  // --- SUPPORT CHECKS (JETZT PUBLIC) ---
+  // --- SUPPORT CHECKS (NOW PUBLIC) ---
   bool isValidImageType();
   bool hasMetadataSupport();
 
@@ -109,6 +116,6 @@ private:
   bool renameToTimestamp_bool{false};
 
   bool createWebpPath();
-  // Ermittelt Zeitstempel (aus Exif oder Datei) ohne umzubenennen
+  // Determines timestamp (from Exif or file) without renaming
   QString determineTimestamp();
 };

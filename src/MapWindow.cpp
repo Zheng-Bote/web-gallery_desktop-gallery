@@ -1,3 +1,8 @@
+/**
+ * @file MapWindow.cpp
+ * @author ZHENG Robert
+ * @brief Implementation of the MapWindow class.
+ */
 #include "MapWindow.hpp"
 #include "rz_photo.hpp"
 
@@ -28,30 +33,30 @@ void MapWindow::showImages(const QList<QString> &filePaths) {
 }
 
 QString MapWindow::generateHtml(const QList<QString> &filePaths) {
-  // 1. Daten sammeln (Lat, Lon, Name)
+  // 1. Collect Data (Lat, Lon, Name)
   QJsonArray markers;
 
   for (const QString &path : filePaths) {
     Photo p(path);
     QPointF gps =
-        p.getGpsLatLon(); // X=Lat, Y=Lon (laut deiner Implementierung)
+        p.getGpsLatLon(); // X=Lat, Y=Lon (according to your implementation)
 
-    // Filter: Nur gültige Koordinaten
+    // Filter: Only valid coordinates
     if (qAbs(gps.x()) > 0.0001 || qAbs(gps.y()) > 0.0001) {
       QJsonObject m;
       m["lat"] = gps.x();
       m["lng"] = gps.y();
       m["title"] = QFileInfo(path).fileName();
-      // Optional: Mehr Infos ins Popup (z.B. Thumbnail Pfad, aber local file
-      // access im Browser ist tricky)
+      // Optional: Add more infos to Popup (e.g. Thumbnail Path, but local file
+      // access in browser is tricky)
       markers.append(m);
     }
   }
 
   QString jsonString = QJsonDocument(markers).toJson(QJsonDocument::Compact);
 
-  // 2. HTML Template mit Leaflet.js
-  // Wir nutzen CDN Links für Leaflet. Internetverbindung erforderlich.
+  // 2. HTML Template with Leaflet.js
+  // We use CDN Links for Leaflet. Internet connection required.
   QString html = R"(
     <!DOCTYPE html>
     <html>
@@ -67,7 +72,7 @@ QString MapWindow::generateHtml(const QList<QString> &filePaths) {
     <body>
         <div id="map"></div>
         <script>
-            // Karte initialisieren
+            // Initialize Map
             var map = L.map('map').setView([0, 0], 2);
 
             // OpenStreetMap Layer
@@ -75,7 +80,7 @@ QString MapWindow::generateHtml(const QList<QString> &filePaths) {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-            // Daten aus C++
+            // Data from C++
             var data = )" +
                  jsonString + R"(;
             
@@ -91,7 +96,7 @@ QString MapWindow::generateHtml(const QList<QString> &filePaths) {
                 group.addTo(map);
                 map.fitBounds(group.getBounds().pad(0.1));
             } else {
-                // Default View (Europa), falls leer
+                // Default View (Europe), if empty
                 map.setView([51.16, 10.45], 5);
             }
         </script>

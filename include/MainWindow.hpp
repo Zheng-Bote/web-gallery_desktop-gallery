@@ -4,7 +4,7 @@
 #include "MapWindow.hpp"
 #include "UploadManager.hpp"
 
-#include <QEvent> // Wichtig für changeEvent
+#include <QEvent> // Important for changeEvent
 #include <QFutureWatcher>
 #include <QLabel>
 #include <QListView>
@@ -22,23 +22,44 @@
 
 #include "rz_metadata.hpp"
 
+/**
+ * @class MainWindow
+ * @brief The main application window.
+ *
+ * Coordinates the folder tree, image gallery, metadata operations, and
+ * settings. Acts as the central controller for the application.
+ */
 class MainWindow : public QMainWindow {
   Q_OBJECT
 
 public:
+  /**
+   * @brief Constructor.
+   * @param parent The parent widget.
+   */
   explicit MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
+
+  /**
+   * @brief Load and apply a specific language.
+   * @param lang The language code (e.g., "en", "de").
+   */
   void loadLanguage(const QString &lang);
 
 protected:
-  // NEU: Reagiert auf Sprachwechsel-Events
+  /**
+   * @brief Event handler for state changes.
+   * @param event The event object.
+   *
+   * NEW: Reacts to language change events.
+   */
   void changeEvent(QEvent *event) override;
 
 private slots:
   void openSrcFolder();
   void openSrcFolderRekursive();
 
-  void showAboutDialog(); // NEU
+  void showAboutDialog(); // NEW
 
   void onFolderClicked(const QModelIndex &index);
   void onGalleryDoubleClicked(const QModelIndex &index);
@@ -77,7 +98,13 @@ private:
   void setupUi();
   void setupDatabase();
   void createMenu();
-  void retranslateUi(); // NEU: Setzt Texte neu
+
+  /**
+   * @brief Retranslate the UI elements.
+   *
+   * NEW: Resets texts after a language change.
+   */
+  void retranslateUi();
 
   void addFolderToTree(const QString &path, bool recursive);
   void addSubfoldersRecursively(const QString &path, QStandardItem *parentItem);
@@ -99,37 +126,37 @@ private:
   QTranslator m_translatorQt;
   QString m_currLang;
 
-  // Helper um den nächsten Request in der Queue zu starten
+  // Helper to start the next request in the queue
   void processNextGeoLookup();
 
-  // --- NETZWERK & SETTINGS ---
+  // --- NETWORK & SETTINGS ---
   QSettings *m_settings;
   QNetworkAccessManager *m_netManager;
 
-  // Warteschlange: Speichert Pfade, die noch verarbeitet werden müssen
+  // Queue: Stores paths that still need to be processed
   QQueue<QString> m_geoLookupQueue;
 
-  // Fortschrittsanzeige für den Batch-Vorgang
+  // Progress indicator for the batch process
   int m_geoTotalCount{0};
 
-  // --- GUI MEMBERS (NEU: Müssen Member sein für retranslateUi) ---
+  // --- GUI MEMBERS (NEW: Must be members for retranslateUi) ---
 
-  // Menüs
+  // Menus
   QMenu *fileMenu;
-  QMenu *langMenu; // NEU
+  QMenu *langMenu; // NEW
   QMenu *settingsMenu;
   QMenu *metaMenu;
   QMenu *picMenu;
   QMenu *viewMenu;
   QMenu *webpMenu;
-  QMenu *helpMenu; // NEU
+  QMenu *helpMenu; // NEW
 
   // File Actions
   QAction *openAct;
   QAction *openRecAct;
   QAction *exitAct;
-  QAction *actLangEn; // NEU
-  QAction *actLangDe; // NEU
+  QAction *actLangEn; // NEW
+  QAction *actLangDe; // NEW
 
   // Settings Actions
   QAction *geoUserAct;
@@ -158,7 +185,7 @@ private:
   QAction *actExportWebp;
 
   // Help Actions
-  QAction *aboutAct; // NEU
+  QAction *aboutAct; // NEW
 
   // Uploads
   UploadManager *m_uploader;

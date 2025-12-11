@@ -7,13 +7,24 @@
 #include <QSettings>
 #include <QVBoxLayout>
 
+/**
+ * @class LoginDialog
+ * @brief A dialog for user authentication and upload configuration.
+ *
+ * Allows the user to enter their credentials and target path for uploading
+ * images to the remote web gallery server.
+ */
 class LoginDialog : public QDialog {
   Q_OBJECT
 public:
+  /**
+   * @brief Constructor.
+   * @param parent The parent widget.
+   */
   explicit LoginDialog(QWidget *parent = nullptr) : QDialog(parent) {
     setWindowTitle(tr("Server Login & Options"));
 
-    // Lesen: Lokale Instanz für den Start
+    // Read: Local instance for startup
     QSettings settings(QSettings::IniFormat, QSettings::UserScope,
                        "Desktop-Gallery", "upload");
     QString lastUser = settings.value("lastUser", "admin").toString();
@@ -33,10 +44,10 @@ public:
 
     QPushButton *loginBtn = new QPushButton(tr("Login & Upload"), this);
 
-    // KORREKTUR: 'settings' aus Capture-Liste entfernt ([this])
+    // CORRECTION: Removed 'settings' from capture list ([this])
     connect(loginBtn, &QPushButton::clicked, this, [this]() {
-      // Speichern: Wir erstellen hier eine NEUE Instanz.
-      // QSettings ist optimiert, das ist kein Performance-Problem.
+      // Save: We create a NEW instance here.
+      // QSettings is optimized, so this is not a performance issue.
       QSettings s(QSettings::IniFormat, QSettings::UserScope, "Desktop-Gallery",
                   "upload");
       s.setValue("lastUser", userEdit->text());
@@ -49,8 +60,22 @@ public:
     layout->addWidget(loginBtn);
   }
 
+  /**
+   * @brief Get the entered username.
+   * @return The username string.
+   */
   QString getUser() const { return userEdit->text(); }
+
+  /**
+   * @brief Get the entered password.
+   * @return The password string.
+   */
   QString getPass() const { return passEdit->text(); }
+
+  /**
+   * @brief Get the target upload path.
+   * @return The path string.
+   */
   QString getPath() const { return pathEdit->text(); }
 
 private:
