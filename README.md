@@ -300,9 +300,12 @@ SOFTWARE.
 │   ├── DatabaseManager.hpp
 │   ├── DefaultMetaWidget.hpp
 │   ├── ImageIndexer.hpp
+│   ├── LoginDialog.hpp
 │   ├── MainWindow copy.hpp
 │   ├── MainWindow.hpp
+│   ├── MapWindow.hpp
 │   ├── ThumbnailDelegate.hpp
+│   ├── UploadManager.hpp
 │   ├── picture_widget.h
 │   ├── rz_config.h
 │   ├── rz_config.hpp
@@ -350,7 +353,9 @@ SOFTWARE.
 │   ├── MainWindow copy.cpp
 │   ├── MainWindow.cpp
 │   ├── MainWindow.ui
+│   ├── MapWindow.cpp
 │   ├── ThumbnailDelegate.cpp
+│   ├── UploadManager.cpp
 │   ├── main.cpp
 │   ├── picture_widget.cpp
 │   ├── picture_widget.ui
@@ -358,7 +363,7 @@ SOFTWARE.
 │   └── rz_photo.cpp
 └── tree.bak
 
-14 directories, 104 files
+14 directories, 109 files
 ```
 <!-- readme-tree end -->
 
