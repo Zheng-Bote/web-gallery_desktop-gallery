@@ -20,10 +20,10 @@
 
 - [Description](#description)
   - [Key Features](#key-features)
-    - [🚀 Performance \& Core](#-performance--core)
+    - [🚀 Performance & Core](#-performance--core)
     - [🌍 Geo-Intelligence](#-geo-intelligence)
     - [📝 Metadata Management](#-metadata-management)
-    - [☁️ Export \& Cloud](#️-export--cloud)
+    - [☁️ Export & Cloud](#-export--cloud)
   - [see also](#see-also)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
@@ -35,9 +35,9 @@
       - [Geocode](#geocode)
       - [Visualize](#visualize)
       - [Export/Upload](#exportupload)
-- [Documentation \& Screenshots](#documentation--screenshots)
+- [Documentation & Screenshots](#documentation--screenshots)
   - [Album View](#album-view)
-  - [Metadata Editor \& Sync](#metadata-editor--sync)
+  - [Metadata Editor & Sync](#metadata-editor--sync)
   - [Context Menu](#context-menu)
   - [Map View](#map-view)
   - [WebP Export](#webp-export)
@@ -53,7 +53,7 @@
     - [System Architecture Diagram](#system-architecture-diagram)
       - [Detailed Component Breakdown](#detailed-component-breakdown)
 - [Authors and License](#authors-and-license)
-  - [Code Contributors](#code-contributors)
+    - [Code Contributors](#code-contributors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
   <hr>
@@ -261,6 +261,128 @@ Responsive Picture view with extended editing and export options.
 
 <!-- readme-tree end -->
 
+<!-- readme-tree start -->
+```
+.
+├── .github
+│   ├── actions
+│   │   └── doctoc
+│   │       ├── README.md
+│   │       ├── action.yml
+│   │       └── dist
+│   │           ├── index.js
+│   │           ├── index.js.map
+│   │           ├── licenses.txt
+│   │           └── sourcemap-register.js
+│   └── workflows
+│       ├── ghp-call_Readme.yml
+│       ├── ghp-create_doctoc.yml
+│       ├── ghp-markdown_index.yml
+│       ├── repo-actions_docu.yml
+│       ├── repo-call_Readme.yml
+│       ├── repo-create_doctoc.yml_
+│       ├── repo-create_doctoc_md.yml
+│       └── repo-create_tree_readme.yml
+├── .gitignore
+├── CMakeLists.txt
+├── LICENSE
+├── README.md
+├── build_appimage.sh
+├── configure
+│   ├── CMakeLists.txt
+│   └── rz_config.hpp.in
+├── desktop-gallery.desktop
+├── desktop-gallery.png
+├── docs
+│   ├── img
+│   │   ├── context_menu.png
+│   │   ├── detail_view.png
+│   │   ├── gps_copyright_view.png
+│   │   ├── i18n.png
+│   │   ├── map_view_1.png
+│   │   ├── map_view_2.png
+│   │   ├── metadata.png
+│   │   ├── metadata_2.png
+│   │   ├── rotate_img.png
+│   │   ├── start.png
+│   │   ├── sync_1.png
+│   │   └── webp_export.png
+│   ├── sbom_v0.23.0.json
+│   └── sbom_v1.0.0.json
+├── i18n
+│   ├── de.png
+│   ├── en.png
+│   ├── gallery_de.ts
+│   └── gallery_en.ts
+├── include
+│   ├── DatabaseManager.hpp
+│   ├── DefaultMetaWidget.hpp
+│   ├── ImageIndexer.hpp
+│   ├── LoginDialog.hpp
+│   ├── MainWindow copy.hpp
+│   ├── MainWindow.hpp
+│   ├── MapWindow.hpp
+│   ├── ThumbnailDelegate.hpp
+│   ├── UploadManager.hpp
+│   ├── picture_widget.h
+│   ├── rz_config.h
+│   ├── rz_config.hpp
+│   ├── rz_hwinfo.h
+│   ├── rz_metadata.hpp
+│   └── rz_photo.hpp
+├── resources
+│   └── img
+│       ├── icons8-add-file-50.png
+│       ├── icons8-arrow-pointing-left-50.png
+│       ├── icons8-ausgang-48.png
+│       ├── icons8-available-updates-50.png
+│       ├── icons8-delete-file-50.png
+│       ├── icons8-delete-folder-50.png
+│       ├── icons8-delete-list-50.png
+│       ├── icons8-edit-file-50.png
+│       ├── icons8-file-elements-50.png
+│       ├── icons8-file-submodule-50.png
+│       ├── icons8-image-file-50.png
+│       ├── icons8-image-file-add-50.png
+│       ├── icons8-image-file-remove-50.png
+│       ├── icons8-images-folder-50.png
+│       ├── icons8-info-48.png
+│       ├── icons8-opened-folder-50.png
+│       ├── icons8-page-orientation-50.png
+│       ├── icons8-regular-document-50.png
+│       ├── icons8-rotate-left-50.png
+│       ├── icons8-rotate-right-50.png
+│       ├── icons8-security-document-50.png
+│       ├── icons8-send-file-50.png
+│       ├── icons8-symlink-file-50.png
+│       ├── icons8-trash-can-50.png
+│       ├── icons8-view-50.png
+│       ├── qt_desktop-gallery.jpg
+│       ├── qt_desktop-gallery.png
+│       ├── qt_desktop-gallery_32x31.png
+│       ├── reduced_copy.png
+│       └── translate.png
+├── resources.qrc
+├── src
+│   ├── DatabaseManager.cpp
+│   ├── DefaultMetaWidget.cpp
+│   ├── DefaultMetaWidget.ui
+│   ├── ImageIndexer.cpp
+│   ├── MainWindow.cpp
+│   ├── MainWindow.ui
+│   ├── MapWindow.cpp
+│   ├── ThumbnailDelegate.cpp
+│   ├── UploadManager.cpp
+│   ├── main.cpp
+│   ├── picture_widget.cpp
+│   ├── picture_widget.ui
+│   ├── rz_hwinfo.cpp
+│   └── rz_photo.cpp
+└── tree.bak
+
+14 directories, 102 files
+```
+<!-- readme-tree end -->
 <!-- readme-tree start -->
 
 <p align="right">(<a href="#top">back to top</a>)</p>
