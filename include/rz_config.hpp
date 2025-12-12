@@ -13,15 +13,15 @@
 #include <cstdint>
 #include <string>
 
-static const std::string PROJECT_NAME = "web-gallery_desktop-gallery";
+static const std::string PROJECT_NAME = "desktop-gallery";
 static const std::string PROG_LONGNAME = "Desktop-Gallery";
 static const std::string PROJECT_DESCRIPTION = "Desktop-Gallery for Linux, MacOS and Windows. Part of the Crow Web-Gallery project.";
 
-static const std::string PROJECT_EXECUTABLE = "web-gallery_desktop-gallery";
+static const std::string PROJECT_EXECUTABLE = "desktop-gallery";
 
-static const std::string PROJECT_VERSION = "0.26.0";
-static const std::int32_t PROJECT_VERSION_MAJOR{0};
-static const std::int32_t PROJECT_VERSION_MINOR{26};
+static const std::string PROJECT_VERSION = "1.0.0";
+static const std::int32_t PROJECT_VERSION_MAJOR{1};
+static const std::int32_t PROJECT_VERSION_MINOR{0};
 static const std::int32_t PROJECT_VERSION_PATCH{0};
 
 static const std::string PROJECT_HOMEPAGE_URL = "https://github.com/Zheng-Bote/web-gallery_desktop-gallery";

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Desktop-Gallery
+Comment=High Performance Photo Gallery Server
+Exec=desktop-gallery
+Icon=desktop-gallery
+Categories=Graphics;Photography;Qt;
+Terminal=false

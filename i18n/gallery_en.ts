@@ -4,670 +4,874 @@
 <context>
     <name>DefaultMeta</name>
     <message>
-        <location filename="../defaultmeta_widget.ui" line="17"/>
+        <location filename="../src/DefaultMetaWidget.ui" line="17"/>
         <source>Default Metadata</source>
         <translation>Default Metadata</translation>
     </message>
     <message>
-        <location filename="../defaultmeta_widget.ui" line="56"/>
+        <location filename="../src/DefaultMetaWidget.ui" line="56"/>
         <source>close</source>
-        <translatorcomment>close</translatorcomment>
-        <translation>close</translation>
+        <translation>Close</translation>
     </message>
     <message>
-        <location filename="../defaultmeta_widget.ui" line="88"/>
+        <location filename="../src/DefaultMetaWidget.ui" line="88"/>
         <source>save</source>
-        <translation>save</translation>
+        <translation>Save</translation>
     </message>
     <message>
-        <location filename="../defaultmeta_widget.ui" line="110"/>
+        <location filename="../src/DefaultMetaWidget.ui" line="110"/>
         <source>only Metadata with values are stored.</source>
-        <translation>only Metadata with values are stored.</translation>
+        <translation>Only metadata with values is stored.</translation>
     </message>
+</context>
+<context>
+    <name>DefaultMetaWidget</name>
     <message>
-        <location filename="../defaultmeta_widget.cpp" line="46"/>
-        <source>Confirmation</source>
-        <translation>Confirmation</translation>
-    </message>
-    <message>
-        <location filename="../defaultmeta_widget.cpp" line="47"/>
-        <source>Are you sure you want to exit without saving data?</source>
-        <translation>Are you sure you want to exit without saving data?</translation>
-    </message>
-    <message>
-        <location filename="../defaultmeta_widget.cpp" line="78"/>
-        <location filename="../defaultmeta_widget.cpp" line="145"/>
+        <location filename="../src/DefaultMetaWidget.cpp" line="74"/>
         <source>Key</source>
         <translation>Key</translation>
     </message>
     <message>
-        <location filename="../defaultmeta_widget.cpp" line="85"/>
-        <location filename="../defaultmeta_widget.cpp" line="152"/>
+        <location filename="../src/DefaultMetaWidget.cpp" line="74"/>
         <source>Value</source>
         <translation>Value</translation>
     </message>
     <message>
-        <location filename="../defaultmeta_widget.cpp" line="92"/>
-        <location filename="../defaultmeta_widget.cpp" line="159"/>
+        <location filename="../src/DefaultMetaWidget.cpp" line="74"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../defaultmeta_widget.cpp" line="267"/>
-        <location filename="../defaultmeta_widget.cpp" line="290"/>
+        <location filename="../src/DefaultMetaWidget.cpp" line="164"/>
         <source>Edit Metadata</source>
         <translation>Edit Metadata</translation>
     </message>
     <message>
-        <location filename="../defaultmeta_widget.cpp" line="268"/>
-        <location filename="../defaultmeta_widget.cpp" line="291"/>
-        <source>Please enter the new value for</source>
-        <translation>Please enter the new value for</translation>
+        <location filename="../src/DefaultMetaWidget.cpp" line="165"/>
+        <source>Value for</source>
+        <translation>Value for</translation>
+    </message>
+    <message>
+        <location filename="../src/DefaultMetaWidget.cpp" line="284"/>
+        <source>Confirmation</source>
+        <translation>Confirmation</translation>
+    </message>
+    <message>
+        <location filename="../src/DefaultMetaWidget.cpp" line="284"/>
+        <source>Unsaved changes. Save now?</source>
+        <translation>Unsaved changes. Save now?</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../mainwindow.ui" line="74"/>
+        <location filename="../src/MainWindow.ui" line="74"/>
         <source>Album</source>
         <translation>Album</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="78"/>
+        <location filename="../src/MainWindow.ui" line="78"/>
         <source>load Folder</source>
-        <translation>load Folder</translation>
+        <translation>Load Folder</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="111"/>
-        <source>Metadata</source>
-        <translation>Metadata</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="134"/>
-        <source>|</source>
-        <translation>|</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="139"/>
-        <source>Export</source>
-        <translation>Export</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="158"/>
-        <location filename="../mainwindow.ui" line="161"/>
-        <source>load Picture</source>
-        <translation>load Picture</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="166"/>
-        <source>load Folders</source>
-        <translation>load Folder</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="171"/>
-        <source>single Folder</source>
-        <translation>single Folder</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="176"/>
-        <source>rekursive Folders</source>
-        <translation>rekursive Folders</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="231"/>
-        <location filename="../mainwindow.ui" line="285"/>
-        <source>write default GPS Meta to selected Pictures</source>
-        <translation>write default GPS Meta to selected Pictures</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="239"/>
-        <source>check Pictures for Metadata</source>
-        <translation>check Pictures for Metadata</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="247"/>
-        <source>check Pictures for Copyright</source>
-        <translation>check Pictures for Copyright</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="255"/>
-        <source>check Pictures for GPS data </source>
-        <translation>check Pictures for GPS data </translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="260"/>
-        <source>edit default Metadata</source>
-        <translation>edit default Metadata</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="265"/>
-        <source>display Copyright Owner in Albumview</source>
-        <translation>display Copyright Owner in Albumview</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="270"/>
-        <source>display GPS data in Albumview</source>
-        <translation>display GPS data in Albumview</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="290"/>
-        <source>write default Metadata to selected Pictures</source>
-        <translation>write default Metadata to selected Pictures</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="295"/>
-        <source>export selected pictures to all sizes</source>
-        <translation>export selected pictures to all sizes</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="306"/>
-        <source>increase too small WebP pictures</source>
-        <translation>increase too small WebP pictures</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="317"/>
-        <source>overwrite existing WebP</source>
-        <translation>overwrite existing WebP</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="328"/>
-        <source>watermark WebP</source>
-        <translation>watermark WebP</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="333"/>
-        <source>rename selected Pictures to timestamp</source>
-        <translation>rename selected Pictures to timestamp</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="341"/>
-        <source>rename WebP to timestamp</source>
-        <translation>rename WebP to timestamp</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="68"/>
-        <location filename="../mainwindow.cpp" line="102"/>
-        <location filename="../mainwindow.cpp" line="137"/>
-        <source>Open Folder</source>
-        <translation>Open Folder</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="83"/>
-        <location filename="../mainwindow.cpp" line="86"/>
-        <location filename="../mainwindow.cpp" line="89"/>
-        <location filename="../mainwindow.cpp" line="117"/>
-        <location filename="../mainwindow.cpp" line="120"/>
-        <location filename="../mainwindow.cpp" line="123"/>
-        <source>processing</source>
-        <translation>processing</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="84"/>
-        <location filename="../mainwindow.cpp" line="87"/>
-        <location filename="../mainwindow.cpp" line="90"/>
-        <location filename="../mainwindow.cpp" line="118"/>
-        <location filename="../mainwindow.cpp" line="121"/>
-        <location filename="../mainwindow.cpp" line="124"/>
-        <location filename="../mainwindow.cpp" line="644"/>
-        <location filename="../mainwindow.cpp" line="1109"/>
-        <location filename="../mainwindow.cpp" line="1187"/>
-        <source>items</source>
-        <translation>items</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="158"/>
-        <source>Open File</source>
-        <translation>Open File</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="160"/>
-        <source>Image (*.jpg *.jpeg *.png *.bmp *.tiff)</source>
-        <translation>Image (*.jpg *.jpeg *.png *.bmp *.tiff)</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="177"/>
-        <source>Confirmation</source>
-        <translation>Confirmation</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="178"/>
-        <source>Are you sure you want to clear the album?</source>
-        <translation>Are you sure you want to clear the album?</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="212"/>
-        <source>at</source>
-        <translation>at</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="221"/>
-        <location filename="../mainwindow.cpp" line="215"/>
-        <source>About</source>
-        <translation>About</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="90"/>
+        <location filename="../src/MainWindow.ui" line="90"/>
         <source>Pictures</source>
         <translation>Pictures</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="181"/>
-        <location filename="../mainwindow.ui" line="275"/>
-        <source>empty Album</source>
-        <translation>empty Album</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="186"/>
-        <source>show default Exif meta data</source>
-        <translation>show default Exif meta data</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="191"/>
-        <source>clear default Exif meta data</source>
-        <translation>clear default Exif meta data</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="196"/>
-        <source>show default IPTC meta data</source>
-        <translation>show default IPTC meta data</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="201"/>
-        <source>clear default IPTC meta data</source>
-        <translation>clear default IPTC meta data</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="206"/>
-        <source>select all Pictures</source>
-        <translation>select all Pictures</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="216"/>
-        <source>remove selected Pictures from Album</source>
-        <translation>remove selected Pictures from Album</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="104"/>
+        <location filename="../src/MainWindow.ui" line="104"/>
         <source>Info</source>
         <translation>Info</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="211"/>
-        <location filename="../mainwindow.ui" line="280"/>
+        <location filename="../src/MainWindow.ui" line="111"/>
+        <location filename="../src/MainWindow.cpp" line="555"/>
+        <location filename="../src/MainWindow.cpp" line="583"/>
+        <source>Metadata</source>
+        <translation>Metadata</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.ui" line="134"/>
+        <source>|</source>
+        <translation>|</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.ui" line="139"/>
+        <source>Export</source>
+        <translation>Export</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.ui" line="158"/>
+        <location filename="../src/MainWindow.ui" line="161"/>
+        <source>load Picture</source>
+        <translation>Load Picture</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.ui" line="166"/>
+        <source>load Folders</source>
+        <translation>Load Folders</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.ui" line="171"/>
+        <source>single Folder</source>
+        <translation>Single Folder</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.ui" line="176"/>
+        <source>rekursive Folders</source>
+        <translation>Recursive Folders</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.ui" line="181"/>
+        <location filename="../src/MainWindow.ui" line="275"/>
+        <source>empty Album</source>
+        <translation>Empty Album</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.ui" line="186"/>
+        <source>show default Exif meta data</source>
+        <translation>Show Default EXIF Metadata</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.ui" line="191"/>
+        <source>clear default Exif meta data</source>
+        <translation>Clear Default EXIF Metadata</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.ui" line="196"/>
+        <source>show default IPTC meta data</source>
+        <translation>Show Default IPTC Metadata</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.ui" line="201"/>
+        <source>clear default IPTC meta data</source>
+        <translation>Clear Default IPTC Metadata</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.ui" line="206"/>
+        <source>select all Pictures</source>
+        <translation>Select All Pictures</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.ui" line="211"/>
+        <location filename="../src/MainWindow.ui" line="280"/>
         <source>write default Owner to selected Pictures</source>
-        <translation>write default Owner to selected Pictures</translation>
+        <translation>Write Default Owner to Selected Pictures</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="226"/>
+        <location filename="../src/MainWindow.ui" line="216"/>
+        <source>remove selected Pictures from Album</source>
+        <translation>Remove Selected Pictures from Album</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.ui" line="221"/>
+        <location filename="../src/MainWindow.cpp" line="979"/>
+        <source>About</source>
+        <translation>About</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.ui" line="226"/>
         <source>HW info</source>
-        <translation>HW info</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="358"/>
-        <source>is running on the following hardware</source>
-        <translation>is running on the following hardware</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="380"/>
-        <source>Hardware Info</source>
         <translation>Hardware Info</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="718"/>
-        <source>show Picture details</source>
-        <translation>show Picture details</translation>
+        <location filename="../src/MainWindow.ui" line="231"/>
+        <location filename="../src/MainWindow.ui" line="285"/>
+        <source>write default GPS Meta to selected Pictures</source>
+        <translation>Write Default GPS Metadata to Selected Pictures</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="735"/>
-        <source>set this red Exif data as default</source>
-        <translation>set this red Exif data as default</translation>
+        <location filename="../src/MainWindow.ui" line="239"/>
+        <source>check Pictures for Metadata</source>
+        <translation>Check Pictures for Metadata</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="743"/>
-        <source>set this red IPTC data as default</source>
-        <translation>set this red IPTC data as default</translation>
+        <location filename="../src/MainWindow.ui" line="247"/>
+        <source>check Pictures for Copyright</source>
+        <translation>Check Pictures for Copyright</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="767"/>
-        <source>remove this Picture from Album</source>
-        <translation>remove this Picture from Album</translation>
+        <location filename="../src/MainWindow.ui" line="255"/>
+        <source>check Pictures for GPS data </source>
+        <translation>Check Pictures for GPS Data </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="857"/>
-        <source>Exif Meta</source>
-        <translation>Exif Meta</translation>
+        <location filename="../src/MainWindow.ui" line="260"/>
+        <source>edit default Metadata</source>
+        <translation>Edit Default Metadata</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="860"/>
-        <source>No default Exif meta data set.</source>
-        <translation>No default Exif meta data set.</translation>
+        <location filename="../src/MainWindow.ui" line="265"/>
+        <source>display Copyright Owner in Albumview</source>
+        <translation>Display Copyright Owner in Album View</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="496"/>
-        <location filename="../mainwindow.cpp" line="861"/>
-        <location filename="../mainwindow.cpp" line="890"/>
-        <location filename="../mainwindow.cpp" line="1235"/>
-        <source>In Album view, select a picture and open the context menu to define the default meta.</source>
-        <translation>In Album view, select a picture and open the context menu to define the default meta.</translation>
+        <location filename="../src/MainWindow.ui" line="270"/>
+        <source>display GPS data in Albumview</source>
+        <translation>Display GPS Data in Album View</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="206"/>
-        <source>Desktop gallery-app to show/edit Exif/IPTC/XMP and export to WebP</source>
-        <translation>Desktop gallery-app to show/edit Exif/IPTC/XMP and export to WebP</translation>
+        <location filename="../src/MainWindow.ui" line="290"/>
+        <source>write default Metadata to selected Pictures</source>
+        <translation>Write Default Metadata to Selected Pictures</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="437"/>
-        <source>Current Language changed to</source>
-        <translation>Current Language changed to</translation>
+        <location filename="../src/MainWindow.ui" line="295"/>
+        <source>export selected pictures to all sizes</source>
+        <translation>Export Selected Pictures to All Sizes</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="492"/>
-        <source>Default GPS Meta</source>
-        <translation>Default GPS Meta</translation>
+        <location filename="../src/MainWindow.ui" line="306"/>
+        <source>increase too small WebP pictures</source>
+        <translation>Upscale Small WebP Pictures</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="495"/>
-        <source>No default GPS meta data set.</source>
-        <translation>No default GPS meta data set.</translation>
+        <location filename="../src/MainWindow.ui" line="317"/>
+        <source>overwrite existing WebP</source>
+        <translation>Overwrite Existing WebP</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="557"/>
-        <source>Default GPS data written to</source>
-        <translation>Default GPS data written to</translation>
+        <location filename="../src/MainWindow.ui" line="328"/>
+        <source>watermark WebP</source>
+        <translation>Watermark WebP</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="586"/>
-        <source>working on</source>
-        <translation>working on</translation>
+        <location filename="../src/MainWindow.ui" line="333"/>
+        <source>rename selected Pictures to timestamp</source>
+        <translation>Rename Selected Pictures to Timestamp</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="617"/>
-        <source>writing default Metadata finsihed</source>
-        <translation>writing default Metadata finsihed</translation>
+        <location filename="../src/MainWindow.ui" line="341"/>
+        <source>rename WebP to timestamp</source>
+        <translation>Rename WebP to Timestamp</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="726"/>
-        <source>rename Picture to timestamp</source>
-        <translation>rename Picture to timestamp</translation>
+        <location filename="../src/MainWindow copy.cpp" line="88"/>
+        <location filename="../src/MainWindow.cpp" line="395"/>
+        <source>Scanning: </source>
+        <translation>Scanning: </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="751"/>
-        <source>set this Copyright data as default</source>
-        <translation>set this Copyright data as default</translation>
+        <location filename="../src/MainWindow copy.cpp" line="113"/>
+        <source>Ready.</source>
+        <translation>Ready.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="759"/>
-        <source>set this GPS data as default</source>
-        <translation>set this GPS data as default</translation>
+        <location filename="../src/MainWindow.cpp" line="241"/>
+        <location filename="../src/MainWindow.cpp" line="319"/>
+        <source>Show selected on Map...</source>
+        <translation>Show Selected on Map...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="775"/>
-        <source>copy GPS data to clipboard</source>
-        <translation>copy GPS data to clipboard</translation>
+        <location filename="../src/MainWindow.cpp" line="275"/>
+        <source>Upload to Server...</source>
+        <translation>Upload to Server...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="886"/>
-        <source>IPTC Meta</source>
-        <translation>IPTC Meta</translation>
+        <location filename="../src/MainWindow.cpp" line="295"/>
+        <source>Desktop-Gallery</source>
+        <translation>Desktop-Gallery</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="889"/>
-        <source>No default IPTC meta data set.</source>
-        <translation>No default IPTC meta data set.</translation>
+        <location filename="../src/MainWindow.cpp" line="297"/>
+        <source>&amp;File</source>
+        <translation>&amp;File</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="928"/>
-        <source>Copyright Owner</source>
-        <translation>Copyright Owner</translation>
+        <location filename="../src/MainWindow.cpp" line="298"/>
+        <source>Open Folder...</source>
+        <translation>Open Folder...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="940"/>
-        <source>GPS data</source>
-        <translation>GPS data</translation>
+        <location filename="../src/MainWindow.cpp" line="299"/>
+        <source>Open Folder (Recursive)...</source>
+        <translation>Open Folder (Recursive)...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="961"/>
-        <source>Export to WebP</source>
-        <translation>Export to WebP</translation>
+        <location filename="../src/MainWindow.cpp" line="300"/>
+        <source>Exit</source>
+        <translation>Exit</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="964"/>
-        <source>No pictures selected to export.</source>
-        <translation>No pictures selected to export.</translation>
+        <location filename="../src/MainWindow.cpp" line="302"/>
+        <source>&amp;Settings</source>
+        <translation>&amp;Settings</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="965"/>
-        <source>In Album view, select one or more pictures.</source>
-        <translation>In Album view, select one or more pictures.</translation>
+        <location filename="../src/MainWindow.cpp" line="303"/>
+        <source>&amp;Language</source>
+        <translation>&amp;Language</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1020"/>
-        <source>WebP export to subfolder WebP</source>
-        <translation>WebP export to subfolder WebP</translation>
+        <location filename="../src/MainWindow.cpp" line="304"/>
+        <source>Configure GeoNames User...</source>
+        <translation>Configure GeoNames User...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1022"/>
-        <source>successful</source>
-        <translation>successful</translation>
+        <location filename="../src/MainWindow.cpp" line="306"/>
+        <source>&amp;Metadata</source>
+        <translation>&amp;Metadata</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1066"/>
-        <source>Critical</source>
-        <translation>Critical</translation>
+        <location filename="../src/MainWindow.cpp" line="307"/>
+        <source>Edit Default Metadata...</source>
+        <translation>Edit Default Metadata...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1069"/>
-        <source>pictures found</source>
-        <translation>pictures found</translation>
+        <location filename="../src/MainWindow.cpp" line="308"/>
+        <source>Write default Copyright to selected</source>
+        <translation>Write Default Copyright to Selected</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1069"/>
-        <source>but</source>
-        <translation>but</translation>
+        <location filename="../src/MainWindow.cpp" line="309"/>
+        <source>Write default GPS to selected</source>
+        <translation>Write Default GPS to Selected</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1070"/>
-        <source>Album limit are</source>
-        <translation>Album limit are</translation>
+        <location filename="../src/MainWindow.cpp" line="310"/>
+        <source>Write ALL default Metadata to selected</source>
+        <translation>Write ALL Default Metadata to Selected</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1231"/>
-        <source>Default Meta</source>
-        <translation>Default Meta</translation>
+        <location filename="../src/MainWindow.cpp" line="312"/>
+        <source>Address lookup for selected pictures (OpenStreetMap)</source>
+        <translation>Address Lookup for Selected Pictures (OpenStreetMap)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1234"/>
-        <source>No default Owner metadata set.</source>
-        <translation>No default Owner metadata set.</translation>
+        <location filename="../src/MainWindow.cpp" line="314"/>
+        <source>&amp;Pictures</source>
+        <translation>&amp;Pictures</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1292"/>
-        <source>Default Owner written to</source>
-        <translation>Default Owner written to</translation>
+        <location filename="../src/MainWindow.cpp" line="315"/>
+        <source>View Options</source>
+        <translation>View Options</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1352"/>
-        <source>renamed</source>
-        <translation>renamed</translation>
+        <location filename="../src/MainWindow.cpp" line="316"/>
+        <source>Display Copyright Owner</source>
+        <translation>Display Copyright Owner</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1413"/>
-        <source>GPS data copied to clipboard</source>
-        <translation>GPS data copied to clipboard</translation>
+        <location filename="../src/MainWindow.cpp" line="317"/>
+        <source>Display GPS Data</source>
+        <translation>Display GPS Data</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="558"/>
-        <location filename="../mainwindow.cpp" line="1021"/>
-        <location filename="../mainwindow.cpp" line="1071"/>
-        <location filename="../mainwindow.cpp" line="1293"/>
-        <location filename="../mainwindow.cpp" line="1353"/>
-        <source>pictures</source>
-        <translation>pictures</translation>
+        <location filename="../src/MainWindow.cpp" line="321"/>
+        <location filename="../src/MainWindow.cpp" line="902"/>
+        <location filename="../src/MainWindow.cpp" line="929"/>
+        <source>WebP Export</source>
+        <translation>WebP Export</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1072"/>
-        <source>Please choose folders with a lesser amount of pictures.</source>
-        <translation>Please choose folders with a lesser amount of pictures.</translation>
+        <location filename="../src/MainWindow.cpp" line="322"/>
+        <source>Increase too small pictures</source>
+        <translation>Upscale Small Pictures</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1074"/>
-        <source>Some filesystems like Microsoft FAT have issues with foldercontent bigger than 4096 entries.</source>
-        <translation>Some filesystems like Microsoft FAT have issues with foldercontent bigger than 4096 entries.</translation>
+        <location filename="../src/MainWindow.cpp" line="323"/>
+        <source>Overwrite existing WebP</source>
+        <translation>Overwrite Existing WebP</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1077"/>
-        <source>Also, if you are planning to do a WebP export, the filecontent will increase (extremly).</source>
-        <translation>Also, if you are planning to do a WebP export, the filecontent will increase (extremly).</translation>
+        <location filename="../src/MainWindow.cpp" line="324"/>
+        <source>Watermark WebP</source>
+        <translation>Watermark WebP</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1105"/>
-        <location filename="../mainwindow.cpp" line="1183"/>
-        <source>Doubleclick on a picture for details. Press CTRL and click to select one or more pictures.</source>
-        <translation>Doubleclick on a picture for details. Press CTRL and click to select one or more pictures.</translation>
+        <location filename="../src/MainWindow.cpp" line="325"/>
+        <source>Rename Export to Timestamp</source>
+        <translation>Rename Export to Timestamp</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="326"/>
+        <source>Export selected to all WebP sizes</source>
+        <translation>Export Selected to All WebP Sizes</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="328"/>
+        <source>Select all Pictures</source>
+        <translation>Select All Pictures</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="329"/>
+        <source>Rename selected to Timestamp</source>
+        <translation>Rename Selected to Timestamp</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="331"/>
+        <source>&amp;Help</source>
+        <translation>&amp;Help</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="332"/>
+        <source>&amp;About</source>
+        <translation>&amp;About</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="335"/>
+        <source>Folders</source>
+        <translation>Folders</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="371"/>
+        <source>Language changed to: </source>
+        <translation>Language changed to: </translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="390"/>
+        <source>Open Folder</source>
+        <translation>Open Folder</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="405"/>
+        <source>Open Folder (Recursive)</source>
+        <translation>Open Folder (Recursive)</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="409"/>
+        <source>Scanning recursively: </source>
+        <translation>Scanning recursively: </translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="450"/>
+        <source>Selected: </source>
+        <translation>Selected: </translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="470"/>
+        <source>Scan complete.</source>
+        <translation>Scan complete.</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="498"/>
+        <source>Selected %1 images.</source>
+        <translation>Selected %1 images.</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="504"/>
+        <source>Rename</source>
+        <translation>Rename</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="504"/>
+        <location filename="../src/MainWindow.cpp" line="903"/>
+        <location filename="../src/MainWindow.cpp" line="985"/>
+        <location filename="../src/MainWindow.cpp" line="1058"/>
+        <source>No images selected.</source>
+        <translation>No images selected.</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="529"/>
+        <source>Renamed %1 images.</source>
+        <translation>Renamed %1 images.</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="533"/>
+        <source>Rename Results</source>
+        <translation>Rename Results</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="534"/>
+        <source>Renamed: %1
+Failed: %2</source>
+        <translation>Renamed: %1
+Failed: %2</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="556"/>
+        <source>No Default Copyright data set.</source>
+        <translation>No Default Copyright data set.</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="571"/>
+        <source>Updated Copyright in %1 images.</source>
+        <translation>Updated Copyright in %1 images.</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="584"/>
+        <source>No Default GPS data set.</source>
+        <translation>No Default GPS data set.</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="599"/>
+        <source>Updated GPS in %1 images.</source>
+        <translation>Updated GPS in %1 images.</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="615"/>
+        <source>Updated Metadata in %1 images.</source>
+        <translation>Updated Metadata in %1 images.</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="648"/>
+        <location filename="../src/MainWindow.cpp" line="675"/>
+        <location filename="../src/MainWindow.cpp" line="702"/>
+        <source>Defaults Set</source>
+        <translation>Defaults Set</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="649"/>
+        <source>Loaded %1 copyright tags (synced).</source>
+        <translation>Loaded %1 copyright tags (synced).</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="652"/>
+        <location filename="../src/MainWindow.cpp" line="679"/>
+        <source>Defaults</source>
+        <translation>Defaults</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="653"/>
+        <source>No copyright information found.</source>
+        <translation>No copyright information found.</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="676"/>
+        <source>Loaded GPS coordinates.</source>
+        <translation>Loaded GPS coordinates.</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="679"/>
+        <location filename="../src/MainWindow.cpp" line="887"/>
+        <source>No GPS data found.</source>
+        <translation>No GPS data found.</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="703"/>
+        <source>Loaded metadata tags.</source>
+        <translation>Loaded metadata tags.</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="722"/>
+        <source>Settings</source>
+        <translation>Settings</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="723"/>
+        <source>OpenStreetMap Nominatim is used.
+No configuration required.</source>
+        <translation>OpenStreetMap Nominatim is used.
+No configuration required.</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="734"/>
+        <source>Starting OSM Nominatim lookup for %1 images...</source>
+        <translation>Starting OSM Nominatim lookup for %1 images...</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="741"/>
+        <source>Lookup finished.</source>
+        <translation>Lookup finished.</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="742"/>
+        <source>Finished</source>
+        <translation>Finished</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="743"/>
+        <source>Address lookup completed.</source>
+        <translation>Address lookup completed.</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="768"/>
+        <source>Lookup: %1 / %2 ...</source>
+        <translation>Lookup: %1 / %2 ...</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="856"/>
+        <source>Open</source>
+        <translation>Open</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="861"/>
+        <source>Export to WebP...</source>
+        <translation>Export to WebP...</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="864"/>
+        <source>Rename to Timestamp</source>
+        <translation>Rename to Timestamp</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="868"/>
+        <source>Set Copyright as Default</source>
+        <translation>Set Copyright as Default</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="871"/>
+        <source>Set GPS Data as Default</source>
+        <translation>Set GPS Data as Default</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="875"/>
+        <source>Set ALL Metadata as Default</source>
+        <translation>Set ALL Metadata as Default</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="879"/>
+        <source>Copy GPS to Clipboard</source>
+        <translation>Copy GPS to Clipboard</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="885"/>
+        <source>GPS copied: </source>
+        <translation>GPS copied: </translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="889"/>
+        <source>Copy Path to Clipboard</source>
+        <translation>Copy Path to Clipboard</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="893"/>
+        <source>Path copied.</source>
+        <translation>Path copied.</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="911"/>
+        <source>Exporting %1 images to WebP...</source>
+        <translation>Exporting %1 images to WebP...</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="926"/>
+        <source>Export finished: %1 / %2 successful.</source>
+        <translation>Export finished: %1 / %2 successful.</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="930"/>
+        <source>Successfully exported %1 of %2 images.</source>
+        <translation>Successfully exported %1 of %2 images.</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="985"/>
+        <location filename="../src/MainWindow.cpp" line="1045"/>
+        <source>Upload</source>
+        <translation>Upload</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="1003"/>
+        <source>Logging in...</source>
+        <translation>Logging in...</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="1003"/>
+        <source>Cancel</source>
+        <translation>Cancel</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="1017"/>
+        <source>Starting upload...</source>
+        <translation>Starting upload...</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="1026"/>
+        <source>Login Failed</source>
+        <translation>Login Failed</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="1032"/>
+        <source>Uploading image %1 of %2 (%3%)</source>
+        <translation>Uploading image %1 of %2 (%3%)</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="1046"/>
+        <source>Upload completed successfully.</source>
+        <translation>Upload completed successfully.</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="1058"/>
+        <source>Map View</source>
+        <translation>Map View</translation>
+    </message>
+</context>
+<context>
+    <name>MapWindow</name>
+    <message>
+        <location filename="../src/MapWindow.cpp" line="18"/>
+        <source>Map View</source>
+        <translation>Map View</translation>
     </message>
 </context>
 <context>
     <name>PictureWidget</name>
     <message>
-        <location filename="../picture_widget.ui" line="29"/>
+        <location filename="../src/picture_widget.ui" line="29"/>
         <source>Picture Details</source>
         <translation>Picture Details</translation>
     </message>
     <message>
-        <location filename="../picture_widget.ui" line="83"/>
+        <location filename="../src/picture_widget.ui" line="83"/>
         <source>close</source>
-        <translation>close</translation>
+        <translation>Close</translation>
     </message>
     <message>
-        <location filename="../picture_widget.ui" line="115"/>
+        <location filename="../src/picture_widget.ui" line="115"/>
         <source>rotate Image</source>
-        <translation>rotate Image</translation>
+        <translation>Rotate Image</translation>
     </message>
     <message>
-        <location filename="../picture_widget.ui" line="134"/>
+        <location filename="../src/picture_widget.ui" line="134"/>
         <source>export to WebP</source>
-        <translation>export to WebP</translation>
+        <translation>Export to WebP</translation>
     </message>
     <message>
-        <location filename="../picture_widget.ui" line="155"/>
+        <location filename="../src/picture_widget.ui" line="154"/>
+        <source>save</source>
+        <translation>Save</translation>
+    </message>
+    <message>
+        <location filename="../src/picture_widget.ui" line="175"/>
         <source>Picture</source>
         <translation>Picture</translation>
     </message>
     <message>
-        <location filename="../picture_widget.ui" line="175"/>
+        <location filename="../src/picture_widget.ui" line="195"/>
         <source>Picture filename</source>
-        <translation>Picture filename</translation>
+        <translation>Filename</translation>
     </message>
     <message>
-        <location filename="../picture_widget.ui" line="191"/>
+        <location filename="../src/picture_widget.ui" line="211"/>
         <source>Picture Label</source>
         <translation>Picture Label</translation>
     </message>
     <message>
-        <location filename="../picture_widget.ui" line="207"/>
+        <location filename="../src/picture_widget.ui" line="227"/>
         <source>Exif</source>
         <translation>Exif</translation>
     </message>
     <message>
-        <location filename="../picture_widget.ui" line="217"/>
+        <location filename="../src/picture_widget.ui" line="237"/>
         <source>IPTC</source>
         <translation>IPTC</translation>
     </message>
     <message>
-        <location filename="../picture_widget.ui" line="227"/>
+        <location filename="../src/picture_widget.ui" line="247"/>
         <source>XMP</source>
         <translation>XMP</translation>
     </message>
     <message>
-        <location filename="../picture_widget.cpp" line="83"/>
+        <location filename="../src/picture_widget.cpp" line="45"/>
+        <source>GPS Map</source>
+        <translation>GPS Map</translation>
+    </message>
+    <message>
+        <location filename="../src/picture_widget.cpp" line="169"/>
         <source>Confirmation</source>
         <translation>Confirmation</translation>
     </message>
     <message>
-        <location filename="../picture_widget.cpp" line="84"/>
+        <location filename="../src/picture_widget.cpp" line="170"/>
         <source>Are you sure you want to exit without saving data?</source>
         <translation>Are you sure you want to exit without saving data?</translation>
     </message>
     <message>
-        <location filename="../picture_widget.cpp" line="692"/>
-        <location filename="../picture_widget.cpp" line="699"/>
-        <location filename="../picture_widget.cpp" line="708"/>
-        <location filename="../picture_widget.cpp" line="715"/>
+        <location filename="../src/picture_widget.cpp" line="441"/>
+        <location filename="../src/picture_widget.cpp" line="447"/>
+        <location filename="../src/picture_widget.cpp" line="455"/>
+        <location filename="../src/picture_widget.cpp" line="461"/>
         <source>rotate</source>
-        <translation>rotate</translation>
+        <translation>Rotate</translation>
     </message>
     <message>
-        <location filename="../picture_widget.cpp" line="730"/>
-        <location filename="../picture_widget.cpp" line="739"/>
-        <location filename="../picture_widget.cpp" line="748"/>
-        <location filename="../picture_widget.cpp" line="757"/>
-        <location filename="../picture_widget.cpp" line="766"/>
+        <location filename="../src/picture_widget.cpp" line="476"/>
         <source>export to size</source>
-        <translation>export to size</translation>
+        <translation>Export to Size</translation>
     </message>
     <message>
-        <location filename="../picture_widget.cpp" line="777"/>
+        <location filename="../src/picture_widget.cpp" line="491"/>
         <source>export to all sizes</source>
-        <translation>export to all sizes</translation>
+        <translation>Export to All Sizes</translation>
     </message>
     <message>
-        <location filename="../picture_widget.cpp" line="787"/>
+        <location filename="../src/picture_widget.cpp" line="498"/>
         <source>increase too small picture</source>
-        <translation>increase too small picture</translation>
+        <translation>Upscale Small Pictures</translation>
     </message>
     <message>
-        <location filename="../picture_widget.cpp" line="793"/>
+        <location filename="../src/picture_widget.cpp" line="503"/>
         <source>overwrite existing WebP</source>
-        <translation>overwrite existing WebP</translation>
+        <translation>Overwrite Existing WebP</translation>
     </message>
     <message>
-        <location filename="../picture_widget.cpp" line="799"/>
+        <location filename="../src/picture_widget.cpp" line="508"/>
         <source>watermark WebP</source>
-        <translation>watermark WebP</translation>
+        <translation>Watermark WebP</translation>
     </message>
     <message>
-        <location filename="../picture_widget.cpp" line="829"/>
-        <location filename="../picture_widget.cpp" line="889"/>
-        <location filename="../picture_widget.cpp" line="935"/>
+        <location filename="../src/picture_widget.cpp" line="586"/>
+        <location filename="../src/picture_widget.cpp" line="618"/>
+        <location filename="../src/picture_widget.cpp" line="649"/>
         <source>Edit Metadata</source>
         <translation>Edit Metadata</translation>
     </message>
     <message>
-        <location filename="../picture_widget.cpp" line="830"/>
-        <location filename="../picture_widget.cpp" line="890"/>
-        <location filename="../picture_widget.cpp" line="936"/>
+        <location filename="../src/picture_widget.cpp" line="587"/>
+        <location filename="../src/picture_widget.cpp" line="619"/>
+        <location filename="../src/picture_widget.cpp" line="650"/>
         <source>Please enter the new value for</source>
         <translation>Please enter the new value for</translation>
     </message>
     <message>
-        <location filename="../picture_widget.cpp" line="1013"/>
-        <location filename="../picture_widget.cpp" line="1033"/>
-        <source>WebP export to subfolder WebP</source>
-        <translation>WebP export to subfolder WebP</translation>
-    </message>
-    <message>
-        <location filename="../picture_widget.cpp" line="1015"/>
-        <location filename="../picture_widget.cpp" line="1050"/>
-        <source>Error</source>
-        <translation>Error</translation>
-    </message>
-    <message>
-        <location filename="../picture_widget.cpp" line="1017"/>
-        <location filename="../picture_widget.cpp" line="1052"/>
-        <source>failed</source>
-        <translation>failed</translation>
-    </message>
-    <message>
-        <location filename="../picture_widget.cpp" line="1019"/>
-        <location filename="../picture_widget.cpp" line="1054"/>
+        <location filename="../src/picture_widget.cpp" line="699"/>
+        <location filename="../src/picture_widget.cpp" line="721"/>
         <source>Success</source>
         <translation>Success</translation>
     </message>
     <message>
-        <location filename="../picture_widget.cpp" line="1021"/>
-        <location filename="../picture_widget.cpp" line="1056"/>
-        <source>successfull</source>
-        <translation>successfull</translation>
+        <location filename="../src/picture_widget.cpp" line="699"/>
+        <location filename="../src/picture_widget.cpp" line="721"/>
+        <source>Error</source>
+        <translation>Error</translation>
+    </message>
+    <message>
+        <location filename="../src/picture_widget.cpp" line="701"/>
+        <source>WebP export to subfolder WebP</source>
+        <translation>WebP export to subfolder WebP</translation>
+    </message>
+    <message>
+        <location filename="../src/picture_widget.cpp" line="702"/>
+        <location filename="../src/picture_widget.cpp" line="724"/>
+        <source>successful</source>
+        <translation>successful</translation>
+    </message>
+    <message>
+        <location filename="../src/picture_widget.cpp" line="702"/>
+        <location filename="../src/picture_widget.cpp" line="724"/>
+        <source>failed</source>
+        <translation>failed</translation>
+    </message>
+    <message>
+        <location filename="../src/picture_widget.cpp" line="723"/>
+        <source>WebP export</source>
+        <translation>WebP Export</translation>
+    </message>
+    <message>
+        <location filename="../src/picture_widget.cpp" line="740"/>
+        <location filename="../src/picture_widget.cpp" line="796"/>
+        <location filename="../src/picture_widget.cpp" line="800"/>
+        <source>Save Error</source>
+        <translation>Save Error</translation>
+    </message>
+    <message>
+        <location filename="../src/picture_widget.cpp" line="741"/>
+        <source>This file format (%1) does not support metadata.</source>
+        <translation>This file format (%1) does not support metadata.</translation>
+    </message>
+    <message>
+        <location filename="../src/picture_widget.cpp" line="797"/>
+        <source>Failed to save metadata:
+%1</source>
+        <translation>Failed to save metadata:
+%1</translation>
+    </message>
+    <message>
+        <location filename="../src/picture_widget.cpp" line="801"/>
+        <source>Unknown error occurred while saving.</source>
+        <translation>Unknown error occurred while saving.</translation>
     </message>
 </context>
 </TS>

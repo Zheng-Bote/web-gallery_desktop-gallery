@@ -3,5 +3,12 @@ CMakeLists.txt.user*
 *.DS_Store
 .cache/**
 
+AppDir/**
+build_appimage/**
+
+linuxdeploy*
 
 README.md_
+src/MainWindow.cpp_copy
+src/main.cpp_copy
+Desktop-Gallery-x86_64.AppImage

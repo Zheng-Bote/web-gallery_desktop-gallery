@@ -8,6 +8,8 @@
 #include <QLocale>
 #include <QTranslator>
 
+#include <QStyleFactory> // Optional, für Style
+
 #include "MainWindow.hpp"
 #include "rz_config.hpp" // If version/name is defined there
 
@@ -30,6 +32,17 @@ int main(int argc, char *argv[]) {
   qputenv("QTWEBENGINE_CHROMIUM_FLAGS", "--disable-gpu");
   // if it still crashes with your graphic card, here the hardcore version:
   // qputenv("QT_XCB_GL_INTEGRATION", "none");
+
+  // 2. Umgebungsvariablen säubern (gegen Theme-Probleme)
+  // qputenv("QT_QPA_PLATFORMTHEME", "xdgdesktopportal");
+  // qputenv("UBUNTU_MENUPROXY", "0");
+
+  // Fallback auf xcb ist gut, lassen wir drin
+  // qputenv("QT_QPA_PLATFORM", "xcb");
+
+  // 3. WICHTIG: Natives Menü global verbieten!
+  // Muss VOR dem QApplication Konstruktor passieren.
+  // QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar);
 
   QApplication a(argc, argv);
 

@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.23)
 
 project(
-  web-gallery_desktop-gallery
-  VERSION 0.26.0
+  desktop-gallery
+  VERSION 1.0.0
   DESCRIPTION "Desktop-Gallery for Linux, MacOS and Windows. Part of the Crow Web-Gallery project."
   HOMEPAGE_URL "https://github.com/Zheng-Bote/web-gallery_desktop-gallery"
   LANGUAGES CXX)
@@ -43,7 +43,7 @@ set(TS_FILES
     i18n/gallery_en.ts
 )
 
-# .ts zu .qm kompilieren
+# .ts zu .qm kompilieren (REGEL 1: Hier werden die Regeln erstellt)
 set_source_files_properties(${TS_FILES} PROPERTIES OUTPUT_LOCATION "${CMAKE_BINARY_DIR}/i18n")
 qt6_add_translation(QM_FILES ${TS_FILES})
 
@@ -103,27 +103,17 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Exiv2::exiv2lib
 )
 
-# --- Post-Build Actions ---
+# --- INSTALLATION RULES ---
 
-# Kopiert den i18n Ordner mit den .qm Dateien in den Ausführungsordner
-# Damit QApplication::applicationDirPath() + "/i18n" funktioniert
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${PROJECT_NAME}>/i18n
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QM_FILES} $<TARGET_FILE_DIR:${PROJECT_NAME}>/i18n/
-    COMMENT "Kopiere Übersetzungen in den Build-Ordner..."
-)
+# Das Executable nach /usr/bin (im AppDir Kontext)
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 
-# --- Installation ---
+# Der Ordner i18n nach /usr/bin/i18n
+install(FILES ${QM_FILES} DESTINATION bin/i18n)
 
-include(GNUInstallDirs)
+# Auch die Ressourcen (falls du sie nicht in qrc hast)
+# install(FILES resources/img/qt_desktop-gallery.png DESTINATION share/icons/hicolor/256x256/apps)
 
-install(TARGETS ${PROJECT_NAME}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    BUNDLE DESTINATION .
-)
+################
+message(STATUS "Build setup complete for ${PROJECT_NAME}")
 
-# Installiere auch die Sprachdateien
-install(DIRECTORY "${CMAKE_BINARY_DIR}/i18n"
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
-    FILES_MATCHING PATTERN "*.qm"
-)
