@@ -262,7 +262,6 @@ Responsive Picture view with extended editing and export options.
 ## Github structure
 
 <!-- readme-tree start -->
-
 ```
 .
 ├── .github
@@ -296,6 +295,7 @@ Responsive Picture view with extended editing and export options.
 ├── desktop-gallery.png
 ├── docs
 │   ├── img
+│   │   ├── about.png
 │   │   ├── context_menu.png
 │   │   ├── detail_view.png
 │   │   ├── gps_copyright_view.png
@@ -381,9 +381,8 @@ Responsive Picture view with extended editing and export options.
 │   └── rz_photo.cpp
 └── tree.bak
 
-14 directories, 102 files
+14 directories, 103 files
 ```
-
 <!-- readme-tree end -->
 
 <p align="right">(<a href="#top">back to top</a>)</p>
