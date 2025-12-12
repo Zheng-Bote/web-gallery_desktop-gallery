@@ -1,5 +1,12 @@
 cmake_minimum_required(VERSION 3.23)
 
+# cmake -B build -S .
+# cmake --build build
+
+# nvm use --lts
+# atom -J-Xmx16g usages -o ./docs/app.atom --slice-outfile ./docs/atom_usages_v1.0.0.json -l cpp ./src
+# cdxgen -o ./docs/sbom_v1.0.0.json -t cpp --usages-slices-file ./docs/atom_usages_v1.0.0.json --author "ZHENG Robert" --deep -r ./src
+
 project(
   desktop-gallery
   VERSION 1.0.0
