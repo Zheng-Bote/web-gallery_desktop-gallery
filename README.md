@@ -330,33 +330,13 @@ ZHENG Robert - Core Development - Github Profile
 ├── CMakeLists.txt
 ├── LICENSE
 ├── README.md
+├── build_appimage.sh
 ├── configure
 │   ├── CMakeLists.txt
 │   └── rz_config.hpp.in
+├── desktop-gallery.desktop
+├── desktop-gallery.png
 ├── docs
-│   ├── GeoCoding.md
-│   ├── features.md
-│   ├── img
-│   │   ├── 00_en.png
-│   │   ├── 01_en.png
-│   │   ├── album-context_en_01.png
-│   │   ├── album-export_en_01.png
-│   │   ├── album-i18n_en_01.png
-│   │   ├── album-info_en_01.png
-│   │   ├── album-metadata_en_01.png
-│   │   ├── album-pictures_en_01.png
-│   │   ├── album_show_gps.png
-│   │   ├── album_show_owner.png
-│   │   ├── details_rotate_en.png
-│   │   ├── details_webp_en.png
-│   │   ├── exif_en.png
-│   │   ├── exif_en_2.png
-│   │   ├── exif_meta_edit.png
-│   │   ├── import.png
-│   │   ├── iptc_en_1.png
-│   │   ├── rotate_en.png
-│   │   ├── webp_en.png
-│   │   └── xmp_en_1.png
 │   └── sbom_v0.23.0.json
 ├── i18n
 │   ├── de.png
@@ -417,7 +397,6 @@ ZHENG Robert - Core Development - Github Profile
 │   ├── DefaultMetaWidget.cpp
 │   ├── DefaultMetaWidget.ui
 │   ├── ImageIndexer.cpp
-│   ├── MainWindow copy.cpp
 │   ├── MainWindow.cpp
 │   ├── MainWindow.ui
 │   ├── MapWindow.cpp
@@ -430,6 +409,6 @@ ZHENG Robert - Core Development - Github Profile
 │   └── rz_photo.cpp
 └── tree.bak
 
-14 directories, 109 files
+13 directories, 89 files
 ```
 <!-- readme-tree end -->
