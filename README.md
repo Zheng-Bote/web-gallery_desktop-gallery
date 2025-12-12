@@ -167,6 +167,8 @@ Use the WebP Export menu for local conversion or Upload to Server to push to you
 
 # Documentation & Screenshots
 
+![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/img/about.png)
+
 ## Album View
 
 Main interface showing the database-driven thumbnail grid.
@@ -217,7 +219,7 @@ Responsive Picture view with extended editing and export options.
 
 ![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/img/detail_view.png)
 
-![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/img/rotate.png)
+![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/img/rotate_img.png)
 
 ![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/img/map_view_2.png)
 
@@ -386,6 +388,7 @@ Responsive Picture view with extended editing and export options.
 
 <!-- readme-tree end -->
 <!-- readme-tree start -->
+
 ```
 .
 ├── .github
@@ -506,6 +509,7 @@ Responsive Picture view with extended editing and export options.
 
 14 directories, 102 files
 ```
+
 <!-- readme-tree end -->
 <!-- readme-tree start -->
 
