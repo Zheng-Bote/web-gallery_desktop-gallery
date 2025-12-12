@@ -20,10 +20,10 @@
 
 - [Description](#description)
   - [Key Features](#key-features)
-    - [🚀 Performance & Core](#-performance--core)
+    - [🚀 Performance \& Core](#-performance--core)
     - [🌍 Geo-Intelligence](#-geo-intelligence)
     - [📝 Metadata Management](#-metadata-management)
-    - [☁️ Export & Cloud](#-export--cloud)
+    - [☁️ Export \& Cloud](#️-export--cloud)
   - [see also](#see-also)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
@@ -35,9 +35,9 @@
       - [Geocode](#geocode)
       - [Visualize](#visualize)
       - [Export/Upload](#exportupload)
-- [Documentation & Screenshots](#documentation--screenshots)
+- [Documentation \& Screenshots](#documentation--screenshots)
   - [Album View](#album-view)
-  - [Metadata Editor & Sync](#metadata-editor--sync)
+  - [Metadata Editor \& Sync](#metadata-editor--sync)
   - [Context Menu](#context-menu)
   - [Map View](#map-view)
   - [WebP Export](#webp-export)
@@ -53,7 +53,7 @@
     - [System Architecture Diagram](#system-architecture-diagram)
       - [Detailed Component Breakdown](#detailed-component-breakdown)
 - [Authors and License](#authors-and-license)
-    - [Code Contributors](#code-contributors)
+  - [Code Contributors](#code-contributors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
   <hr>
@@ -185,7 +185,7 @@ Edit EXIF, IPTC, and XMP data with automatic synchronization.
 
 Upload to Web-Gallery (CowQtServer ReST API-Server)
 
-![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/img/sync.png)
+![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/img/sync_1.png)
 
 ## Context Menu
 
@@ -262,6 +262,7 @@ Responsive Picture view with extended editing and export options.
 <!-- readme-tree end -->
 
 <!-- readme-tree start -->
+
 ```
 .
 ├── .github
@@ -382,6 +383,7 @@ Responsive Picture view with extended editing and export options.
 
 14 directories, 102 files
 ```
+
 <!-- readme-tree end -->
 <!-- readme-tree start -->
 
