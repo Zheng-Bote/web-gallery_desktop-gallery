@@ -66,9 +66,11 @@ Beyond viewing images, it serves as a comprehensive **Metadata Editor** and **Wo
 
 ## Key Features
 
-- \[X] runs on Linux
-- \[X] runs on MacOS
-- \[X] runs on Windows
+✅ runs on Linux
+
+✅ runs on MacOS
+
+✅ runs on Windows
 
 ### 🚀 Performance & Core
 
@@ -169,55 +171,55 @@ Use the WebP Export menu for local conversion or Upload to Server to push to you
 
 Main interface showing the database-driven thumbnail grid.
 
-![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/start.png)
+![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/img/start.png)
 
-![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/gps_copyright_view.png)
+![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/img/gps_copyright_view.png)
 
 ## Metadata Editor & Sync
 
 Edit EXIF, IPTC, and XMP data with automatic synchronization.
 
-![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/metadata.png)
+![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/img/metadata.png)
 
-![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/metadata_2.png)
+![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/img/metadata_2.png)
 
 Upload to Web-Gallery (CowQtServer ReST API-Server)
 
-![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/sync.png)
+![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/img/sync.png)
 
 ## Context Menu
 
 several Picture actions via context menu.
 
-![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/context_menu.png)
+![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/img/context_menu.png)
 
 ## Map View
 
 Interactive map showing the location of selected images (Leaflet/OSM).
 
-![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/map_view_1.png)
+![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/img/map_view_1.png)
 
 ## WebP Export
 
 Bulk conversion tool with resizing and watermarking options.
 
-![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/webp_export.png)
+![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/img/webp_export.png)
 
 ## Internationalization (i18n)
 
 Live language switching (English/German).
 
-![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/i18n.png)
+![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/img/i18n.png)
 
 ## Detail View
 
 Responsive Picture view with extended editing and export options.
 
-![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/detail_view.png)
+![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/img/detail_view.png)
 
-![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/rotate.png)
+![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/img/rotate.png)
 
-![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/map_view_2.png)
+![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/img/map_view_2.png)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
