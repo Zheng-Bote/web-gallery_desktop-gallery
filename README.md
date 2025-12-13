@@ -22,6 +22,7 @@
     - [🌍 Geo-Intelligence](#-geo-intelligence)
     - [📝 Metadata Management](#-metadata-management)
     - [☁️ Export \& Cloud](#️-export--cloud)
+    - [🌐 Internationalization](#-internationalization)
   - [see also](#see-also)
 - [Status](#status)
 - [Getting Started](#getting-started)
@@ -75,6 +76,10 @@ Beyond viewing images, it serves as a comprehensive **Metadata Editor** and **Wo
 
 - **WebP Bulk Export:** Convert images to WebP with customizable quality, resizing, and watermarking.
 - **Cloud Upload Client:** Integrated client to upload images and metadata to a CrowQtServer (supports JWT Auth & Refresh Tokens).
+
+### 🌐 Internationalization
+
+- i18n: Support for multiple languages (English, German).
 
 ## see also
 
@@ -168,7 +173,7 @@ cmake --build .
 > \[!NOTE]
 > please visit [Desktop-Gallery Github Pages](https://zheng-bote.github.io/web-gallery_desktop-gallery/) for more.
 
-![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/img/about.png)
+![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/about.png)
 
 **Technology Stack**
 
