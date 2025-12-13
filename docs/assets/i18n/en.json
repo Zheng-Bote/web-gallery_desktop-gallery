@@ -1,0 +1,11 @@
+{
+  "app-title": "Rust Rocket Template",
+  "app-brief": "Content Template for Rust Rocket",
+  "main-title": "Main Template",
+  "main-brief": "Article Template for Main",
+  "main-section-title": "Main Section-Title",
+  "main-section-brief": "Section Main Template",
+  "Author": "Author",
+  "text_width_limited": "Text-width limited to 80ch",
+  "app-desc": "Basic pre-configured Rust Webserver with Rocket, CORS, CSRF, Fileserver for Tera-Templates and static assets."
+}

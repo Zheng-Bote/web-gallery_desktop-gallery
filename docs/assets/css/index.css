@@ -1,0 +1,87 @@
+:root {
+  color-scheme: light dark;
+
+  --font-family: "Inter", -apple-system, BlinkMacSystemFont, Roboto, Ubuntu,
+    "Segeo UI", "Helvetica Neue", Arial, sans-serif;
+
+  --font-size-bigger: 1.5rem;
+  --font-size: 1rem;
+  --font-size-small: 0.8rem;
+  --font-size-smaller: 0.5rem;
+
+  --font-size-big-dynamic: clamp(1.5rem, -2.3149rem + 8.8398vw, 2.5rem);
+  --font-size-bigger-dynamic: clamp(1rem, -2.3149rem + 8.8398vw, 2rem);
+  --font-size-normal-dynamic: clamp(1rem, 2vw, 1.5rem);
+  --font-size-small-dynamic: clamp(0.6rem, 0.7rem, 0.8rem);
+  --font-size-responsive: calc(2vw + 1em);
+
+  --font-color: light-dark(oklch(0% 0 0), oklch(95.84% 0.004 214.33));
+  --font-color-header: light-dark(oklch(0% 0 0), oklch(95.84% 0.004 214.33));
+  --font-color-footer: light-dark(oklch(0% 0 0), oklch(95.84% 0.004 214.33));
+
+  --background-color: light-dark(
+    oklch(95.84% 0.004 214.33),
+    oklch(69.09% 0.026 242.51)
+  );
+  --background-color-header: lightblue;
+  --background-color-footer: lightblue;
+
+  --red-color: oklch(62.8% 0.25768330773615683 29.2338851923426);
+  --yellow-color: oklch(96.8% 0.21100590772552355 109.76923207652125);
+  --green-color: oklch(86.8% 0.156 144.09);
+
+  --base-margin: 5px;
+  --base-padding: 5px;
+  --transparency: rgb(0 0 0 / 0);
+
+  --border-color: oklch(0% 0 0);
+  --border-style: solid;
+  --border-width: 1px;
+  --border-radius: 5px;
+
+  --primary-color: oklch(0.64 0.1336 247.67);
+  --secondary-color: oklch(0.78 0.0771 208.49);
+  --font-color-white: oklch(1 0 0);
+
+  --tranparent: tranparent;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-family);
+  font-size: 16px;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-size: 100vw 100vh;
+  height: 100%;
+
+  background-color: var(--background-color);
+  color: var(--font-color);
+  /*padding: calc(var(--base-padding) * 4);*/
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+.brand {
+  opacity: 0.5;
+  img {
+    vertical-align: middle;
+    width: 25px;
+    height: auto;
+  }
+}

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" id="html">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Desktop-Gallery</title>
+
+    <meta property="og:title" content="template" />
+    <meta property="og:description" content="template for HTML5" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.robert.hase-zheng.net/" />
+    <meta
+      property="og:image"
+      content="https://www.robert.hase-zheng.net/assets/img/icons/favicon.svg"
+    />
+
+    <link
+      rel="shortcut icon"
+      href="/assets/img/icons/favicon.ico"
+      type="image/x-icon"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/assets/img/icons/favicon.svg"
+    />
+    <link href="/assets/css/index.css" rel="stylesheet" type="text/css" />
+
+    <link
+      href="/assets/css/page-structure.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <link href="/assets/css/format.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/css/image.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/css/text.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/css/coding.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/css/attribute.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/css/link.css" rel="stylesheet" type="text/css" />
+
+    <link rel="preload" href="/assets/img/logo.png" as="image" />
+
+    <style>
+      /* Beispiele */
+      .box {
+        border: 1px solid black;
+        padding: 10px;
+        width: fit-content;
+        background-color: aquamarine;
+      }
+    </style>
+    <script src="/assets/js/all.js" defer></script>
+  </head>
+
+  <body id="body" class="page-structure">
+    <header class="smart-header">
+      <div class="branding">
+        <img src="/assets/img/logo.png" alt="Logo" class="logo" />
+        <h1>Desktop-Gallery</h1>
+        <div class="brief">
+          a powerful image management tool for Linux, MacOS and Windows
+        </div>
+      </div>
+    </header>
+    <nav>
+      <h2>&nbsp;</h2>
+      <ul>
+        <li>
+          <a href="/index.html"><button>Home</button></a>
+        </li>
+        <li>
+          <a href="/installation.html"><button>Installation</button></a>
+        </li>
+        <li>
+          <a href="/usage_screenshots.html"><button>Screenshots</button></a>
+        </li>
+        <li>
+          <a href="/architecture.html"
+            ><button class="active">Architecture</button></a
+          >
+        </li>
+      </ul>
+    </nav>
+    <main>
+      <h1>Architecture</h1>
+
+      <p class="txt">
+        Based on the codebase we have built, the architecture of Desktop-Gallery
+        is a modular, event-driven desktop application leveraging Qt's
+        Model-View-Controller (MVC) framework.
+      </p>
+      <p class="brief center-txt">Developed for Linux, macOS, and Windows.</p>
+
+      <article>
+        <h2>Architecture Overview</h2>
+        <p>The application is structured into three main layers:</p>
+        <br />
+        <h3>Presentation Layer (UI)</h3>
+        <p>
+          Handles user interaction, views (Gallery, Map, Details), and dialogs.
+          It uses Qt Widgets.
+        </p>
+        <br />
+        <h3>Business Logic Layer</h3>
+        <p>
+          Handles the "heavy lifting" like image processing, metadata editing,
+          uploading, and geocoding. This layer is often multithreaded.
+        </p>
+        <br />
+        <h3>Data Layer</h3>
+        <p>
+          Manages persistent storage (SQLite database), file system access, and
+          configuration settings.
+        </p>
+      </article>
+
+      <article>
+        <h2>System Architecture Diagram</h2>
+        <p>
+          This diagram visualizes how the different classes and modules interact
+          with each other.
+        </p>
+        <section class="listbox">
+          <h3>Detailed Component Breakdown</h3>
+          <br />
+          <h4>Main Window & Navigation (The Controller)</h4>
+          <p>
+            <span class="title">MainWindow:</span>
+            The central hub. It orchestrates the entire application flow. It
+            initializes the database, manages the layout (QSplitter), creates
+            menus, and handles global events (like language switching).
+            <br />
+            <span class="title">LoginDialog:</span> A modal dialog for
+            authenticating with the CrowQtServer.
+          </p>
+          <br />
+          <h4>Data Models (The "M" in MVC)</h4>
+          <p>
+            <span class="title">DatabaseManager:</span> A Singleton class that
+            wraps the SQLite database (gallery_cache.db). It handles connection
+            opening/closing and schema creation.
+            <br />
+            <span class="title">QSqlTableModel:</span> A Qt class that provides
+            a direct link between the SQLite database and the UI views. It holds
+            the image data (path, metadata, etc.).
+            <br />
+            <span class="title">QStandardItemModel:</span> Manages the folder
+            structure tree view on the left side.
+          </p>
+          <br />
+          <h4>Views & Delegates (The "V" in MVC)</h4>
+          <p>
+            <span class="title">QListView (Gallery View)</span>
+            Displays the grid of images.
+            <br />
+            <span class="title">ThumbnailDelegate:</span> A custom painter that
+            renders the thumbnails, borders, and text overlays (Copyright/GPS)
+            directly onto the QListView. It uses QPixmapCache for performance.
+            <br />
+            <span class="title">QTreeView:</span> Displays the file system
+            folder hierarchy.
+            <br />
+            <span class="title">MapWindow:</span> Embeds a QWebEngineView to
+            display OpenStreetMap/Leaflet.js for visualizing GPS coordinates.
+          </p>
+          <br />
+          <h4>Workers & Logic (Business Logic)</h4>
+          <p>
+            <span class="title">ImageIndexer:</span> A QRunnable (runs in a
+            background thread via QThreadPool). It recursively scans folders for
+            images, extracts metadata, and populates the database. This prevents
+            the UI from freezing during large imports.
+            <br />
+            <span class="title">UploadManager:</span> Handles the communication
+            with the CrowQtServer. It manages the upload queue, performs
+            authentication (JWT/Refresh tokens), and builds Multipart HTTP
+            requests.
+            <br />
+            <span class="title">Photo (Wrapper):</span> A utility class that
+            wraps Exiv2. It provides a high-level API to read/write EXIF, IPTC,
+            and XMP metadata, rotate images, and export to WebP.
+            <br />
+            <span class="title">rz_metadata:</span> A static configuration
+            namespace defining valid tags, mappings (Sync Rules), and default
+            values. <br />
+          </p>
+          <br />
+          <h4>External Services:</h4>
+          <p>
+            <span class="title">Nominatim (OSM):</span> Accessed via
+            QNetworkAccessManager for Reverse Geocoding (converting GPS coords
+            to Address).
+            <br />
+            <span class="title">CrowQtServer:</span> The remote backend (REST
+            API) for uploading images.
+            <br />
+            <span class="title">Data Flow Example:</span>
+            <br />
+            <span class="title">Importing Images User Action:</span> User clicks
+            "Open Folder (Recursive)".
+            <br />
+            <span class="title">Controller:</span> MainWindow starts an
+            ImageIndexer task in the global QThreadPool.
+            <br />
+            <span class="title">Worker:</span> ImageIndexer iterates through
+            files.
+            <br />
+            <span class="title">Helper:</span> For each file, Photo reads
+            metadata (EXIF/XMP).
+            <br />
+            <span class="title">Database:</span> ImageIndexer inserts records
+            into the SQLite DB via DatabaseManager.
+            <br />
+            <span class="title">View Update:</span> The QSqlTableModel detects
+            changes in the DB and signals the QListView.
+            <br />
+            <span class="title">Rendering:</span> ThumbnailDelegate paints the
+            new thumbnails in the grid.
+          </p>
+        </section>
+      </article>
+    </main>
+    <aside>
+      <h2>&nbsp;</h2>
+      <ul>
+        <li>
+          <a href="/index.html"><button>Home</button></a>
+        </li>
+        <li>
+          <a href="/installation.html"><button>Installation</button></a>
+        </li>
+        <li>
+          <a href="/usage_screenshots.html"><button>Screenshots</button></a>
+        </li>
+        <li>
+          <a href="/architecture.html"
+            ><button class="active">Architecture</button></a
+          >
+        </li>
+      </ul>
+    </aside>
+    <footer>
+      <h2>Footer</h2>
+      <p>this is the footer</p>
+    </footer>
+  </body>
+</html>

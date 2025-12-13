@@ -1,0 +1,52 @@
+/* Base image reset */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Card grid */
+.card-wrapper {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(30ch, 1fr));
+  gap: 1.5rem;
+}
+
+/* Card */
+.card {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0.05rem 0.1rem 0.3rem -0.03rem rgba(0, 0, 0, 0.45);
+  padding-bottom: 1rem;
+  position: relative; /* needed for z-index context */
+}
+
+/* Card content spacing */
+.card h3 {
+  margin: 1rem;
+  font-size: 1.25rem;
+}
+
+.card p {
+  margin: 0 1rem;
+}
+
+/* Image */
+.card img {
+  width: 100%;
+  border-radius: 0.5rem 0.5rem 0 0;
+  transition: transform 0.35s ease, z-index 0s;
+  transform-origin: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* Hover zoom outside */
+.card img:hover {
+  transform: scale(2); /* 200% */
+  z-index: 10;
+  cursor: zoom-in;
+}

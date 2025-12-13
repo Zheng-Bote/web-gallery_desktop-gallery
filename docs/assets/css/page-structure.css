@@ -1,0 +1,143 @@
+/* tmp */
+body {
+  background-color: lightgray;
+}
+header {
+  background-color: lightblue;
+}
+nav {
+  background-color: lightgreen;
+}
+main {
+  background-color: lightyellow;
+  padding: 10px;
+}
+aside {
+  background-color: lightpink;
+}
+footer {
+  background-color: lightcoral;
+  text-align: center;
+  font-size: 0.8rem;
+  opacity: 0.5;
+}
+
+nav,
+aside {
+  padding: 10px;
+
+  & button {
+    background: none;
+    width: 100%;
+    background-color: light-dark(var(--secondary-color), var(--primary-color));
+    color: white;
+    text-decoration: none;
+    padding: 5px;
+    margin: 5px 0 5px 0;
+    border-radius: var(--border-radius);
+    border: var(--border-width) var(--border-style)
+      light-dark(var(--primary-color), var(--secondary-color));
+    cursor: pointer;
+  }
+  & button:hover {
+    background-color: var(--primary-color);
+  }
+  & button.active {
+    background-color: lightgray;
+  }
+  & a:not([href^="http"]):not([href^="mailto"]) {
+    background: none;
+    width: 100%;
+    text-decoration: none;
+    padding: 5px;
+    cursor: pointer;
+  }
+}
+/* tmp */
+
+.page-structure {
+  display: grid;
+  grid-template:
+    "header"
+    "nav"
+    "main"
+    "aside"
+    "footer";
+  grid-template-rows: auto;
+  min-height: 100dvh;
+}
+.page-structure > header {
+  grid-area: header;
+}
+.page-structure > nav {
+  grid-area: nav;
+}
+.page-structure > main {
+  grid-area: main;
+}
+.page-structure > aside {
+  grid-area: aside;
+}
+.page-structure > footer {
+  grid-area: footer;
+}
+
+/* Add this class via JS when scrolling down */
+.smart-header {
+  position: sticky;
+  top: 0;
+  transition: transform 0.3s ease;
+  z-index: 100;
+}
+.smart-header.hidden {
+  transform: translateY(-100%);
+}
+.branding {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  & h1 {
+    opacity: 0.5;
+  }
+  & img {
+    width: 50px;
+    height: auto;
+  }
+}
+/*
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  const currentScroll = window.pageYOffset;
+  const header = document.querySelector('.smart-header');
+  
+  // If scrolled down more than 100px and continuing to scroll down
+  if (currentScroll > 100 && currentScroll > lastScroll) {
+    header.classList.add('hidden');
+  } else {
+    header.classList.remove('hidden');
+  }
+  
+  lastScroll = currentScroll;
+});
+*/
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: 1.5rem;
+}
+
+@media screen and (min-width: 1024px) {
+  .page-structure {
+    display: grid;
+    grid-template:
+      "header header header" auto
+      "nav    main   aside" 1fr
+      "footer footer footer" auto / auto 1fr auto;
+    min-height: 100vh;
+  }
+  aside {
+    display: none;
+  }
+}

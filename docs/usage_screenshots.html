@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" id="html">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Desktop-Gallery</title>
+
+    <meta property="og:title" content="template" />
+    <meta property="og:description" content="template for HTML5" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.robert.hase-zheng.net/" />
+    <meta
+      property="og:image"
+      content="https://www.robert.hase-zheng.net/assets/img/icons/favicon.svg"
+    />
+
+    <link
+      rel="shortcut icon"
+      href="/assets/img/icons/favicon.ico"
+      type="image/x-icon"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/assets/img/icons/favicon.svg"
+    />
+    <link href="/assets/css/index.css" rel="stylesheet" type="text/css" />
+
+    <link
+      href="/assets/css/page-structure.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <link href="/assets/css/format.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/css/image.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/css/text.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/css/coding.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/css/attribute.css" rel="stylesheet" type="text/css" />
+
+    <link rel="preload" href="/assets/img/logo.png" as="image" />
+
+    <style>
+      /* Beispiele */
+      .box {
+        border: 1px solid black;
+        padding: 10px;
+        width: fit-content;
+        background-color: aquamarine;
+      }
+    </style>
+
+    <script src="/assets/js/all.js" defer></script>
+  </head>
+
+  <body id="body" class="page-structure">
+    <header class="smart-header">
+      <div class="branding">
+        <img src="/assets/img/logo.png" alt="Logo" class="logo" />
+        <h1>Desktop-Gallery</h1>
+        <div class="brief">
+          a powerful image management tool for Linux, MacOS and Windows
+        </div>
+      </div>
+    </header>
+    <nav>
+      <h2>&nbsp;</h2>
+      <ul>
+        <li>
+          <a href="/index.html"><button>Home</button></a>
+        </li>
+        <li>
+          <a href="/installation.html"><button>Installation</button></a>
+        </li>
+        <li>
+          <a href="/usage_screenshots.html"
+            ><button class="active">Screenshots</button></a
+          >
+        </li>
+        <li>
+          <a href="/architecture.html"><button>Architecture</button></a>
+        </li>
+      </ul>
+    </nav>
+    <main>
+      <article>
+        <h2>Usage Workflow</h2>
+        <br />
+        <div class="txt">
+          <p>
+            <span class="title">Import:</span> Use File -> Open Folder
+            (Recursive) to scan your image library.
+          </p>
+          <p>
+            <span class="title">Organize:</span> Select images to view details.
+            Use the context menu to copy GPS data or paths.
+          </p>
+          <p>
+            <span class="title">Edit Metadata:</span> Double-click metadata
+            fields to edit. Use Metadata -> Write default... for bulk updates.
+          </p>
+          <p>
+            <span class="title">Geocode:</span> Select images with GPS data and
+            run Metadata -> Address lookup to auto-fill location tags.
+          </p>
+          <p>
+            <span class="title">Visualize:</span> Use Pictures -> Show selected
+            on Map to see locations.
+          </p>
+          <p>
+            <span class="title">Export/Upload:</span> Use the WebP Export menu
+            for local conversion or Upload to Server to push to your web
+            gallery.
+          </p>
+        </div>
+      </article>
+      <br />
+      <h2>Screenshots</h2>
+      <br />
+
+      <div class="card-wrapper">
+        <div class="card">
+          <img src="/img/start.png" alt="" />
+          <h3>Album View</h3>
+          <p>Main interface showing the database-driven thumbnail grid.</p>
+        </div>
+        <div class="card">
+          <img src="/img/about.png" alt="" />
+          <h3>Help</h3>
+          <p>about this application</p>
+        </div>
+        <div class="card">
+          <img src="/img/context_menu.png" alt="" />
+          <h3>Context Menu</h3>
+          <p>several Picture actions via context menu</p>
+        </div>
+        <div class="card">
+          <img src="/img/detail_view.png" alt="" />
+          <h3>Photo Details</h3>
+          <p>detail view of selected image</p>
+        </div>
+
+        <div class="card">
+          <img src="/img/gps_copyright_view.png" alt="" />
+          <h3>GPS Copyright View</h3>
+          <p>gps and copyright information of selected image</p>
+        </div>
+        <div class="card">
+          <img src="/img/i18n.png" alt="" />
+          <h3>Internationalization (i18n)</h3>
+          <p>Live language switching (English/German).</p>
+        </div>
+        <div class="card">
+          <img src="/img/map_view_1.png" alt="" />
+          <h3>Map View</h3>
+          <p>
+            Interactive map showing the location of selected images
+            (Leaflet/OSM).
+          </p>
+        </div>
+        <div class="card">
+          <img src="/img/map_view_2.png" alt="" />
+          <h3>Photo Details</h3>
+          <p>
+            Responsive Picture view with extended editing and export options.
+          </p>
+        </div>
+        <div class="card">
+          <img src="/img/metadata.png" alt="" />
+          <h3>Metadata Editor & Sync</h3>
+          <p>Edit EXIF, IPTC, and XMP data with automatic synchronization.</p>
+        </div>
+        <div class="card">
+          <img src="/img/metadata_2.png" alt="" />
+          <h3>Metadata</h3>
+          <p>metadata of selected image</p>
+        </div>
+        <div class="card">
+          <img src="/img/rotate_img.png" alt="" />
+          <h3>Photo Details</h3>
+          <p>rotate image</p>
+        </div>
+
+        <div class="card">
+          <img src="/img/sync_1.png" alt="" />
+          <h3>Sync</h3>
+          <p>upload images to web gallery</p>
+        </div>
+
+        <div class="card">
+          <img src="/img/webp_export.png" alt="" />
+          <h3>WebP Export</h3>
+          <p>Bulk conversion tool with resizing and watermarking options.</p>
+        </div>
+      </div>
+    </main>
+    <aside>
+      <h2>&nbsp;</h2>
+      <ul>
+        <li>
+          <a href="/index.html"><button>Home</button></a>
+        </li>
+        <li>
+          <a href="/installation.html"><button>Installation</button></a>
+        </li>
+        <li>
+          <a href="/usage_screenshots.html"
+            ><button class="active">Screenshots</button></a
+          >
+        </li>
+        <li>
+          <a href="/architecture.html"><button>Architecture</button></a>
+        </li>
+      </ul>
+    </aside>
+    <footer>
+      <h2>Footer</h2>
+      <p>this is the footer</p>
+    </footer>
+  </body>
+</html>

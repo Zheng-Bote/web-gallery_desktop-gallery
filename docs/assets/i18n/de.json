@@ -1,0 +1,11 @@
+{
+  "app-title": "Rust Rocket Vorlage",
+  "app-brief": "Inhalts-Vorlage für Rust Rocket",
+  "main-title": "Main-Vorlage",
+  "main-brief": "Artikel Vorlage für Main",
+  "main-section-title": "Main Sektions-Titel",
+  "main-section-brief": "Sektions Vorlage für Main",
+  "Author": "Autor",
+  "text_width_limited": "Textbreite limitiert auf 80ch",
+  "app-desc": "Grundlegender vorkonfigurierter Rust-Webserver mit Rocket, CORS, CSRF, Dateiserver für Tera-Vorlagen und statischen Assets."
+}

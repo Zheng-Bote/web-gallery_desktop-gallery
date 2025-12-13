@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" id="html">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Desktop-Gallery</title>
+
+    <meta property="og:title" content="Desktop-Gallery" />
+    <meta
+      property="og:description"
+      content="a powerful image management tool for Linux, MacOS and Windows"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.robert.hase-zheng.net/" />
+    <meta
+      property="og:image"
+      content="https://www.robert.hase-zheng.net/assets/img/icons/favicon.svg"
+    />
+
+    <link
+      rel="shortcut icon"
+      href="/assets/img/icons/favicon.ico"
+      type="image/x-icon"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/assets/img/icons/favicon.svg"
+    />
+    <link href="/assets/css/index.css" rel="stylesheet" type="text/css" />
+
+    <link
+      href="/assets/css/page-structure.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <link href="/assets/css/format.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/css/image.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/css/text.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/css/coding.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/css/attribute.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/css/link.css" rel="stylesheet" type="text/css" />
+
+    <link rel="preload" href="/assets/img/logo.png" as="image" />
+
+    <style>
+      /* Beispiele */
+      .box {
+        border: 1px solid black;
+        padding: 10px;
+        width: fit-content;
+        background-color: aquamarine;
+      }
+    </style>
+
+    <script src="/assets/js/all.js" defer></script>
+  </head>
+
+  <body id="body" class="page-structure">
+    <header class="smart-header">
+      <div class="branding">
+        <img src="/assets/img/logo.png" alt="Logo" class="logo" />
+        <h1>Desktop-Gallery</h1>
+        <div class="brief">
+          a powerful image management tool for Linux, MacOS and Windows
+        </div>
+      </div>
+    </header>
+    <nav>
+      <h2>&nbsp;</h2>
+      <ul>
+        <li>
+          <a href="/index.html"><button class="active">Home</button></a>
+        </li>
+        <li>
+          <a href="/installation.html"><button>Installation</button></a>
+        </li>
+        <li>
+          <a href="/usage_screenshots.html"><button>Screenshots</button></a>
+        </li>
+        <li>
+          <a href="/architecture.html"><button>Architecture</button></a>
+        </li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Welcome</h2>
+      <div class="center-txt">
+        <p>
+          Desktop-Gallery is a high-performance, professional Desktop Frontend
+          (for the Crow Web-Gallery Project).
+        </p>
+        <br />
+        <p class="brief">Developed for Linux, macOS, and Windows.</p>
+      </div>
+
+      <article>
+        <h2>Description</h2>
+        <div class="txt">
+          <p>
+            Desktop-Gallery is a powerful image management tool built with C++23
+            and Qt6. It is designed to handle large photo collections
+            efficiently using a multithreaded architecture and a local SQLite
+            database.
+          </p>
+          <br />
+          <p>
+            Beyond viewing images, it serves as a comprehensive Metadata Editor
+            and Workflow Tool, allowing photographers to synchronize
+            EXIF/IPTC/XMP data, geocode images via OpenStreetMap, visualize
+            locations on an interactive map, and bulk-export assets to WebP or
+            upload them directly to a CrowQtServer (Crow Web-Gallery) instance.
+          </p>
+        </div>
+      </article>
+
+      <article>
+        <h2>Key Features</h2>
+        <div class="txt">
+          <ul class="toc">
+            <li>✅ runs on Linux</li>
+            <li>✅ runs on MacOS</li>
+            <li>✅ runs on Windows</li>
+          </ul>
+          <br />
+          <h3>🚀 Performance & Core</h3>
+          <p>
+            <span class="title">Database-Driven:</span> High-performance SQLite
+            backend with caching for instant search and filtering.
+            <br />
+            <span class="title">Multithreading:</span> Asynchronous recursive
+            folder scanning and thumbnail generation.
+            <br />
+            <span class="title">Cross-Platform:</span> Runs natively on Linux,
+            macOS, and Windows.
+          </p>
+          <br />
+          <h3>🌍 Geo-Intelligence</h3>
+          <p>
+            <span class="title">Reverse Geocoding:</span> Automatically fetch
+            address data (City, Street, Country) based on GPS coordinates using
+            OpenStreetMap (Nominatim).
+            <br />
+            <span class="title">Interactive Map View:</span> Visualize selected
+            images on a map using Leaflet.js integration.
+            <br />
+            <span class="title">GPS Data Management:</span> Read, write, and
+            propagate GPS metadata.
+          </p>
+          <br />
+          <h3>📝 Metadata Management</h3>
+          <p>
+            <span class="title">Comprehensive Editor:</span> View and edit EXIF,
+            IPTC, and XMP data.
+            <br />
+            <span class="title">Smart Synchronization:</span> Automatically
+            syncs metadata between standards (e.g., changing EXIF Copyright
+            updates IPTC and XMP fields instantly).
+            <br />
+            <span class="title">Bulk Operations:</span> Write default metadata
+            (Copyright, Author) to multiple selected images at once.
+            <br />
+            <span class="title">Smart Rename:</span> Bulk rename files based on
+            their creation timestamp.
+          </p>
+          <br />
+          <h3>☁️ Export & Cloud</h3>
+          <p>
+            <span class="title">WebP Bulk Export:</span> Convert images to WebP
+            with customizable quality, resizing, and watermarking.
+            <br />
+            <span class="title">Cloud Upload Client:</span> Integrated client to
+            upload images and metadata to a CrowQtServer (supports JWT Auth &
+            Refresh Tokens).
+          </p>
+          <br />
+          <h3>🌐 Internationalization</h3>
+          <p>
+            <span class="title">i18n:</span> Support for multiple languages
+            (English, German).
+          </p>
+        </div>
+      </article>
+
+      <section>
+        <h2>see also</h2>
+        <p class="brief">related products on GitHub</p>
+        <br />
+
+        <table>
+          <tr>
+            <th>Product</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td>
+              <a
+                href="https://github.com/Zheng-Bote/CrowQtServer"
+                alt="CrowQtServer"
+                title="github"
+              >
+                CrowQtServer</a
+              >
+            </td>
+            <td>
+              Crow ReST API Server with Qt6 & Worker (Inbox-Pattern) for
+              Web-Gallery
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a
+                href="https://github.com/Zheng-Bote/webserver-admin"
+                alt="Webserver Admin"
+                title="github"
+              >
+                Webserver Admin</a
+              >
+            </td>
+            <td>
+              extending CrowQtServer API Server to SCS (web-based user
+              management etc)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a
+                href="https://github.com/Zheng-Bote/web-gallery-frontend"
+                alt="Web-Gallery frontend"
+                title="github"
+              >
+                Web-Gallery frontend</a
+              >
+            </td>
+            <td>Angular Web-Frontend for Web-Gallery</td>
+          </tr>
+          <tr>
+            <td>
+              <a
+                href="https://github.com/Zheng-Bote/desktop-gallery"
+                alt="Desktop-Gallery"
+                title="github"
+              >
+                Desktop-Gallery</a
+              >
+            </td>
+            <td>
+              Desktop-Gallery image management and uploader to Web-Gallery
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a
+                href="https://github.com/Zheng-Bote/crowqt-client"
+                alt="CrowQtClient"
+                title="github"
+              >
+                CrowQtClient</a
+              >
+            </td>
+            <td>simple Desktop Client to upload Pictures to the Web-Gallery</td>
+          </tr>
+          <tr>
+            <td>
+              <a
+                href="https://github.com/Zheng-Bote/cli-img-client"
+                alt="CliImgClient"
+                title="github"
+              >
+                CliImgClient</a
+              >
+            </td>
+            <td>
+              Commandline Batch Image processing and uploader to Web-Gallery
+            </td>
+          </tr>
+        </table>
+      </section>
+    </main>
+    <aside>
+      <h2>&nbsp;</h2>
+      <ul>
+        <li>
+          <a href="/index.html"><button class="active">Home</button></a>
+        </li>
+        <li>
+          <a href="/installation.html"><button>Installation</button></a>
+        </li>
+        <li>
+          <a href="/usage_screenshots.html"><button>Screenshots</button></a>
+        </li>
+        <li>
+          <a href="/architecture.html"><button>Architecture</button></a>
+        </li>
+      </ul>
+    </aside>
+    <footer>
+      <h2>Footer</h2>
+      <p>this is the footer</p>
+    </footer>
+  </body>
+</html>

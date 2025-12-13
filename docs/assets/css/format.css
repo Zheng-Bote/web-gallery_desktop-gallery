@@ -1,0 +1,75 @@
+.grid-center-hv {
+  display: grid;
+  place-items: center;
+}
+.grid-center-h {
+  display: grid;
+  justify-content: center;
+}
+.grid-center-v {
+  display: grid;
+  align-items: center;
+}
+
+.center-element {
+  display: block;
+  align-items: center;
+}
+
+article,
+section {
+  margin: 10px;
+  padding: 10px;
+  border: var(--border-width) var(--border-style)
+    light-dark(var(--primary-color), var(--secondary-color));
+  border-radius: var(--border-radius);
+}
+article {
+  background-color: light-dark(var(--secondary-color), var(--primary-color));
+}
+
+section {
+  background-color: light-dark(var(--secondary-color), var(--primary-color));
+}
+
+section.listbox p {
+  margin: 10px 20px 10px 20px;
+  max-width: 70ch;
+
+  text-wrap: pretty;
+}
+
+.tab {
+  border-bottom: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  border-radius: 0 0 5px;
+}
+
+.toc {
+  ul,
+  li {
+    list-style: none;
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border: var(--border-width) var(--border-style)
+    light-dark(var(--primary-color), var(--secondary-color));
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+th,
+td {
+  border: var(--border-width) var(--border-style)
+    light-dark(var(--primary-color), var(--secondary-color));
+  padding: 5px;
+}
