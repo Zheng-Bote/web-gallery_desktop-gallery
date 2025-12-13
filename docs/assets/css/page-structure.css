@@ -1,22 +1,22 @@
 /* tmp */
 body {
-  background-color: lightgray;
+  background-color: var(--background-color);
 }
 header {
-  background-color: lightblue;
+  background-color: var(--background-color-header);
 }
 nav {
-  background-color: lightgreen;
+  background-color: var(--background-color-nav);
 }
 main {
-  background-color: lightyellow;
+  background-color: var(--background-color-main);
   padding: 10px;
 }
 aside {
-  background-color: lightpink;
+  background-color: var(--background-color-aside);
 }
 footer {
-  background-color: lightcoral;
+  background-color: var(--background-color-footer);
   text-align: center;
   font-size: 0.8rem;
   opacity: 0.5;
@@ -43,7 +43,7 @@ aside {
     background-color: var(--primary-color);
   }
   & button.active {
-    background-color: lightgray;
+    background-color: var(--primary-color);
   }
   & a:not([href^="http"]):not([href^="mailto"]) {
     background: none;

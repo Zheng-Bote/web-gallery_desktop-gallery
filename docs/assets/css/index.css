@@ -20,11 +20,13 @@
   --font-color-footer: light-dark(oklch(0% 0 0), oklch(95.84% 0.004 214.33));
 
   --background-color: light-dark(
-    oklch(95.84% 0.004 214.33),
-    oklch(69.09% 0.026 242.51)
+    oklch(0.78 0.0771 208.49),
+    oklch(0.64 0.1336 247.67)
   );
   --background-color-header: lightblue;
   --background-color-footer: lightblue;
+  --background-color-nav: lightblue;
+  --background-color-aside: lightblue;
 
   --red-color: oklch(62.8% 0.25768330773615683 29.2338851923426);
   --yellow-color: oklch(96.8% 0.21100590772552355 109.76923207652125);
@@ -57,19 +59,21 @@
 html {
   font-family: var(--font-family);
   font-size: 16px;
+  color: var(--font-color);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
+  background-color: var(--background-color);
 }
 
 body {
   background-size: 100vw 100vh;
   height: 100%;
 
-  background-color: var(--background-color);
-  color: var(--font-color);
+  /*background-color: var(--background-color);*/
+  /*color: var(--font-color);
   /*padding: calc(var(--base-padding) * 4);*/
 }
 
