@@ -149,7 +149,7 @@ window.addEventListener('scroll', () => {
   gap: 1.5rem;
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 1440px) {
   .page-structure {
     display: grid;
     grid-template:
@@ -157,6 +157,8 @@ window.addEventListener('scroll', () => {
       "nav    main   aside" 1fr
       "footer footer footer" auto / auto 1fr auto;
     min-height: 100vh;
+    max-width: 1600px;
+    margin: auto;
   }
   nav {
     flex-direction: column;
