@@ -48,9 +48,7 @@ Beyond viewing images, it serves as a comprehensive **Metadata Editor** and **Wo
 ## Key Features
 
 ✅ runs on Linux
-
 ✅ runs on MacOS
-
 ✅ runs on Windows
 
 ### 🚀 Performance & Core
