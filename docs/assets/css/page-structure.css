@@ -63,6 +63,14 @@ aside {
     padding: 5px;
     cursor: pointer;
   }
+
+  & a[href^="http"] {
+    background: none;
+    width: 100%;
+    text-decoration: none;
+    padding: 5px;
+    cursor: pointer;
+  }
 }
 /* tmp */
 
