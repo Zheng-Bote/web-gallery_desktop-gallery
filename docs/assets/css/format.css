@@ -73,3 +73,17 @@ td {
     light-dark(var(--primary-color), var(--secondary-color));
   padding: 5px;
 }
+
+th {
+  color: var(--font-color-header);
+}
+td {
+  color: black;
+  & a:link,
+  a:active,
+  a:visited {
+    color: black;
+    font-style: italic;
+    text-decoration: none;
+  }
+}

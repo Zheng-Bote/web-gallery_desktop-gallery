@@ -1,0 +1,43 @@
+.div-color {
+  color: attr(data-text-color type(<color>), black);
+}
+
+[data-background="default"] {
+  text-align: center;
+}
+[data-type] {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid black;
+}
+[data-type="text"] {
+  background-color: lightseagreen;
+}
+
+button[data-btn="attribute"] {
+  background-color: aquamarine;
+  padding: 2px;
+  border-radius: 5px;
+}
+
+/* ##### Grid ##### */
+[data-columns] {
+  display: grid;
+  grid-gap: 1rem;
+  padding: 1rem;
+  margin: 0 0 1rem 0;
+
+  color: black;
+
+  grid-template-columns: repeat(attr(data-columns type(<number>), 2), 1fr);
+}
+
+[data-columns] > div {
+  height: 100px;
+  background: white;
+}
+
+[data-columns="3"] {
+  background: #64b5f6;
+  /*grid-template-columns: repeat(2, 1fr);*/
+}

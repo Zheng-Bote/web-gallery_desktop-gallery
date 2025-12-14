@@ -4,6 +4,7 @@ body {
 }
 header {
   background-color: var(--background-color-header);
+  color: var(--font-color-header);
 }
 nav {
   background-color: var(--background-color-nav);
@@ -17,6 +18,7 @@ aside {
 }
 footer {
   background-color: var(--background-color-footer);
+  color: var(--font-color-footer);
   text-align: center;
   font-size: 0.8rem;
   opacity: 0.5;
@@ -26,11 +28,13 @@ nav,
 aside {
   padding: 10px;
 
+  display: flex;
+
   & button {
     background: none;
-    width: 100%;
+    width: 100px;
     background-color: light-dark(var(--secondary-color), var(--primary-color));
-    color: white;
+    color: var(--font-color);
     text-decoration: none;
     padding: 5px;
     margin: 5px 0 5px 0;
@@ -103,6 +107,8 @@ aside {
   & img {
     width: 50px;
     height: auto;
+    decoding: auto;
+    vertical-align: middle;
   }
 }
 /*
@@ -137,7 +143,23 @@ window.addEventListener('scroll', () => {
       "footer footer footer" auto / auto 1fr auto;
     min-height: 100vh;
   }
+  nav {
+    flex-direction: column;
+    align-items: stretch;
+  }
   aside {
     display: none;
+  }
+}
+
+@media (max-width: 1023px) {
+  nav {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  aside {
+    flex-direction: row;
+    justify-content: center;
   }
 }

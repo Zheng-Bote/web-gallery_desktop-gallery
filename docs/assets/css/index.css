@@ -16,17 +16,22 @@
   --font-size-responsive: calc(2vw + 1em);
 
   --font-color: light-dark(oklch(0% 0 0), oklch(95.84% 0.004 214.33));
-  --font-color-header: light-dark(oklch(0% 0 0), oklch(95.84% 0.004 214.33));
-  --font-color-footer: light-dark(oklch(0% 0 0), oklch(95.84% 0.004 214.33));
-
-  --background-color: light-dark(
-    oklch(0.78 0.0771 208.49),
-    oklch(0.64 0.1336 247.67)
+  /*--font-color-header: light-dark(oklch(0% 0 0), oklch(95.84% 0.004 214.33));
+  --font-color-footer: light-dark(oklch(0% 0 0), oklch(95.84% 0.004 214.33));*/
+  --font-color-header: light-dark(
+    oklch(28.627% 0.01177 214.654 / 0.527),
+    oklch(0% 0 0)
   );
-  --background-color-header: lightblue;
-  --background-color-footer: lightblue;
-  --background-color-nav: lightblue;
-  --background-color-aside: lightblue;
+  --font-color-footer: light-dark(
+    oklch(28.627% 0.01177 214.654 / 0.527),
+    oklch(0% 0 0)
+  );
+
+  --background-color: light-dark(#a1e3f9, #578fca);
+  --background-color-header: light-dark(#578fca, #3674b5);
+  --background-color-footer: light-dark(#578fca, #3674b5);
+  --background-color-nav: light-dark(#578fca, #3674b5);
+  --background-color-aside: light-dark(#578fca, #3674b5);
 
   --red-color: oklch(62.8% 0.25768330773615683 29.2338851923426);
   --yellow-color: oklch(96.8% 0.21100590772552355 109.76923207652125);
@@ -41,8 +46,8 @@
   --border-width: 1px;
   --border-radius: 5px;
 
-  --primary-color: oklch(0.64 0.1336 247.67);
-  --secondary-color: oklch(0.78 0.0771 208.49);
+  --primary-color: #578fca;
+  --secondary-color: #a1e3f9;
   --font-color-white: oklch(1 0 0);
 
   --tranparent: tranparent;

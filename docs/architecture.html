@@ -6,23 +6,27 @@
 
     <title>Desktop-Gallery</title>
 
-    <meta
-      name="description"
-      content="a powerful image management tool for Linux, MacOS and Windows"
-    />
+    <meta name="description" content="Architecture of Desktop-Gallery" />
     <meta name="version" content="v1.0.0" />
     <meta name="author" content="ZHENG Robert" />
     <meta name="date" content="2025-12-13T16:45:00+01:00" />
+    <meta
+      name="keywords"
+      content="Desktop-Gallery, Picture Gallery, Image Management, Qt, C++23, SQLite, Exiv2, IPTC, XMP, OpenStreetMap, Leaflet.js, Crow, CrowQtServer, CrowWebGallery, ZHENG Bote, Robert Zheng"
+    />
+
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
 
     <meta property="og:title" content="Desktop-Gallery" />
     <meta
       property="og:description"
-      content="a powerful image management tool for Linux, MacOS and Windows"
+      content="A high-performance, professional Desktop Picture Gallery and Image management tool."
     />
     <meta property="og:type" content="website" />
     <meta
       property="og:url"
-      content="https://zheng-bote.github.io/web-gallery_desktop-gallery/"
+      content="https://github.com/Zheng-Bote/web-gallery_desktop-gallery"
     />
     <meta
       property="og:image"
@@ -71,22 +75,12 @@
     </header>
     <nav>
       <h2>&nbsp;</h2>
-      <ul>
-        <li>
-          <a href="./index.html"><button>Home</button></a>
-        </li>
-        <li>
-          <a href="./installation.html"><button>Installation</button></a>
-        </li>
-        <li>
-          <a href="./usage_screenshots.html"><button>Screenshots</button></a>
-        </li>
-        <li>
-          <a href="./architecture.html"
-            ><button class="active">Architecture</button></a
-          >
-        </li>
-      </ul>
+      <a href="./index.html"><button>Home</button></a>
+      <a href="./installation.html"><button>Installation</button></a>
+      <a href="./usage_screenshots.html"><button>Screenshots</button></a>
+      <a href="./architecture.html"
+        ><button class="active">Architecture</button></a
+      >
     </nav>
     <main>
       <h1>Architecture</h1>
@@ -224,27 +218,31 @@
             <span class="title">Rendering:</span> ThumbnailDelegate paints the
             new thumbnails in the grid.
           </p>
+          <br />
+          <h4>Technology Stack:</h4>
+          <p>
+            <span class="title">Language:</span> C++23
+            <br />
+            <span class="title">Framework:</span> Qt 6.9 (Core, Gui, Widgets,
+            Sql, Network, Concurrent, WebEngineWidgets)
+            <br />
+            <span class="title">Metadata Library:</span> Exiv2
+            <br />
+            <span class="title">Database:</span> SQLite3 (via QtSql)
+            <br />
+            <span class="title">Build System:</span> CMake
+          </p>
         </section>
       </article>
     </main>
     <aside>
       <h2>&nbsp;</h2>
-      <ul>
-        <li>
-          <a href="./index.html"><button>Home</button></a>
-        </li>
-        <li>
-          <a href="./installation.html"><button>Installation</button></a>
-        </li>
-        <li>
-          <a href="./usage_screenshots.html"><button>Screenshots</button></a>
-        </li>
-        <li>
-          <a href="./architecture.html"
-            ><button class="active">Architecture</button></a
-          >
-        </li>
-      </ul>
+      <a href="./index.html"><button>Home</button></a>
+      <a href="./installation.html"><button>Installation</button></a>
+      <a href="./usage_screenshots.html"><button>Screenshots</button></a>
+      <a href="./architecture.html"
+        ><button class="active">Architecture</button></a
+      >
     </aside>
     <footer>
       <h2>Footer</h2>
