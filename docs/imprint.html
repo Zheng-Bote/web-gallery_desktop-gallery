@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Desktop-Gallery</title>
+
+    <meta
+      name="description"
+      content="A high-performance, professional Desktop Picture Gallery and Image management tool."
+    />
+    <meta name="version" content="v1.0.0" />
+    <meta name="author" content="ZHENG Robert" />
+    <meta name="date" content="2025-12-13T16:45:00+01:00" />
+    <meta
+      name="keywords"
+      content="Desktop-Gallery, Picture Gallery, Image Management, Qt, C++23, SQLite, Exiv2, IPTC, XMP, OpenStreetMap, Leaflet.js, Crow, CrowQtServer, CrowWebGallery, ZHENG Bote, Robert Zheng"
+    />
+
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+
+    <meta property="og:title" content="Desktop-Gallery" />
+    <meta
+      property="og:description"
+      content="A high-performance, professional Desktop Picture Gallery and Image management tool."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://github.com/Zheng-Bote/web-gallery_desktop-gallery"
+    />
+    <meta
+      property="og:image"
+      content="https://zheng-bote.github.io/web-gallery_desktop-gallery/assets/img/icons/favicon.svg"
+    />
+
+    <link
+      rel="shortcut icon"
+      href="./assets/img/icons/favicon.ico"
+      type="image/x-icon"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="./assets/img/icons/favicon.svg"
+    />
+    <link href="./assets/css/index.css" rel="stylesheet" type="text/css" />
+
+    <link
+      href="./assets/css/page-structure.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <link href="./assets/css/format.css" rel="stylesheet" type="text/css" />
+    <link href="./assets/css/image.css" rel="stylesheet" type="text/css" />
+    <link href="./assets/css/text.css" rel="stylesheet" type="text/css" />
+    <link href="./assets/css/coding.css" rel="stylesheet" type="text/css" />
+    <link href="./assets/css/attribute.css" rel="stylesheet" type="text/css" />
+    <link href="./assets/css/link.css" rel="stylesheet" type="text/css" />
+    <link href="./assets/css/coding.css" rel="stylesheet" type="text/css" />
+
+    <link rel="preload" href="./assets/img/logo.png" as="image" />
+
+    <script src="./assets/js/all.js" defer></script>
+
+    <style>
+      img {
+        border-radius: var(--border-radius);
+      }
+    </style>
+  </head>
+
+  <body id="body" class="page-structure">
+    <header class="smart-header">
+      <div class="branding">
+        <img src="./assets/img/logo.png" alt="Logo" class="logo" />
+        <h1>Desktop-Gallery</h1>
+        <div class="brief">
+          a powerful image management tool for Linux, MacOS and Windows
+        </div>
+      </div>
+    </header>
+    <nav>
+      <h2>&nbsp;</h2>
+      <a href="./index.html"><button>Home</button></a>
+      <a href="./installation.html"><button>Installation</button></a>
+      <a href="./usage_screenshots.html"><button>Screenshots</button></a>
+      <a href="./architecture.html"><button>Architecture</button></a>
+      <a href="./imprint.html"><button class="active">Imprint</button></a>
+    </nav>
+    <main>
+      <h2>Imprint - Legal Notice</h2>
+      <div class="center-txt">
+        <p>
+          <b>-- private, non-commercial website --</b>
+        </p>
+        <br />
+        <p class="brief">Represented by: Zheng Robert</p>
+      </div>
+
+      <article>
+        <h2>Legal Notice</h2>
+        <section>
+          <h3>Contact</h3>
+          <br />
+          <p><span class="title">Represented by:</span> Zheng Robert</p>
+          <br />
+          <p>
+            <span class="title">Address:</span>
+            <img
+              src="./assets/img/address_imprint.png"
+              alt="imprint contact"
+              title="Imprint Contactdata"
+              width="400px"
+              height="auto"
+            />
+            <br />
+            <span class="title">Responsible for Content:</span> Zheng Robert
+            <br />
+            <span class="title">VAT ID:</span> --/--
+            <br />
+            <span class="title">eMail:</span>
+            <img
+              src="./assets/img/mail_white.svg"
+              alt="mailadress"
+              width="200px"
+              height="auto"
+            />
+            <br />
+            <img
+              src="./assets/img/qr-code_email.svg"
+              alt="mailadress"
+              width="200px"
+              height="auto"
+            />
+            <br />
+            <span class="title">Regulatory Authority:</span>
+            Europe/Germany/Bavaria/Munich
+          </p>
+          <br />
+          <p>
+            This Legal Notice complies with the German laws under § 5 TMG and §
+            55 RStV.
+          </p>
+        </section>
+        <section>
+          <h3>Liability for Content</h3>
+          <p class="txt">
+            The contents of our website have been created with the greatest
+            possible care. However, we cannot guarantee the contents' accuracy,
+            completeness, or topicality. According to Section 7, paragraph 1 of
+            the TMG (Telemediengesetz - German Telemedia Act), we as service
+            providers are liable for our content on these pages by general laws.
+            However, according to Sections 8 to 10 of the TMG, we service
+            providers are not obliged to monitor external information
+            transmitted or stored or investigate circumstances pointing to
+            illegal activity. Obligations to remove or block the use of
+            information under general laws remain unaffected. However, a
+            liability in this regard is only possible from the moment of
+            knowledge of a specific infringement. Upon notification of such
+            violations, we will remove the content immediately.
+          </p>
+        </section>
+        <section>
+          <h3>Liability for Links</h3>
+          <p class="txt">
+            Our website contains links to external websites of third parties. As
+            a service provider, we are not liable for the contents of those
+            external websites according to Section 8 of the TMG
+            (Telemediengesetz - German Telemedia Act). However, according to
+            Section 18 of the TMG, we are liable in individual cases of
+            knowledge of illegal contents and failure to remove them. Upon
+            notification of such violations, we will remove the content
+            immediately.
+          </p>
+        </section>
+        <section>
+          <h3>Copyright</h3>
+          <p class="txt">
+            The contents and works on these pages created by the site operator
+            are subject to German copyright law. The duplication, processing,
+            distribution, and any kind of utilization outside the limits of
+            copyright require the written consent of the respective author or
+            creator. Downloads and copies of these pages are only permitted for
+            private, non-commercial use. In so far as the contents on this site
+            were not created by the operator, the copyrights of third parties
+            are respected. In particular, third-party content is marked as such.
+            Should you become aware of a copyright infringement, please inform
+            us accordingly. Upon notification of violations, we will remove such
+            contents immediately.
+          </p>
+        </section>
+        <section>
+          <h3>License of Sourcecode</h3>
+          <p class="txt">
+            The sourcecode of this project is licensed under the
+            <b>MIT License</b>.
+            <br />
+            Copyright (c) 2024 ZHENG Robert
+            <br /><br />
+            Permission is hereby granted, free of charge, to any person
+            obtaining a copy of this software and associated documentation files
+            (the "Software"), to deal in the Software without restriction,
+            including without limitation the rights to use, copy, modify, merge,
+            publish, distribute, sublicense, and/or sell copies of the Software,
+            and to permit persons to whom the Software is furnished to do so,
+            subject to the following conditions: The above copyright notice and
+            this permission notice shall be included in all copies or
+            substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS
+            IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+            NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+            PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+            AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+            OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+            OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+            OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+          </p>
+        </section>
+        <p class="brief">Last Updated: 12/2023</p>
+      </article>
+    </main>
+    <aside>
+      <h2>&nbsp;</h2>
+      <a href="./index.html"><button>Home</button></a>
+      <a href="./installation.html"><button>Installation</button></a>
+      <a href="./usage_screenshots.html"><button>Screenshots</button></a>
+      <a href="./architecture.html"><button>Architecture</button></a>
+      <a href="./imprint.html"><button class="active">Imprint</button></a>
+    </aside>
+    <footer>
+      <h2>Footer</h2>
+      <p>this is the footer</p>
+    </footer>
+  </body>
+</html>

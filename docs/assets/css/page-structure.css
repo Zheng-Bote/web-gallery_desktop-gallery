@@ -5,6 +5,7 @@ body {
 header {
   background-color: var(--background-color-header);
   color: var(--font-color-header);
+  max-height: 70px;
 }
 nav {
   background-color: var(--background-color-nav);
@@ -12,6 +13,7 @@ nav {
 main {
   background-color: var(--background-color-main);
   padding: 10px;
+  min-height: 100%;
 }
 aside {
   background-color: var(--background-color-aside);
@@ -21,7 +23,12 @@ footer {
   color: var(--font-color-footer);
   text-align: center;
   font-size: 0.8rem;
-  opacity: 0.5;
+  opacity: 0.8;
+  max-height: 40px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 nav,
