@@ -173,7 +173,53 @@ cmake --build .
 
 ![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/about.png)
 
-**Technology Stack**
+
+# Architecture Overview
+
+**Desktop-Gallery** is a high-performance, multithreaded desktop application designed for managing, editing, and distributing digital photography. It is built using **modern C++ (C++23)** and the **Qt 6 Framework**.
+
+The application follows a **Model-View-Controller (MVC)** architectural pattern, leveraging Qt's efficient signal/slot mechanism for event-driven communication and SQLite for persistent data storage.
+
+## 1. Technology Stack
+
+* **Language:** C++23
+* **GUI Framework:** Qt 6.x (Widgets, GUI, Core)
+* **Database:** SQLite 3 (via QtSql)
+* **Concurrency:** QtConcurrent / QThreadPool
+* **Networking:** QtNetwork (REST API / Multipart Uploads)
+* **Web Engine:** QtWebEngine (Chromium-based) for Map rendering
+* **Metadata Library:** Exiv2 (via custom `Photo` wrapper)
+* **Build System:** CMake
+
+## 2. High-Level Architecture Diagram
+
+```mermaid
+graph TD
+    User[User Interaction] --> UI[Presentation Layer]
+    
+    subgraph "Presentation Layer (UI)"
+        UI --> MW[MainWindow]
+        UI --> PW[PictureWidget Details]
+        UI --> MAP[MapWindow / Leaflet]
+        UI --> DLG[Dialogs / Settings]
+    end
+
+    subgraph "Business Logic Layer"
+        MW --> IDX[ImageIndexer Worker]
+        MW --> UP[UploadManager]
+        MW --> GEO[Nominatim Geocoding]
+        PW --> P_WRAP[Photo Wrapper / Exiv2]
+    end
+
+    subgraph "Data Persistence Layer"
+        IDX --> DB[(SQLite Database)]
+        DB --> MODEL[QSqlTableModel]
+        MODEL --> MW
+        UP --> API[CrowQt Server API]
+        P_WRAP --> FS[File System]
+    end
+```
+## Technology Stack**
 
 Language: C++23
 
