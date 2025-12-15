@@ -6,10 +6,7 @@
 
     <title>Desktop-Gallery</title>
 
-    <meta
-      name="description"
-      content="Getting started: Prerequisites, Project Structure and Build Instructions for building Desktop-Gallery"
-    />
+    <meta name="description" content="about Desktop-Gallery and Developers" />
     <meta name="version" content="v1.0.0" />
     <meta name="author" content="ZHENG Robert" />
     <meta name="date" content="2025-12-13T16:45:00+01:00" />
@@ -64,6 +61,31 @@
     <link rel="preload" href="./assets/img/logo.png" as="image" />
 
     <script src="./assets/js/all.js" defer></script>
+
+    <style>
+      a[href^="http"] {
+        background: none;
+      }
+
+      .avatar_img {
+        float: left;
+        padding: 0.5rem;
+      }
+      .avatar {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 50%;
+        max-width: 250px;
+        height: auto;
+        opacity: 0.5;
+      }
+      .avatar_center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    </style>
   </head>
 
   <body id="body" class="page-structure">
@@ -79,101 +101,98 @@
     <nav>
       <h2>&nbsp;</h2>
       <a href="./index.html"><button>Home</button></a>
-      <a href="./installation.html"
-        ><button class="active">Installation</button></a
-      >
+      <a href="./installation.html"><button>Installation</button></a>
       <a href="./usage_screenshots.html"><button>Screenshots</button></a>
       <a href="./architecture.html"><button>Architecture</button></a>
+      <a href="./about.html"><button class="active">About</button></a>
       <a href="https://github.com/Zheng-Bote/web-gallery_desktop-gallery"
         ><button>&lt;&gt; GitHub</button></a
       >
     </nav>
     <main>
-      <h2>Installation</h2>
-      <br />
+      <h2>About</h2>
+      <div class="center-txt">
+        <p>
+          about Desktop-Gallery, Author and Code Contributors of the Crow
+          Web-Gallery Project.
+        </p>
+        <br />
+        <p class="brief">Scope: Desktop-Gallery</p>
+      </div>
 
       <article>
-        <h2>Getting Started</h2>
+        <h2>Desktop-Gallery</h2>
         <section>
-          <h3>Prerequisites</h3>
+          <h3>Application</h3>
+          <p>
+            Desktop-Gallery is a high-performance, professional Desktop Picture
+            Gallery and Image management tool for Linux, MacOS and Windows.
+          </p>
           <br />
-          <ul class="toc">
-            <li>CMake (3.16+)</li>
-            <li>
-              C++ Compiler supporting C++23 (GCC 13+, Clang 16+, MSVC 2022)
-            </li>
-            <li>
-              Qt6 (Core, Gui, Widgets, Sql, Concurrent, Network,
-              WebEngineWidgets, LinguistTools)
-            </li>
-            <li>Exiv2 (Library for image metadata)</li>
-          </ul>
+          <p>Part of the Crow Web-Gallery Project.</p>
         </section>
-        <section class="coding">
-          <h3>Project Structure</h3>
-          <br />
-          <code>
-            <pre>
-├── CMakeLists.txt # Main build configuration
-├── LICENSE # MIT License
-├── README.md # Project documentation
-├── configure
-│   └── rz_config.hpp.in # Version and Project defines
-├── i18n # Translation files (.ts and .qm)
-│   ├── gallery_de.ts
-│   └── gallery_en.ts
-├── include # Header files (.hpp)
-│   ├── DatabaseManager.hpp # SQLite encapsulation
-│   ├── LoginDialog.hpp # Server Auth UI
-│   ├── MapWindow.hpp # QWebEngine Map View
-│   ├── MainWindow.hpp # Main GUI Logic
-│   ├── UploadManager.hpp # Network/Upload Logic
-│   ├── rz_metadata.hpp # Metadata Definitions & Mappings
-│   └── rz_photo.hpp # Image & Exiv2 Wrapper
-├── resources # Icons and Assets
-│   └── img
-├── src # Source files (.cpp)
-│   ├── DatabaseManager.cpp
-│   ├── ImageIndexer.cpp # Multithreaded Scanner
-│   ├── MainWindow.cpp
-│   ├── MapWindow.cpp
-│   ├── ThumbnailDelegate.cpp # Custom Grid Rendering
-│   ├── UploadManager.cpp
-│   ├── main.cpp # Entry Point
-│   ├── picture_widget.cpp # Detail View
-│   └── rz_photo.cpp # Exiv2 Implementation
-        </pre
+        <section>
+          <h3>Author</h3>
+
+          <img
+            src="https://avatars.githubusercontent.com/u/78920748?v=4"
+            alt="Zheng Robert"
+            title="Zheng Robert"
+            class="avatar"
+          />
+          <div class="avatar_center">
+            <a
+              href="https://www.github.com/Zheng-Bote"
+              alt="Zheng Robert"
+              title="Zheng Robert on GitHub"
             >
-          </code>
-        </section>
-        <section class="coding">
-          <h3>Build Instructions</h3>
-          <br />
-          <span class="title">1. Clone the repository:</span>
-          <code>
-            <pre>
-git clone https://github.com/Zheng-Bote/web-gallery_desktop-gallery.git</pre
+              <img
+                src="https://img.shields.io/badge/Github-Zheng_Robert-black?logo=github"
+                alt="Zheng Robert"
+                class="avatar_img"
+              />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/robert-zheng-67899965/"
+              alt="Zheng Robert"
+              title="Zheng Robert on LinkedIn"
             >
-          </code>
-          <br />
-          <span class="title">2. Build the project:</span>
-          <code><pre>cd web-gallery_desktop-gallery</pre></code>
-          <code><pre>mkdir build</pre></code>
-          <code><pre>cd build</pre></code>
-          <code><pre>cmake ..</pre></code>
-          <code><pre>make</pre></code>
-          <br />
-          <span class="title">3. Run the application:</span>
-          <code><pre>./Desktop-Gallery</pre></code>
+              <img
+                src="https://img.shields.io/badge/LinkedIn-Zheng_Robert-black?logo=linkedin"
+                alt="Zheng Robert"
+                class="avatar_img"
+              />
+            </a>
+            <a
+              href="https://www.xing.com/profile/Robert_Zheng"
+              alt="Zheng Robert"
+              title="Zheng Robert on Xing"
+            >
+              <img
+                src="https://img.shields.io/badge/Xing-Zheng_Robert-black?logo=xing"
+                alt="Zheng Robert"
+                class="avatar_img"
+              />
+            </a>
+            <a
+              href="https://www.robert.hase-zheng.net"
+              alt="Zheng Robert"
+              title="Zheng Robert Homepage"
+            >
+              <img
+                src="https://img.shields.io/badge/Homepage-Zheng_Robert-black?logo=homepage"
+                alt="Zheng Robert"
+                class="avatar_img"
+              />
+            </a>
+          </div>
         </section>
       </article>
     </main>
     <aside>
       <h2>&nbsp;</h2>
-      <a href="./index.html"><button>Home</button></a>
-      <a href="./installation.html"
-        ><button class="active">Installation</button></a
-      >
+      <a href="./index.html"><button class="active">Home</button></a>
+      <a href="./installation.html"><button>Installation</button></a>
       <a href="./usage_screenshots.html"><button>Screenshots</button></a>
       <a href="./architecture.html"><button>Architecture</button></a>
       <a href="https://github.com/Zheng-Bote/web-gallery_desktop-gallery"
