@@ -1,90 +1,23 @@
-/* tmp */
-body {
-  background-color: var(--background-color);
-}
-header {
-  background-color: var(--background-color-header);
-  color: var(--font-color-header);
-  max-height: 70px;
-}
-nav {
-  background-color: var(--background-color-nav);
-}
-main {
-  background-color: var(--background-color-main);
-  padding: 10px;
-  min-height: 100%;
-}
-aside {
-  background-color: var(--background-color-aside);
-}
-footer {
-  background-color: var(--background-color-footer);
-  color: var(--font-color-footer);
-  text-align: center;
-  font-size: 0.8rem;
-  opacity: 0.8;
-  max-height: 40px;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-nav,
-aside {
-  padding: 10px;
-
-  display: flex;
-
-  & button {
-    background: none;
-    width: 100px;
-    background-color: light-dark(var(--secondary-color), var(--primary-color));
-    color: var(--font-color);
-    text-decoration: none;
-    padding: 5px;
-    margin: 5px 0 5px 0;
-    border-radius: var(--border-radius);
-    border: var(--border-width) var(--border-style)
-      light-dark(var(--primary-color), var(--secondary-color));
-    cursor: pointer;
-  }
-  & button:hover {
-    background-color: var(--primary-color);
-  }
-  & button.active {
-    background-color: var(--primary-color);
-  }
-  & a:not([href^="http"]):not([href^="mailto"]) {
-    background: none;
-    width: 100%;
-    text-decoration: none;
-    padding: 5px;
-    cursor: pointer;
-  }
-
-  & a[href^="http"] {
-    background: none;
-    width: 100%;
-    text-decoration: none;
-    padding: 5px;
-    cursor: pointer;
-  }
-}
-/* tmp */
-
+/* --- PAGE STRUCTURE (GRID) --- */
 .page-structure {
   display: grid;
-  grid-template:
+  min-height: 100dvh; /* Wichtig: Mindestens 100% der Viewport-Höhe */
+
+  /* MOBILE LAYOUT (Standard) */
+  /* Zeilen: Header, Nav, Main, Aside, Footer */
+  /* Die 1fr bei Main sorgt dafür, dass Main den freien Platz nimmt -> Footer rutscht nach unten */
+  grid-template-rows: auto auto 1fr auto auto;
+  grid-template-columns: 100%;
+
+  grid-template-areas:
     "header"
     "nav"
     "main"
     "aside"
     "footer";
-  grid-template-rows: auto;
-  min-height: 100dvh;
 }
+
+/* Zuweisung der Grid-Areas */
 .page-structure > header {
   grid-area: header;
 }
@@ -101,16 +34,87 @@ aside {
   grid-area: footer;
 }
 
-/* Add this class via JS when scrolling down */
-.smart-header {
+/* --- COMPONENT STYLES --- */
+
+header {
+  background-color: var(--background-color-header);
+  color: var(--font-color-header);
+  padding: 10px;
+  /* Sticky Header (optional, aus deinem Code übernommen) */
   position: sticky;
   top: 0;
-  transition: transform 0.3s ease;
   z-index: 100;
 }
-.smart-header.hidden {
-  transform: translateY(-100%);
+
+main {
+  background-color: var(--background-color-main);
+  padding: 20px;
 }
+
+footer {
+  background-color: var(--background-color-footer);
+  color: var(--font-color-footer);
+  padding: 10px;
+  text-align: center;
+}
+
+/* --- NAV & ASIDE STYLING (Mobile: Horizontal) --- */
+nav,
+aside {
+  padding: 10px;
+  display: flex;
+  flex-direction: row; /* Horizontal */
+  flex-wrap: wrap; /* Umbruch erlauben */
+  justify-content: center; /* Zentriert */
+  gap: 10px; /* Abstand zwischen Buttons */
+
+  & a:not([href^="http"]):not([href^="mailto"]) {
+    background: none;
+
+    text-decoration: none;
+    padding: 5px;
+    cursor: pointer;
+  }
+
+  & a[href^="http"] {
+    background: none;
+    text-decoration: none;
+    padding: 5px;
+    cursor: pointer;
+  }
+}
+
+nav {
+  background-color: var(--background-color-nav);
+}
+aside {
+  background-color: var(--background-color-aside);
+}
+
+/* Button Styling */
+/*nav a,
+aside a {
+  text-decoration: none;
+}*/
+
+nav button,
+aside button {
+  width: 100px; /* Anforderung */
+  padding: 10px;
+  cursor: pointer;
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  transition: background 0.3s;
+}
+
+nav button:hover,
+nav button.active,
+aside button:hover {
+  background-color: var(--primary-color);
+}
+
 .branding {
   display: flex;
   align-items: center;
@@ -126,57 +130,71 @@ aside {
     vertical-align: middle;
   }
 }
-/*
-let lastScroll = 0;
-window.addEventListener('scroll', () => {
-  const currentScroll = window.pageYOffset;
-  const header = document.querySelector('.smart-header');
-  
-  // If scrolled down more than 100px and continuing to scroll down
-  if (currentScroll > 100 && currentScroll > lastScroll) {
-    header.classList.add('hidden');
-  } else {
-    header.classList.remove('hidden');
-  }
-  
-  lastScroll = currentScroll;
-});
-*/
-
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
-  gap: 1.5rem;
-}
 
 @media screen and (min-width: 1440px) {
   .page-structure {
-    display: grid;
-    grid-template:
-      "header header header" auto
-      "nav    main   aside" 1fr
-      "footer footer footer" auto / auto 1fr auto;
-    min-height: 100vh;
+    /* Layout: Nav - Main - Aside */
+    /* Spalten: Nav(auto) - Main(Rest) - Aside(auto) */
+    grid-template-columns: auto 1fr auto;
+
+    /* Zeilen: Header - Content(Main+Nav+Aside) - Footer */
+    grid-template-rows: auto 1fr auto;
+
+    grid-template-areas:
+      "header header header"
+      "nav    main   aside"
+      "footer footer footer";
+
     max-width: 1600px;
     margin: auto;
   }
+
+  /* Nav und Aside vertikal ausrichten */
   nav {
-    flex-direction: column;
-    align-items: stretch;
+    flex-direction: column; /* Buttons untereinander */
+    justify-content: flex-start;
+    width: 140px; /* Etwas Platz für die 100px Buttons + Padding */
+    align-items: center;
   }
   aside {
     display: none;
   }
+
+  main {
+    /* Optional: Max-Width für Main Content auf großen Screens */
+    max-width: 100%;
+  }
 }
 
-@media (max-width: 1023px) {
-  nav {
-    flex-direction: row;
-    justify-content: center;
+/* --- DESKTOP LAYOUT (min-width: 1024px) --- */
+@media screen and (min-width: 1024px) and (max-width: 1439px) {
+  .page-structure {
+    /* Layout: Nav - Main - Aside */
+    /* Spalten: Nav(auto) - Main(Rest) - Aside(auto) */
+    grid-template-columns: auto 1fr auto;
+
+    /* Zeilen: Header - Content(Main+Nav+Aside) - Footer */
+    grid-template-rows: auto 1fr auto;
+
+    grid-template-areas:
+      "header header header"
+      "nav    main   aside"
+      "footer footer footer";
   }
 
+  /* Nav und Aside vertikal ausrichten */
+  nav {
+    flex-direction: column; /* Buttons untereinander */
+    justify-content: flex-start;
+    width: 140px; /* Etwas Platz für die 100px Buttons + Padding */
+    align-items: center;
+  }
   aside {
-    flex-direction: row;
-    justify-content: center;
+    display: none;
+  }
+
+  main {
+    /* Optional: Max-Width für Main Content auf großen Screens */
+    max-width: 100%;
   }
 }
