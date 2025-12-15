@@ -219,17 +219,7 @@ graph TD
         P_WRAP --> FS[File System]
     end
 ```
-## Technology Stack**
 
-Language: C++23
-
-Framework: Qt 6.9 (Core, Gui, Widgets, Sql, Network, Concurrent, WebEngineWidgets)
-
-Metadata Library: Exiv2
-
-Database: SQLite3 (via QtSql)
-
-Build System: CMake
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
