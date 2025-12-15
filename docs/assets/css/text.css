@@ -28,6 +28,10 @@
   text-wrap: pretty;
 }
 
+.txt-small {
+  font-size: var(--font-size-small);
+}
+
 .center-txt {
   text-align: center;
 }

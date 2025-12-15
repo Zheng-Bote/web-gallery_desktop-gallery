@@ -1,5 +1,5 @@
 window.onload = function () {
-  const footer = document.querySelector("footer");
+  const footer = document.querySelector("#footer-center");
 
   const year = 2024;
   const DATE = new Date();
@@ -8,5 +8,8 @@ window.onload = function () {
 
   Number(year) == FULLYEAR ? (years = year) : (years = year + "-" + FULLYEAR);
 
-  footer.innerHTML = "Copyright &copy; " + years + " by ZHENG Robert";
+  footer.innerHTML =
+    "<p>&copy; " +
+    years +
+    " by ZHENG Robert</p><p class='txt-small'>All rights reserved.</p>";
 };

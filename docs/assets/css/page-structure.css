@@ -1,20 +1,13 @@
 /* --- PAGE STRUCTURE (GRID) --- */
 .page-structure {
   display: grid;
-  min-height: 100dvh; /* Wichtig: Mindestens 100% der Viewport-Höhe */
-
-  /* MOBILE LAYOUT (Standard) */
-  /* Zeilen: Header, Nav, Main, Aside, Footer */
-  /* Die 1fr bei Main sorgt dafür, dass Main den freien Platz nimmt -> Footer rutscht nach unten */
+  min-height: 100dvh;
   grid-template-rows: auto auto 1fr auto auto;
   grid-template-columns: 100%;
-
-  grid-template-areas:
-    "header"
-    "nav"
-    "main"
-    "aside"
-    "footer";
+  grid-template-areas: "header" "nav" "main" "aside" "footer";
+  /* Abstand zwischen den Glas-Panels */
+  gap: 15px;
+  padding: 15px;
 }
 
 /* Zuweisung der Grid-Areas */
@@ -37,36 +30,159 @@
 /* --- COMPONENT STYLES --- */
 
 header {
-  background-color: var(--background-color-header);
+  /* Wir übernehmen die Eigenschaften der .glass-panel Klasse */
+  background-color: var(--glass-bg-surface);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-bottom: var(--border-width) solid var(--glass-border-color);
+  box-shadow: var(--glass-shadow);
+
   color: var(--font-color-header);
-  padding: 10px;
-  /* Sticky Header (optional, aus deinem Code übernommen) */
+  padding: 15px 20px;
   position: sticky;
   top: 0;
   z-index: 100;
+  /* Radius oben entfernen, wenn sticky ganz oben */
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
 }
 
 main {
-  background-color: var(--background-color-main);
-  padding: 20px;
+  /* Main ist auch Glas, aber etwas undurchsichtiger (siehe Variablen) */
+  background-color: var(--glass-bg-main);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--border-width) solid var(--glass-border-color);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--border-radius);
+
+  padding: 25px;
 }
 
+/* --- Footer (Aktualisiert für 3 Spalten) --- */
 footer {
-  background-color: var(--background-color-footer);
+  /* Glass Panel Eigenschaften */
+  background-color: var(--glass-bg-surface);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-top: var(--border-width) solid var(--glass-border-color);
+
   color: var(--font-color-footer);
-  padding: 10px;
+  padding: 20px;
+  font-size: 0.9rem;
+
+  /* Layout: Flexbox für die Aufteilung */
+  display: flex;
+  flex-direction: column; /* Mobile: Untereinander */
+  gap: 20px;
+  align-items: center; /* Mobile: Alles zentriert */
   text-align: center;
+
+  /* Nur oben abrunden im Mobile View (da unten am Rand) */
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+/* Die einzelnen Sektionen im Footer */
+.footer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.footer-section h3 {
+  font-size: 1rem;
+  margin-bottom: 5px;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.footer-section a {
+  color: var(--font-color-footer);
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.footer-section a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+/* --- DESKTOP ANPASSUNGEN (min-width: 1024px) --- */
+/* Füge dies innerhalb deiner bestehenden @media query hinzu oder aktualisiere den footer Teil dort */
+
+@media screen and (min-width: 1024px) {
+  /* ... (dein bestehender Code für nav, aside, grid etc.) ... */
+
+  footer {
+    /* Desktop: Horizontal nebeneinander */
+    flex-direction: row;
+    justify-content: space-between; /* Verteilt Links, Mitte, Rechts */
+    align-items: flex-start; /* Oben bündig */
+    text-align: left; /* Textausrichtung zurücksetzen */
+
+    /* Da wir im Desktop-Grid Padding haben, runden wir den Footer komplett ab */
+    border-radius: var(--border-radius);
+    /* Border überall, nicht nur oben */
+    border: var(--border-width) solid var(--glass-border-color);
+  }
+
+  /* Damit Copyright genau in der Mitte ist, geben wir allen Teilen 
+     die gleiche Breite (flex: 1) */
+  .footer-section {
+    flex: 1;
+
+    & a:not([href^="http"]):not([href^="mailto"]) {
+      background: none;
+
+      text-decoration: none;
+      padding: 5px;
+      cursor: pointer;
+    }
+    & a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+  }
+
+  /* Spezifische Ausrichtungen für die 3 Teile */
+  .footer-section.left {
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .footer-section.center {
+    text-align: center;
+    align-items: center;
+    /* Copyright etwas nach unten schieben, damit es optisch mittig zu den Listen wirkt, 
+       oder einfach margin-top entfernen, falls gewünscht. */
+    justify-content: center;
+  }
+
+  .footer-section.right {
+    text-align: right;
+    align-items: flex-end;
+  }
 }
 
 /* --- NAV & ASIDE STYLING (Mobile: Horizontal) --- */
 nav,
 aside {
-  padding: 10px;
+  /* Glass Panel Eigenschaften anwenden */
+  background-color: var(--glass-bg-surface);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--border-width) solid var(--glass-border-color);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--border-radius);
+
+  padding: 15px;
   display: flex;
-  flex-direction: row; /* Horizontal */
-  flex-wrap: wrap; /* Umbruch erlauben */
-  justify-content: center; /* Zentriert */
-  gap: 10px; /* Abstand zwischen Buttons */
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 
   & a:not([href^="http"]):not([href^="mailto"]) {
     background: none;
@@ -99,20 +215,34 @@ aside a {
 
 nav button,
 aside button {
-  width: 100px; /* Anforderung */
-  padding: 10px;
+  width: 100px;
+  padding: 8px;
   cursor: pointer;
-  background-color: var(--secondary-color);
-  color: white;
-  border: none;
+  font-family: var(--font-family);
+  font-size: 0.9rem;
+
+  /* Buttons auch leicht transparent machen für konsistenten Look */
+  background-color: light-dark(
+    rgba(161, 227, 249, 0.5),
+    rgba(87, 143, 202, 0.5)
+  ); /* var(--secondary-color) mit 50% opacity */
+  color: var(--font-color);
+  border: 1px solid var(--glass-border-color);
   border-radius: var(--border-radius);
-  transition: background 0.3s;
+  backdrop-filter: blur(5px); /* Subtiler Blur auch auf Buttons */
+  transition: all 0.2s ease-in-out;
 }
 
 nav button:hover,
 nav button.active,
 aside button:hover {
-  background-color: var(--primary-color);
+  background-color: var(
+    --primary-color
+  ); /* Solid beim Hover für klaren Feedback */
+  color: var(--font-color-white);
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(87, 143, 202, 0.4); /* Leuchtfarbe im Schatten */
 }
 
 .branding {
@@ -131,7 +261,8 @@ aside button:hover {
   }
 }
 
-@media screen and (min-width: 1440px) {
+/* --- DESKTOP LAYOUT (min-width: 1024px) --- */
+@media screen and (min-width: 1024px) {
   .page-structure {
     /* Layout: Nav - Main - Aside */
     /* Spalten: Nav(auto) - Main(Rest) - Aside(auto) */
@@ -144,9 +275,6 @@ aside button:hover {
       "header header header"
       "nav    main   aside"
       "footer footer footer";
-
-    max-width: 1600px;
-    margin: auto;
   }
 
   /* Nav und Aside vertikal ausrichten */
@@ -163,38 +291,45 @@ aside button:hover {
   main {
     /* Optional: Max-Width für Main Content auf großen Screens */
     max-width: 100%;
+  }
+
+  footer {
+    /* Desktop: Horizontal nebeneinander */
+    flex-direction: row;
+    justify-content: space-between; /* Verteilt Links, Mitte, Rechts */
+    align-items: flex-start; /* Oben bündig */
+    text-align: left; /* Textausrichtung zurücksetzen */
+
+    /* Da wir im Desktop-Grid Padding haben, runden wir den Footer komplett ab */
+    border-radius: var(--border-radius);
+    /* Border überall, nicht nur oben */
+    border: var(--border-width) solid var(--glass-border-color);
+  }
+
+  /* Damit Copyright genau in der Mitte ist, geben wir allen Teilen 
+     die gleiche Breite (flex: 1) */
+  .footer-section {
+    flex: 1;
+  }
+
+  /* Spezifische Ausrichtungen für die 3 Teile */
+  .footer-section.left {
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .footer-section.center {
+    text-align: center;
+    align-items: center;
+    /* Copyright etwas nach unten schieben, damit es optisch mittig zu den Listen wirkt, 
+       oder einfach margin-top entfernen, falls gewünscht. */
+    justify-content: center;
   }
 }
 
-/* --- DESKTOP LAYOUT (min-width: 1024px) --- */
-@media screen and (min-width: 1024px) and (max-width: 1439px) {
+@media screen and (min-width: 1440px) {
   .page-structure {
-    /* Layout: Nav - Main - Aside */
-    /* Spalten: Nav(auto) - Main(Rest) - Aside(auto) */
-    grid-template-columns: auto 1fr auto;
-
-    /* Zeilen: Header - Content(Main+Nav+Aside) - Footer */
-    grid-template-rows: auto 1fr auto;
-
-    grid-template-areas:
-      "header header header"
-      "nav    main   aside"
-      "footer footer footer";
-  }
-
-  /* Nav und Aside vertikal ausrichten */
-  nav {
-    flex-direction: column; /* Buttons untereinander */
-    justify-content: flex-start;
-    width: 140px; /* Etwas Platz für die 100px Buttons + Padding */
-    align-items: center;
-  }
-  aside {
-    display: none;
-  }
-
-  main {
-    /* Optional: Max-Width für Main Content auf großen Screens */
-    max-width: 100%;
+    max-width: 1600px;
+    margin: auto;
   }
 }
