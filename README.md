@@ -18,10 +18,10 @@
 
 - [Description](#description)
   - [Key Features](#key-features)
-    - [🚀 Performance \& Core](#-performance--core)
+    - [🚀 Performance & Core](#-performance--core)
     - [🌍 Geo-Intelligence](#-geo-intelligence)
     - [📝 Metadata Management](#-metadata-management)
-    - [☁️ Export \& Cloud](#️-export--cloud)
+    - [☁️ Export & Cloud](#-export--cloud)
     - [🌐 Internationalization](#-internationalization)
   - [see also](#see-also)
 - [Status](#status)
@@ -29,9 +29,12 @@
   - [Prerequisites](#prerequisites)
   - [Project Structure](#project-structure)
   - [Build Instructions](#build-instructions)
-- [Documentation \& Screenshots](#documentation--screenshots)
+- [Documentation & Screenshots](#documentation--screenshots)
+- [Architecture Overview](#architecture-overview)
+  - [1. Technology Stack](#1-technology-stack)
+  - [2. High-Level Architecture Diagram](#2-high-level-architecture-diagram)
 - [Authors and License](#authors-and-license)
-  - [Code Contributors](#code-contributors)
+    - [Code Contributors](#code-contributors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
   <hr>
