@@ -18,10 +18,10 @@
 
 - [Description](#description)
   - [Key Features](#key-features)
-    - [🚀 Performance & Core](#-performance--core)
+    - [🚀 Performance \& Core](#-performance--core)
     - [🌍 Geo-Intelligence](#-geo-intelligence)
     - [📝 Metadata Management](#-metadata-management)
-    - [☁️ Export & Cloud](#-export--cloud)
+    - [☁️ Export \& Cloud](#️-export--cloud)
     - [🌐 Internationalization](#-internationalization)
   - [see also](#see-also)
 - [Status](#status)
@@ -29,12 +29,12 @@
   - [Prerequisites](#prerequisites)
   - [Project Structure](#project-structure)
   - [Build Instructions](#build-instructions)
-- [Documentation & Screenshots](#documentation--screenshots)
+- [Documentation \& Screenshots](#documentation--screenshots)
 - [Architecture Overview](#architecture-overview)
   - [1. Technology Stack](#1-technology-stack)
   - [2. High-Level Architecture Diagram](#2-high-level-architecture-diagram)
 - [Authors and License](#authors-and-license)
-    - [Code Contributors](#code-contributors)
+  - [Code Contributors](#code-contributors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
   <hr>
@@ -174,8 +174,8 @@ cmake --build .
 > \[!NOTE]
 > please visit [Desktop-Gallery Github Pages](https://zheng-bote.github.io/web-gallery_desktop-gallery/) for more.
 
-![App Screenshot](https://github.com/Zheng-Bote/web-gallery_desktop-gallery/blob/main/docs/about.png)
-
+![App Screenshot Linux](docs/about.png)
+![App Screenshot MacOS](docs/macos.png)
 
 # Architecture Overview
 
@@ -185,21 +185,21 @@ The application follows a **Model-View-Controller (MVC)** architectural pattern,
 
 ## 1. Technology Stack
 
-* **Language:** C++23
-* **GUI Framework:** Qt 6.x (Widgets, GUI, Core)
-* **Database:** SQLite 3 (via QtSql)
-* **Concurrency:** QtConcurrent / QThreadPool
-* **Networking:** QtNetwork (REST API / Multipart Uploads)
-* **Web Engine:** QtWebEngine (Chromium-based) for Map rendering
-* **Metadata Library:** Exiv2 (via custom `Photo` wrapper)
-* **Build System:** CMake
+- **Language:** C++23
+- **GUI Framework:** Qt 6.x (Widgets, GUI, Core)
+- **Database:** SQLite 3 (via QtSql)
+- **Concurrency:** QtConcurrent / QThreadPool
+- **Networking:** QtNetwork (REST API / Multipart Uploads)
+- **Web Engine:** QtWebEngine (Chromium-based) for Map rendering
+- **Metadata Library:** Exiv2 (via custom `Photo` wrapper)
+- **Build System:** CMake
 
 ## 2. High-Level Architecture Diagram
 
 ```mermaid
 graph TD
     User[User Interaction] --> UI[Presentation Layer]
-    
+
     subgraph "Presentation Layer (UI)"
         UI --> MW[MainWindow]
         UI --> PW[PictureWidget Details]
@@ -222,7 +222,6 @@ graph TD
         P_WRAP --> FS[File System]
     end
 ```
-
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
