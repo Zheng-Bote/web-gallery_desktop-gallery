@@ -1,7 +1,19 @@
 /**
+ * SPDX-FileComment: Main Application Logic
+ * SPDX-FileType: SOURCE
+ * SPDX-FileContributor: ZHENG Robert
+ * SPDX-FileCopyrightText: 2026 ZHENG Robert
+ * SPDX-License-Identifier: MIT
+ *
  * @file MainWindow.cpp
- * @author ZHENG Robert
- * @brief Main Application Logic
+ * @brief Main Application Logic.
+ * @version 1.0.0
+ * @date 2026-03-07
+ *
+ * @author ZHENG Robert (robert@hase-zheng.net)
+ * @copyright Copyright (c) 2026 ZHENG Robert
+ *
+ * @license MIT License
  */
 #include "MainWindow.hpp"
 #include "DatabaseManager.hpp"
@@ -175,120 +187,112 @@ void MainWindow::setupUi() {
 }
 
 void MainWindow::createMenu() {
-  menuBar()->setNativeMenuBar(false);
+    //#ifdef __LINUX__
+    menuBar()->setNativeMenuBar(false);
+    //#else
+    //    menuBar()->setNativeMenuBar(true);
+    //#endif
+    // File
+    fileMenu = menuBar()->addMenu(tr("&File"));
+    openAct = fileMenu->addAction(tr("Open Folder..."));
+    connect(openAct, &QAction::triggered, this, &MainWindow::openSrcFolder);
+    openRecAct = fileMenu->addAction(tr("Open Folder (Recursive)..."));
+    connect(openRecAct, &QAction::triggered, this, &MainWindow::openSrcFolderRekursive);
 
-  // File
-  fileMenu = menuBar()->addMenu("");
-  openAct = fileMenu->addAction("");
-  connect(openAct, &QAction::triggered, this, &MainWindow::openSrcFolder);
-  openRecAct = fileMenu->addAction("");
-  connect(openRecAct, &QAction::triggered, this,
-          &MainWindow::openSrcFolderRekursive);
+    fileMenu->addSeparator();
+    exitAct = fileMenu->addAction(tr("Exit"));
+    connect(exitAct, &QAction::triggered, this, &QWidget::close);
 
-  fileMenu->addSeparator();
-  exitAct = fileMenu->addAction("");
-  connect(exitAct, &QAction::triggered, this, &QWidget::close);
+    // Settings
+    settingsMenu = menuBar()->addMenu(tr("&Settings"));
 
-  // Settings
-  settingsMenu = menuBar()->addMenu("");
+    // Language Submenu unter Settings
+    langMenu = settingsMenu->addMenu(tr("&Language"));
+    actLangEn = langMenu->addAction("English");
+    connect(actLangEn, &QAction::triggered, this, [this]() {
+        qDebug() << "[Menu] Manually clicked on English";
+        loadLanguage("en");
+    });
 
-  // Language Submenu unter Settings
-  langMenu = settingsMenu->addMenu("");
-  actLangEn = langMenu->addAction("English");
-  connect(actLangEn, &QAction::triggered, this, [this]() {
-    qDebug() << "[Menu] Manually clicked on English";
-    loadLanguage("en");
-  });
+    actLangDe = langMenu->addAction("Deutsch");
+    connect(actLangDe, &QAction::triggered, this, [this]() {
+        qDebug() << "[Menu] Manually clicked on German";
+        loadLanguage("de");
+    });
 
-  actLangDe = langMenu->addAction("Deutsch");
-  connect(actLangDe, &QAction::triggered, this, [this]() {
-    qDebug() << "[Menu] Manually clicked on German";
-    loadLanguage("de");
-  });
+    geoUserAct = settingsMenu->addAction(tr("Configure GeoNames User..."));
+    connect(geoUserAct, &QAction::triggered, this, &MainWindow::openSettingsDialog);
 
-  geoUserAct = settingsMenu->addAction("");
-  connect(geoUserAct, &QAction::triggered, this,
-          &MainWindow::openSettingsDialog);
+    // Metadata
+    metaMenu = menuBar()->addMenu(tr("&Metadata"));
+    metaAct = metaMenu->addAction(tr("Edit Default Metadata..."));
+    connect(metaAct, &QAction::triggered, this, &MainWindow::showDefaultMetaWidget);
+    metaMenu->addSeparator();
+    writeCpAct = metaMenu->addAction(tr("Write default Copyright to selected"));
+    connect(writeCpAct, &QAction::triggered, this, &MainWindow::writeDefaultCopyrightToSelection);
+    writeGpsAct = metaMenu->addAction(tr("Write default GPS to selected"));
+    connect(writeGpsAct, &QAction::triggered, this, &MainWindow::writeDefaultGpsToSelection);
+    writeAllAct = metaMenu->addAction(tr("Write ALL default Metadata to selected"));
+    connect(writeAllAct, &QAction::triggered, this, &MainWindow::writeAllDefaultsToSelection);
+    metaMenu->addSeparator();
+    geoLookupAct = metaMenu->addAction(tr("Address lookup for selected pictures"));
+    connect(geoLookupAct, &QAction::triggered, this, &MainWindow::startGeoNamesLookup);
 
-  // Metadata
-  metaMenu = menuBar()->addMenu("");
-  metaAct = metaMenu->addAction("");
-  connect(metaAct, &QAction::triggered, this,
-          &MainWindow::showDefaultMetaWidget);
-  metaMenu->addSeparator();
-  writeCpAct = metaMenu->addAction("");
-  connect(writeCpAct, &QAction::triggered, this,
-          &MainWindow::writeDefaultCopyrightToSelection);
-  writeGpsAct = metaMenu->addAction("");
-  connect(writeGpsAct, &QAction::triggered, this,
-          &MainWindow::writeDefaultGpsToSelection);
-  writeAllAct = metaMenu->addAction("");
-  connect(writeAllAct, &QAction::triggered, this,
-          &MainWindow::writeAllDefaultsToSelection);
-  metaMenu->addSeparator();
-  geoLookupAct = metaMenu->addAction("");
-  connect(geoLookupAct, &QAction::triggered, this,
-          &MainWindow::startGeoNamesLookup);
+    // Pictures
+    picMenu = menuBar()->addMenu(tr("&Pictures"));
+    viewMenu = picMenu->addMenu(tr("View Options"));
+    actShowCopyright = viewMenu->addAction(tr("Display Copyright Owner"));
+    actShowCopyright->setCheckable(true);
+    actShowGps = viewMenu->addAction(tr("Display GPS Data"));
+    actShowGps->setCheckable(true);
+    // Map Action
+    actViewMap = viewMenu->addAction(tr("Show selected on Map..."));
+    connect(actViewMap, &QAction::triggered, this, &MainWindow::showMapForSelection);
 
-  // Pictures
-  picMenu = menuBar()->addMenu("");
-  viewMenu = picMenu->addMenu("");
-  actShowCopyright = viewMenu->addAction("");
-  actShowCopyright->setCheckable(true);
-  actShowGps = viewMenu->addAction("");
-  actShowGps->setCheckable(true);
-  // Map Action
-  actViewMap = viewMenu->addAction(tr("Show selected on Map..."));
-  connect(actViewMap, &QAction::triggered, this,
-          &MainWindow::showMapForSelection);
+    auto updateDelegate = [this]() {
+        ThumbnailDelegate *del = qobject_cast<ThumbnailDelegate *>(m_galleryView->itemDelegate());
+        if (del) {
+            del->setShowCopyright(actShowCopyright->isChecked());
+            del->setShowGps(actShowGps->isChecked());
+            m_galleryView->viewport()->update();
+        }
+    };
+    connect(actShowCopyright, &QAction::toggled, this, updateDelegate);
+    connect(actShowGps, &QAction::toggled, this, updateDelegate);
 
-  auto updateDelegate = [this]() {
-    ThumbnailDelegate *del =
-        qobject_cast<ThumbnailDelegate *>(m_galleryView->itemDelegate());
-    if (del) {
-      del->setShowCopyright(actShowCopyright->isChecked());
-      del->setShowGps(actShowGps->isChecked());
-      m_galleryView->viewport()->update();
-    }
-  };
-  connect(actShowCopyright, &QAction::toggled, this, updateDelegate);
-  connect(actShowGps, &QAction::toggled, this, updateDelegate);
+    picMenu->addSeparator();
+    webpMenu = picMenu->addMenu(tr("WebP Export"));
+    actWebpOversize = webpMenu->addAction(tr("Increase too small pictures"));
+    actWebpOversize->setCheckable(true);
+    actWebpOversize->setChecked(true);
+    actWebpOverwrite = webpMenu->addAction(tr("Overwrite existing WebP"));
+    actWebpOverwrite->setCheckable(true);
+    actWebpWatermark = webpMenu->addAction(tr("Watermark WebP"));
+    actWebpWatermark->setCheckable(true);
+    actWebpWatermark->setChecked(true);
+    webpMenu->addSeparator();
+    actWebpRename = webpMenu->addAction(tr("Rename Export to Timestamp"));
+    actWebpRename->setCheckable(true);
+    webpMenu->addSeparator();
+    actExportWebp = webpMenu->addAction(tr("Export selected to all WebP sizes"));
+    connect(actExportWebp, &QAction::triggered, this, &MainWindow::exportSelectedToWebP);
 
-  picMenu->addSeparator();
-  webpMenu = picMenu->addMenu("");
-  actWebpOversize = webpMenu->addAction("");
-  actWebpOversize->setCheckable(true);
-  actWebpOversize->setChecked(true);
-  actWebpOverwrite = webpMenu->addAction("");
-  actWebpOverwrite->setCheckable(true);
-  actWebpWatermark = webpMenu->addAction("");
-  actWebpWatermark->setCheckable(true);
-  actWebpWatermark->setChecked(true);
-  webpMenu->addSeparator();
-  actWebpRename = webpMenu->addAction("");
-  actWebpRename->setCheckable(true);
-  webpMenu->addSeparator();
-  actExportWebp = webpMenu->addAction("");
-  connect(actExportWebp, &QAction::triggered, this,
-          &MainWindow::exportSelectedToWebP);
+    QAction *uploadAct = picMenu->addAction(tr("Upload to Server..."));
+    connect(uploadAct, &QAction::triggered, this, &MainWindow::uploadSelectedImages);
 
-  QAction *uploadAct = picMenu->addAction(tr("Upload to Server..."));
-  connect(uploadAct, &QAction::triggered, this,
-          &MainWindow::uploadSelectedImages);
+    picMenu->addSeparator();
+    actSelectAll = picMenu->addAction(tr("Select all Pictures"));
+    actSelectAll->setShortcut(QKeySequence::SelectAll);
+    connect(actSelectAll, &QAction::triggered, this, &MainWindow::selectAllImages);
+    actRename = picMenu->addAction(tr("Rename selected to Timestamp"));
+    connect(actRename, &QAction::triggered, this, &MainWindow::renameSelectedImages);
 
-  picMenu->addSeparator();
-  actSelectAll = picMenu->addAction("");
-  actSelectAll->setShortcut(QKeySequence::SelectAll);
-  connect(actSelectAll, &QAction::triggered, this,
-          &MainWindow::selectAllImages);
-  actRename = picMenu->addAction("");
-  connect(actRename, &QAction::triggered, this,
-          &MainWindow::renameSelectedImages);
+    // Help
+    helpMenu = menuBar()->addMenu(tr("&Help"));
+    aboutAct = helpMenu->addAction(tr("&About"));
+    connect(aboutAct, &QAction::triggered, this, &MainWindow::showAboutDialog);
 
-  // Help
-  helpMenu = menuBar()->addMenu("");
-  aboutAct = helpMenu->addAction("");
-  connect(aboutAct, &QAction::triggered, this, &MainWindow::showAboutDialog);
+    //menuBar()->show();
 }
 
 void MainWindow::retranslateUi() {

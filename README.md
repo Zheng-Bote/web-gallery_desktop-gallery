@@ -7,6 +7,7 @@
 [Report Issue](https://github.com/Zheng-Bote/qt_desktop-gallery/issues) · [Request Feature](https://github.com/Zheng-Bote/qt_desktop-gallery/pulls)
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows%20%7C%20macOS-lightgrey.svg)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/Zheng-Bote/qt_desktop-gallery?logo=GitHub)](https://github.com/Zheng-Bote/qt_desktop-gallery/releases)
 
 </div>
@@ -165,6 +166,10 @@ cmake ..
 
 # 4. Build
 cmake --build .
+
+# 5. Create macOS DMG Installer (macOS only)
+# Make sure you have the required Qt modules installed (including WebEngineWidgets, Positioning, WebChannel)
+./create_dmg.sh
 ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -222,6 +227,31 @@ graph TD
         P_WRAP --> FS[File System]
     end
 ```
+
+## 3. Detailed Architecture Diagrams
+
+For a deeper dive into the system design, please refer to the detailed Mermaid diagrams located in the `docs/architecture` directory:
+
+### Context & Flow
+- [Bounded Contexts](docs/architecture/bounded_contexts.md)
+- [Use Case Diagram](docs/architecture/use_case_diagram.md)
+- [Information Flow](docs/architecture/information_flow.md)
+- [Activity Diagram: Indexing](docs/architecture/activity_diagram.md)
+- [Flowchart: Metadata Writing](docs/architecture/flowchart.md)
+
+### Structure & Components
+- [Class Diagram](docs/architecture/class_diagram.md)
+- [Sequence Diagram: Upload](docs/architecture/sequence_diagram.md)
+- [State Diagram: UploadManager](docs/architecture/state_diagram.md)
+- [Component Diagram](docs/architecture/component_diagram.md)
+- [Entity Relationship Diagram (DB)](docs/architecture/entity_relationship_diagram.md)
+
+### Systems Engineering Views
+- [Functional Decomposition](docs/architecture/functional_decomposition.md)
+- [Logical Decomposition](docs/architecture/logical_decomposition.md)
+- [Physical Decomposition](docs/architecture/physical_decomposition.md)
+- [Development View](docs/architecture/development_view.md)
+- [Deployment View](docs/architecture/deployment_view.md)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

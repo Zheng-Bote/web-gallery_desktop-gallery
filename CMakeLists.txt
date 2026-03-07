@@ -14,6 +14,7 @@ project(
   HOMEPAGE_URL "https://github.com/Zheng-Bote/web-gallery_desktop-gallery"
   LANGUAGES CXX)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -96,8 +97,26 @@ set(PROJECT_SOURCES
     ${QM_FILES}
 )
 
+# Mac Icon configuring
+if(APPLE)
+    set(APP_ICON_MACOS "${CMAKE_SOURCE_DIR}/resources/desktop-gallery.icns")
+    set_source_files_properties(${APP_ICON_MACOS} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+    list(APPEND PROJECT_SOURCES ${APP_ICON_MACOS})
+endif()
+
 # Executable erstellen
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
+add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${PROJECT_SOURCES})
+
+if(APPLE)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        MACOSX_BUNDLE_INFO_STRING "${PROG_LONGNAME}"
+        MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}"
+        MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}"
+        MACOSX_BUNDLE_BUNDLE_NAME "${PROG_LONGNAME}"
+        MACOSX_BUNDLE_GUI_IDENTIFIER "${PROG_ORGANIZATION_DOMAIN}.${PROJECT_NAME}"
+        MACOSX_BUNDLE_ICON_FILE "desktop-gallery.icns"
+    )
+endif()
 
 # Bibliotheken linken
 target_link_libraries(${PROJECT_NAME} PRIVATE
@@ -112,14 +131,39 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 # --- INSTALLATION RULES ---
 
-# Das Executable nach /usr/bin (im AppDir Kontext)
-install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+# Das Executable nach /usr/bin (im AppDir Kontext auf Linux) 
+# oder in den Root-Ordner des DMG (auf macOS)
+if(APPLE)
+    install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION .)
+else()
+    install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+endif()
 
 # Der Ordner i18n nach /usr/bin/i18n
 install(FILES ${QM_FILES} DESTINATION bin/i18n)
 
 # Auch die Ressourcen (falls du sie nicht in qrc hast)
 # install(FILES resources/img/qt_desktop-gallery.png DESTINATION share/icons/hicolor/256x256/apps)
+
+
+# --- 5. Custom Generators (Original Code) ---
+
+# CPack configuration
+if(APPLE)
+    set(CPACK_GENERATOR "DragNDrop")
+    set(CPACK_DMG_FORMAT "UDBZ")
+    set(CPACK_DMG_VOLUME_NAME "${PROG_LONGNAME}")
+    include(CPack)
+endif()
+
+# CMake File API Query (Datei erzeugen)
+set(QUERY_DIR "${CMAKE_BINARY_DIR}/.cmake/api/v1/query/client-project")
+file(MAKE_DIRECTORY "${QUERY_DIR}")
+file(WRITE "${QUERY_DIR}/codemodel-v2" "")
+
+# libs.txt Generierung (Timing-sicher via GENERATE)
+file(GENERATE OUTPUT "${CMAKE_BINARY_DIR}/libs.txt"
+     CONTENT "$<TARGET_PROPERTY:${PROJECT_NAME},LINK_LIBRARIES>")
 
 ################
 message(STATUS "Build setup complete for ${PROJECT_NAME}")

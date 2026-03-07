@@ -1,7 +1,19 @@
 /**
+ * SPDX-FileComment: Central definition of all Metadata Tags, Defaults and Mappings
+ * SPDX-FileType: HEADER
+ * SPDX-FileContributor: ZHENG Robert
+ * SPDX-FileCopyrightText: 2026 ZHENG Robert
+ * SPDX-License-Identifier: MIT
+ *
  * @file rz_metadata.hpp
- * @brief Central definition of all Metadata Tags, Defaults and Mappings
- * @version 0.9 (Full Default Lists)
+ * @brief Central definition of all Metadata Tags, Defaults and Mappings.
+ * @version 1.0.0
+ * @date 2026-03-07
+ *
+ * @author ZHENG Robert (robert@hase-zheng.net)
+ * @copyright Copyright (c) 2026 ZHENG Robert
+ *
+ * @license MIT License
  */
 #pragma once
 

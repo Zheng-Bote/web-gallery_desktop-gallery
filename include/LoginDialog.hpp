@@ -1,3 +1,20 @@
+/**
+ * SPDX-FileComment: A dialog for user authentication and upload configuration
+ * SPDX-FileType: HEADER
+ * SPDX-FileContributor: ZHENG Robert
+ * SPDX-FileCopyrightText: 2026 ZHENG Robert
+ * SPDX-License-Identifier: MIT
+ *
+ * @file LoginDialog.hpp
+ * @brief A dialog for user authentication and upload configuration.
+ * @version 1.0.0
+ * @date 2026-03-07
+ *
+ * @author ZHENG Robert (robert@hase-zheng.net)
+ * @copyright Copyright (c) 2026 ZHENG Robert
+ *
+ * @license MIT License
+ */
 #pragma once
 #include <QDialog>
 #include <QFormLayout>

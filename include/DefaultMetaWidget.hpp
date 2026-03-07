@@ -1,3 +1,20 @@
+/**
+ * SPDX-FileComment: Widget for configuring default metadata values
+ * SPDX-FileType: HEADER
+ * SPDX-FileContributor: ZHENG Robert
+ * SPDX-FileCopyrightText: 2026 ZHENG Robert
+ * SPDX-License-Identifier: MIT
+ *
+ * @file DefaultMetaWidget.hpp
+ * @brief Widget for configuring default metadata values.
+ * @version 1.0.0
+ * @date 2026-03-07
+ *
+ * @author ZHENG Robert (robert@hase-zheng.net)
+ * @copyright Copyright (c) 2026 ZHENG Robert
+ *
+ * @license MIT License
+ */
 #pragma once
 
 #include <QCloseEvent>

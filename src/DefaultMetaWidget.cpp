@@ -1,7 +1,19 @@
 /**
+ * SPDX-FileComment: Implementation of the DefaultMetaWidget class
+ * SPDX-FileType: SOURCE
+ * SPDX-FileContributor: ZHENG Robert
+ * SPDX-FileCopyrightText: 2026 ZHENG Robert
+ * SPDX-License-Identifier: MIT
+ *
  * @file DefaultMetaWidget.cpp
- * @author ZHENG Robert
  * @brief Implementation of the DefaultMetaWidget class.
+ * @version 1.0.0
+ * @date 2026-03-07
+ *
+ * @author ZHENG Robert (robert@hase-zheng.net)
+ * @copyright Copyright (c) 2026 ZHENG Robert
+ *
+ * @license MIT License
  */
 #include "DefaultMetaWidget.hpp"
 #include "ui_DefaultMetaWidget.h"

@@ -1,3 +1,20 @@
+/**
+ * SPDX-FileComment: Background task for scanning folders and indexing images
+ * SPDX-FileType: HEADER
+ * SPDX-FileContributor: ZHENG Robert
+ * SPDX-FileCopyrightText: 2026 ZHENG Robert
+ * SPDX-License-Identifier: MIT
+ *
+ * @file ImageIndexer.hpp
+ * @brief Background task for scanning folders and indexing images.
+ * @version 1.0.0
+ * @date 2026-03-07
+ *
+ * @author ZHENG Robert (robert@hase-zheng.net)
+ * @copyright Copyright (c) 2026 ZHENG Robert
+ *
+ * @license MIT License
+ */
 #pragma once
 #include <QObject>
 #include <QRunnable>

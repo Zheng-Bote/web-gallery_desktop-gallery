@@ -1,7 +1,19 @@
 /**
+ * SPDX-FileComment: Entry point of the Desktop-Gallery application
+ * SPDX-FileType: SOURCE
+ * SPDX-FileContributor: ZHENG Robert
+ * SPDX-FileCopyrightText: 2026 ZHENG Robert
+ * SPDX-License-Identifier: MIT
+ *
  * @file main.cpp
- * @author ZHENG Robert
  * @brief Entry point of the Desktop-Gallery application.
+ * @version 1.0.0
+ * @date 2026-03-07
+ *
+ * @author ZHENG Robert (robert@hase-zheng.net)
+ * @copyright Copyright (c) 2026 ZHENG Robert
+ *
+ * @license MIT License
  */
 #include <QApplication>
 #include <QDebug>
@@ -29,7 +41,9 @@ int main(int argc, char *argv[]) {
   // FIX: Disable hardware acceleration for WebEngine to avoid crashes
   // (GBM is not supported with the current configuration).
   // This forces Chromium into software rendering mode.
+#ifdef __linux__
   qputenv("QTWEBENGINE_CHROMIUM_FLAGS", "--disable-gpu");
+#endif
   // if it still crashes with your graphic card, here the hardcore version:
   // qputenv("QT_XCB_GL_INTEGRATION", "none");
 

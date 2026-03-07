@@ -1,7 +1,19 @@
 /**
+ * SPDX-FileComment: Main class for the picture detail widget
+ * SPDX-FileType: SOURCE
+ * SPDX-FileContributor: ZHENG Robert
+ * SPDX-FileCopyrightText: 2026 ZHENG Robert
+ * SPDX-License-Identifier: MIT
+ *
  * @file picture_widget.cpp
- * @author ZHENG Robert
- * @brief Main class for the picture detail widget
+ * @brief Main class for the picture detail widget.
+ * @version 1.0.0
+ * @date 2026-03-07
+ *
+ * @author ZHENG Robert (robert@hase-zheng.net)
+ * @copyright Copyright (c) 2026 ZHENG Robert
+ *
+ * @license MIT License
  */
 #include "picture_widget.h"
 #include "rz_metadata.hpp"

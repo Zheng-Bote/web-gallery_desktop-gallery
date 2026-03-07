@@ -1,7 +1,19 @@
 /**
+ * SPDX-FileComment: Wrapper class for Exiv2 and Image Operations
+ * SPDX-FileType: HEADER
+ * SPDX-FileContributor: ZHENG Robert
+ * SPDX-FileCopyrightText: 2026 ZHENG Robert
+ * SPDX-License-Identifier: MIT
+ *
  * @file rz_photo.hpp
- * @author ZHENG Robert
- * @brief Wrapper class for Exiv2 and Image Operations
+ * @brief Wrapper class for Exiv2 and Image Operations.
+ * @version 1.0.0
+ * @date 2026-03-07
+ *
+ * @author ZHENG Robert (robert@hase-zheng.net)
+ * @copyright Copyright (c) 2026 ZHENG Robert
+ *
+ * @license MIT License
  */
 #pragma once
 
