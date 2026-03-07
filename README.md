@@ -34,6 +34,10 @@
 - [Architecture Overview](#architecture-overview)
   - [1. Technology Stack](#1-technology-stack)
   - [2. High-Level Architecture Diagram](#2-high-level-architecture-diagram)
+  - [3. Detailed Architecture Diagrams](#3-detailed-architecture-diagrams)
+    - [Context & Flow](#context--flow)
+    - [Structure & Components](#structure--components)
+    - [Systems Engineering Views](#systems-engineering-views)
 - [Authors and License](#authors-and-license)
     - [Code Contributors](#code-contributors)
 

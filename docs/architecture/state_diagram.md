@@ -1,3 +1,11 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [State Diagram: UploadManager](#state-diagram-uploadmanager)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # State Diagram: UploadManager
 
 ```mermaid

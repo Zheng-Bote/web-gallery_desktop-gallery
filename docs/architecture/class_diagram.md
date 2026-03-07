@@ -1,3 +1,11 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Class Diagram](#class-diagram)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Class Diagram
 
 ```mermaid
