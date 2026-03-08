@@ -1,14 +1,4 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**
-
-- [Changelog](#changelog)
-  - [[Unreleased]](#unreleased)
-  - [[0.2.0] - 2026-03-07](#020---2026-03-07)
-    - [Added](#added)
-    - [Changed](#changed)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DOCTOC SKIP -->
 
 # Changelog
 
@@ -20,7 +10,9 @@ and this project adheres to Semantic Versioning.
 ## [Unreleased]
 
 ## [0.2.0] - 2026-03-07
+
 ### Added
+
 - **SDPX Headers:** Added missing MIT License SPDX headers to all C++ source (`.cpp`) and header (`.hpp`) files in `src/` and `include/`.
 - **Doxygen Documentation:** Standardized file-level comments in all C++ files over to professional Doxygen English comments, replacing older German and English comments.
 - **Architecture Diagrams:** Added a comprehensive suite of architectural diagrams (Mermaid) to `docs/architecture/`, including:
@@ -31,4 +23,5 @@ and this project adheres to Semantic Versioning.
 - **CHANGELOG:** Introduced standard `CHANGELOG.md` file to track project history.
 
 ### Changed
+
 - **README:** Updated `README.md` to reference the newly generated architectural documentation.

@@ -7,8 +7,8 @@
  *
  * @file main.cpp
  * @brief Entry point of the Desktop-Gallery application.
- * @version 1.0.0
- * @date 2026-03-07
+ * @version 0.2.0
+ * @date 2026-03-08
  *
  * @author ZHENG Robert (robert@hase-zheng.net)
  * @copyright Copyright (c) 2026 ZHENG Robert
@@ -23,18 +23,18 @@
 #include <QStyleFactory> // Optional, für Style
 
 #include "MainWindow.hpp"
+#include "qt_gh-update-checker.hpp"
 #include "rz_config.hpp" // If version/name is defined there
 
-// Fallback if rz_config.hpp is missing
-#ifndef PROJECT_NAME
-#define PROJECT_NAME "Desktop-Gallery"
-#endif
-#ifndef PROJECT_VERSION
-#define PROJECT_VERSION "0.24.0"
-#endif
-#ifndef PROJECT_ORGANIZATION_NAME
-#define PROJECT_ORGANIZATION_NAME "ZHENG Robert"
-#endif
+#include <QDesktopServices>
+#include <QMessageBox>
+#include <QPushButton>
+#include <QUrl>
+#include <QtConcurrent>
+
+#include <string_view>
+
+// rz_config.hpp contains PROJECT_NAME, PROJECT_VERSION, PROG_ORGANIZATION_NAME
 
 int main(int argc, char *argv[]) {
 
@@ -42,7 +42,12 @@ int main(int argc, char *argv[]) {
   // (GBM is not supported with the current configuration).
   // This forces Chromium into software rendering mode.
 #ifdef __linux__
-  qputenv("QTWEBENGINE_CHROMIUM_FLAGS", "--disable-gpu");
+  for (int i = 1; i < argc; ++i) {
+    if (std::string_view(argv[i]) == "--disable-gpu") {
+      qputenv("QTWEBENGINE_CHROMIUM_FLAGS", "--disable-gpu");
+      break;
+    }
+  }
 #endif
   // if it still crashes with your graphic card, here the hardcore version:
   // qputenv("QT_XCB_GL_INTEGRATION", "none");
@@ -62,9 +67,9 @@ int main(int argc, char *argv[]) {
 
   // IMPORTANT: Set metadata BEFORE accessing any paths (QStandardPaths)!
   // DatabaseManager uses this for the cache path.
-  QCoreApplication::setApplicationName(PROJECT_NAME);
-  QCoreApplication::setApplicationVersion(PROJECT_VERSION);
-  QCoreApplication::setOrganizationName(PROJECT_ORGANIZATION_NAME);
+  QCoreApplication::setApplicationName(QString::fromStdString(PROG_LONGNAME));
+  QCoreApplication::setApplicationVersion(QString::fromStdString(PROJECT_VERSION));
+  QCoreApplication::setOrganizationName(QString::fromStdString(PROG_ORGANIZATION_NAME));
   // QCoreApplication::setOrganizationDomain("hase-zheng.net");
 
   // Set Icon
@@ -81,6 +86,41 @@ int main(int argc, char *argv[]) {
   // Initial load of the language
   w.loadLanguage(locale);
   */
+
+  QtConcurrent::run([]() {
+    try {
+      auto info = qtgh::check_github_update(
+          QString::fromStdString(PROJECT_HOMEPAGE_URL),
+          QString::fromStdString(PROJECT_VERSION));
+      if (info.hasUpdate) {
+        QMetaObject::invokeMethod(qApp, [info]() {
+          QMessageBox msgBox;
+          msgBox.setWindowTitle(
+              QCoreApplication::translate("main", "Update Available"));
+          msgBox.setText(QCoreApplication::translate(
+              "main", "A new version of the application is available."));
+          msgBox.setInformativeText(
+              QString("Current version: %1\nAvailable version: %2")
+                  .arg(QString::fromStdString(PROJECT_VERSION),
+                       info.latestVersion));
+          QPushButton *downloadButton = msgBox.addButton(
+              QCoreApplication::translate("main", "Download Release"),
+              QMessageBox::ActionRole);
+          msgBox.addButton(QMessageBox::Ignore);
+
+          msgBox.exec();
+
+          if (msgBox.clickedButton() == downloadButton) {
+            QDesktopServices::openUrl(
+                QUrl(QString::fromStdString(PROJECT_HOMEPAGE_URL) +
+                     "/releases/latest"));
+          }
+        });
+      }
+    } catch (const std::exception &e) {
+      qWarning() << "Update check failed: " << e.what();
+    }
+  });
 
   w.show();
   return a.exec();
