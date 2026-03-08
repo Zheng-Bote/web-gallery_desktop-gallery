@@ -25,6 +25,12 @@
 #include "picture_widget.h"
 #include "rz_config.hpp"
 #include "rz_photo.hpp"
+#include "regeocode/re_geocode_core.hpp"
+#include "regeocode/adapter_nominatim.hpp"
+#include "regeocode/adapter_google.hpp"
+#include "regeocode/adapter_opencage.hpp"
+#include "regeocode/adapter_bing.hpp"
+#include "regeocode/adapter_geonames_timezone.hpp"
 
 #include <QApplication>
 #include <QClipboard>
@@ -109,6 +115,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   m_settings = new QSettings(iniPath, QSettings::IniFormat, this);
   qDebug() << "[Init] Settings Path:" << iniPath;
 
+  // Regeocode-INI Pfad aus Settings laden
+  m_regeocodeIniPath = m_settings->value("Regeocode/iniPath", "").toString();
+
   // Network
   m_netManager = new QNetworkAccessManager(this);
   connect(m_netManager, &QNetworkAccessManager::finished, this,
@@ -187,112 +196,139 @@ void MainWindow::setupUi() {
 }
 
 void MainWindow::createMenu() {
-    //#ifdef __LINUX__
-    menuBar()->setNativeMenuBar(false);
-    //#else
-    //    menuBar()->setNativeMenuBar(true);
-    //#endif
-    // File
-    fileMenu = menuBar()->addMenu(tr("&File"));
-    openAct = fileMenu->addAction(tr("Open Folder..."));
-    connect(openAct, &QAction::triggered, this, &MainWindow::openSrcFolder);
-    openRecAct = fileMenu->addAction(tr("Open Folder (Recursive)..."));
-    connect(openRecAct, &QAction::triggered, this, &MainWindow::openSrcFolderRekursive);
+  // #ifdef __LINUX__
+  menuBar()->setNativeMenuBar(false);
+  // #else
+  //     menuBar()->setNativeMenuBar(true);
+  // #endif
+  //  File
+  fileMenu = menuBar()->addMenu(tr("&File"));
+  openAct = fileMenu->addAction(tr("Open Folder..."));
+  connect(openAct, &QAction::triggered, this, &MainWindow::openSrcFolder);
+  openRecAct = fileMenu->addAction(tr("Open Folder (Recursive)..."));
+  connect(openRecAct, &QAction::triggered, this,
+          &MainWindow::openSrcFolderRekursive);
 
-    fileMenu->addSeparator();
-    exitAct = fileMenu->addAction(tr("Exit"));
-    connect(exitAct, &QAction::triggered, this, &QWidget::close);
+  fileMenu->addSeparator();
+  exitAct = fileMenu->addAction(tr("Exit"));
+  connect(exitAct, &QAction::triggered, this, &QWidget::close);
 
-    // Settings
-    settingsMenu = menuBar()->addMenu(tr("&Settings"));
+  // Settings
+  settingsMenu = menuBar()->addMenu(tr("&Settings"));
 
-    // Language Submenu unter Settings
-    langMenu = settingsMenu->addMenu(tr("&Language"));
-    actLangEn = langMenu->addAction("English");
-    connect(actLangEn, &QAction::triggered, this, [this]() {
-        qDebug() << "[Menu] Manually clicked on English";
-        loadLanguage("en");
-    });
+  // Language Submenu unter Settings
+  langMenu = settingsMenu->addMenu(tr("&Language"));
+  actLangEn = langMenu->addAction("English");
+  connect(actLangEn, &QAction::triggered, this, [this]() {
+    qDebug() << "[Menu] Manually clicked on English";
+    loadLanguage("en");
+  });
 
-    actLangDe = langMenu->addAction("Deutsch");
-    connect(actLangDe, &QAction::triggered, this, [this]() {
-        qDebug() << "[Menu] Manually clicked on German";
-        loadLanguage("de");
-    });
+  actLangDe = langMenu->addAction("Deutsch");
+  connect(actLangDe, &QAction::triggered, this, [this]() {
+    qDebug() << "[Menu] Manually clicked on German";
+    loadLanguage("de");
+  });
 
-    geoUserAct = settingsMenu->addAction(tr("Configure GeoNames User..."));
-    connect(geoUserAct, &QAction::triggered, this, &MainWindow::openSettingsDialog);
+  geoUserAct = settingsMenu->addAction(tr("Configure GeoNames User..."));
+  connect(geoUserAct, &QAction::triggered, this,
+          &MainWindow::openSettingsDialog);
 
-    // Metadata
-    metaMenu = menuBar()->addMenu(tr("&Metadata"));
-    metaAct = metaMenu->addAction(tr("Edit Default Metadata..."));
-    connect(metaAct, &QAction::triggered, this, &MainWindow::showDefaultMetaWidget);
-    metaMenu->addSeparator();
-    writeCpAct = metaMenu->addAction(tr("Write default Copyright to selected"));
-    connect(writeCpAct, &QAction::triggered, this, &MainWindow::writeDefaultCopyrightToSelection);
-    writeGpsAct = metaMenu->addAction(tr("Write default GPS to selected"));
-    connect(writeGpsAct, &QAction::triggered, this, &MainWindow::writeDefaultGpsToSelection);
-    writeAllAct = metaMenu->addAction(tr("Write ALL default Metadata to selected"));
-    connect(writeAllAct, &QAction::triggered, this, &MainWindow::writeAllDefaultsToSelection);
-    metaMenu->addSeparator();
-    geoLookupAct = metaMenu->addAction(tr("Address lookup for selected pictures"));
-    connect(geoLookupAct, &QAction::triggered, this, &MainWindow::startGeoNamesLookup);
+  // Regeocode-INI Pfad konfigurieren
+  regeocodeIniAct = settingsMenu->addAction(tr("Set Regeocode INI Path..."));
+  connect(regeocodeIniAct, &QAction::triggered, this, [this]() {
+    QString currentPath = m_regeocodeIniPath.isEmpty() ? QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) : m_regeocodeIniPath;
+    QString iniPath = QFileDialog::getOpenFileName(this, tr("Select desktop-gallery_regeocode.ini"), currentPath, tr("INI Files (*.ini)"));
+    if (!iniPath.isEmpty()) {
+      m_regeocodeIniPath = iniPath;
+      m_settings->setValue("Regeocode/iniPath", iniPath);
+      QMessageBox::information(this, tr("INI Path Set"), tr("Regeocode INI path set to:\n") + iniPath);
+    }
+  });
 
-    // Pictures
-    picMenu = menuBar()->addMenu(tr("&Pictures"));
-    viewMenu = picMenu->addMenu(tr("View Options"));
-    actShowCopyright = viewMenu->addAction(tr("Display Copyright Owner"));
-    actShowCopyright->setCheckable(true);
-    actShowGps = viewMenu->addAction(tr("Display GPS Data"));
-    actShowGps->setCheckable(true);
-    // Map Action
-    actViewMap = viewMenu->addAction(tr("Show selected on Map..."));
-    connect(actViewMap, &QAction::triggered, this, &MainWindow::showMapForSelection);
+  // Metadata
+  metaMenu = menuBar()->addMenu(tr("&Metadata"));
+  metaAct = metaMenu->addAction(tr("Edit Default Metadata..."));
+  connect(metaAct, &QAction::triggered, this,
+          &MainWindow::showDefaultMetaWidget);
+  metaMenu->addSeparator();
+  writeCpAct = metaMenu->addAction(tr("Write default Copyright to selected"));
+  connect(writeCpAct, &QAction::triggered, this,
+          &MainWindow::writeDefaultCopyrightToSelection);
+  writeGpsAct = metaMenu->addAction(tr("Write default GPS to selected"));
+  connect(writeGpsAct, &QAction::triggered, this,
+          &MainWindow::writeDefaultGpsToSelection);
+  writeAllAct =
+      metaMenu->addAction(tr("Write ALL default Metadata to selected"));
+  connect(writeAllAct, &QAction::triggered, this,
+          &MainWindow::writeAllDefaultsToSelection);
+  metaMenu->addSeparator();
+  geoLookupAct =
+      metaMenu->addAction(tr("Address lookup for selected pictures"));
+  connect(geoLookupAct, &QAction::triggered, this,
+          &MainWindow::startGeoNamesLookup);
 
-    auto updateDelegate = [this]() {
-        ThumbnailDelegate *del = qobject_cast<ThumbnailDelegate *>(m_galleryView->itemDelegate());
-        if (del) {
-            del->setShowCopyright(actShowCopyright->isChecked());
-            del->setShowGps(actShowGps->isChecked());
-            m_galleryView->viewport()->update();
-        }
-    };
-    connect(actShowCopyright, &QAction::toggled, this, updateDelegate);
-    connect(actShowGps, &QAction::toggled, this, updateDelegate);
+  // Pictures
+  picMenu = menuBar()->addMenu(tr("&Pictures"));
+  viewMenu = picMenu->addMenu(tr("View Options"));
+  actShowCopyright = viewMenu->addAction(tr("Display Copyright Owner"));
+  actShowCopyright->setCheckable(true);
+  actShowGps = viewMenu->addAction(tr("Display GPS Data"));
+  actShowGps->setCheckable(true);
+  // Map Action
+  actViewMap = viewMenu->addAction(tr("Show selected on Map..."));
+  connect(actViewMap, &QAction::triggered, this,
+          &MainWindow::showMapForSelection);
 
-    picMenu->addSeparator();
-    webpMenu = picMenu->addMenu(tr("WebP Export"));
-    actWebpOversize = webpMenu->addAction(tr("Increase too small pictures"));
-    actWebpOversize->setCheckable(true);
-    actWebpOversize->setChecked(true);
-    actWebpOverwrite = webpMenu->addAction(tr("Overwrite existing WebP"));
-    actWebpOverwrite->setCheckable(true);
-    actWebpWatermark = webpMenu->addAction(tr("Watermark WebP"));
-    actWebpWatermark->setCheckable(true);
-    actWebpWatermark->setChecked(true);
-    webpMenu->addSeparator();
-    actWebpRename = webpMenu->addAction(tr("Rename Export to Timestamp"));
-    actWebpRename->setCheckable(true);
-    webpMenu->addSeparator();
-    actExportWebp = webpMenu->addAction(tr("Export selected to all WebP sizes"));
-    connect(actExportWebp, &QAction::triggered, this, &MainWindow::exportSelectedToWebP);
+  auto updateDelegate = [this]() {
+    ThumbnailDelegate *del =
+        qobject_cast<ThumbnailDelegate *>(m_galleryView->itemDelegate());
+    if (del) {
+      del->setShowCopyright(actShowCopyright->isChecked());
+      del->setShowGps(actShowGps->isChecked());
+      m_galleryView->viewport()->update();
+    }
+  };
+  connect(actShowCopyright, &QAction::toggled, this, updateDelegate);
+  connect(actShowGps, &QAction::toggled, this, updateDelegate);
 
-    QAction *uploadAct = picMenu->addAction(tr("Upload to Server..."));
-    connect(uploadAct, &QAction::triggered, this, &MainWindow::uploadSelectedImages);
+  picMenu->addSeparator();
+  webpMenu = picMenu->addMenu(tr("WebP Export"));
+  actWebpOversize = webpMenu->addAction(tr("Increase too small pictures"));
+  actWebpOversize->setCheckable(true);
+  actWebpOversize->setChecked(true);
+  actWebpOverwrite = webpMenu->addAction(tr("Overwrite existing WebP"));
+  actWebpOverwrite->setCheckable(true);
+  actWebpWatermark = webpMenu->addAction(tr("Watermark WebP"));
+  actWebpWatermark->setCheckable(true);
+  actWebpWatermark->setChecked(true);
+  webpMenu->addSeparator();
+  actWebpRename = webpMenu->addAction(tr("Rename Export to Timestamp"));
+  actWebpRename->setCheckable(true);
+  webpMenu->addSeparator();
+  actExportWebp = webpMenu->addAction(tr("Export selected to all WebP sizes"));
+  connect(actExportWebp, &QAction::triggered, this,
+          &MainWindow::exportSelectedToWebP);
 
-    picMenu->addSeparator();
-    actSelectAll = picMenu->addAction(tr("Select all Pictures"));
-    actSelectAll->setShortcut(QKeySequence::SelectAll);
-    connect(actSelectAll, &QAction::triggered, this, &MainWindow::selectAllImages);
-    actRename = picMenu->addAction(tr("Rename selected to Timestamp"));
-    connect(actRename, &QAction::triggered, this, &MainWindow::renameSelectedImages);
+  QAction *uploadAct = picMenu->addAction(tr("Upload to Server..."));
+  connect(uploadAct, &QAction::triggered, this,
+          &MainWindow::uploadSelectedImages);
 
-    // Help
-    helpMenu = menuBar()->addMenu(tr("&Help"));
-    aboutAct = helpMenu->addAction(tr("&About"));
-    connect(aboutAct, &QAction::triggered, this, &MainWindow::showAboutDialog);
+  picMenu->addSeparator();
+  actSelectAll = picMenu->addAction(tr("Select all Pictures"));
+  actSelectAll->setShortcut(QKeySequence::SelectAll);
+  connect(actSelectAll, &QAction::triggered, this,
+          &MainWindow::selectAllImages);
+  actRename = picMenu->addAction(tr("Rename selected to Timestamp"));
+  connect(actRename, &QAction::triggered, this,
+          &MainWindow::renameSelectedImages);
 
-    //menuBar()->show();
+  // Help
+  helpMenu = menuBar()->addMenu(tr("&Help"));
+  aboutAct = helpMenu->addAction(tr("&About"));
+  connect(aboutAct, &QAction::triggered, this, &MainWindow::showAboutDialog);
+
+  // menuBar()->show();
 }
 
 void MainWindow::retranslateUi() {
@@ -735,16 +771,119 @@ void MainWindow::startGeoNamesLookup() {
   for (const QString &f : files)
     m_geoLookupQueue.enqueue(f);
   m_geoTotalCount = files.size();
-  m_statusLabel->setText(tr("Starting OSM Nominatim lookup for %1 images...")
-                             .arg(m_geoTotalCount));
-  processNextGeoLookup();
+  m_statusLabel->setText(
+      tr("Starting geocoding lookup for %1 images...").arg(m_geoTotalCount));
+
+  // NEU: Prüfe, ob Regeocode-INI-Pfad gesetzt ist
+  if (m_regeocodeIniPath.isEmpty()) {
+    QMessageBox msgBox;
+    msgBox.setWindowTitle(tr("Geocoding-Konfiguration fehlt"));
+    msgBox.setText(tr("Kein Pfad zur desktop-gallery_regeocode.ini konfiguriert.\n\nMöchten Sie die Default-API (Nominatim) verwenden oder den Pfad zur INI eingeben?"));
+    QPushButton *defaultApiBtn = msgBox.addButton(tr("Default-API (Nominatim)"), QMessageBox::AcceptRole);
+    QPushButton *setIniBtn = msgBox.addButton(tr("INI-Pfad eingeben"), QMessageBox::ActionRole);
+    msgBox.addButton(QMessageBox::Cancel);
+    msgBox.exec();
+    if (msgBox.clickedButton() == defaultApiBtn) {
+      processNextGeoLookup();
+      return;
+    } else if (msgBox.clickedButton() == setIniBtn) {
+      QString iniPath = QFileDialog::getOpenFileName(this, tr("Select desktop-gallery_regeocode.ini"), QStandardPaths::writableLocation(QStandardPaths::ConfigLocation), tr("INI Files (*.ini)"));
+      if (!iniPath.isEmpty()) {
+        m_regeocodeIniPath = iniPath;
+        m_settings->setValue("Regeocode/iniPath", iniPath);
+        QMessageBox::information(this, tr("INI Path Set"), tr("Regeocode INI path set to:\n") + iniPath);
+        // Hier kann dann die neue Methode für Regeocode-Lookup aufgerufen werden
+        processNextRegeocodeLookup();
+        return;
+      } else {
+        // Abbruch
+        return;
+      }
+    } else {
+      // Abbruch
+      return;
+    }
+  } else {
+    // Wenn INI-Pfad gesetzt, Regeocode-Lookup
+    processNextRegeocodeLookup();
+    return;
+  }
+}
+
+// --- Regeocode Batch-Lookup ---
+void MainWindow::processNextRegeocodeLookup() {
+  if (m_geoLookupQueue.isEmpty()) {
+    m_statusLabel->setText(tr("Lookup finished."));
+    QMessageBox::information(this, tr("Finished"), tr("Address lookup completed."));
+    m_galleryModel->select();
+    return;
+  }
+  QString path = m_geoLookupQueue.head();
+  Photo p(path);
+  QPointF gps = p.getGpsLatLon();
+  if (qAbs(gps.x()) < 0.0001 && qAbs(gps.y()) < 0.0001) {
+    qWarning() << "Skipping file without GPS:" << path;
+    m_geoLookupQueue.dequeue();
+    processNextRegeocodeLookup();
+    return;
+  }
+
+  try {
+    std::vector<regeocode::ApiAdapterPtr> adapters;
+    adapters.push_back(std::make_unique<regeocode::NominatimAdapter>());
+    adapters.push_back(std::make_unique<regeocode::GoogleAdapter>());
+    adapters.push_back(std::make_unique<regeocode::OpenCageAdapter>());
+    adapters.push_back(std::make_unique<regeocode::BingAdapter>());
+    adapters.push_back(std::make_unique<regeocode::GeoNamesTimezoneAdapter>());
+
+    regeocode::ConfigLoader loader(m_regeocodeIniPath.toStdString());
+    auto config_result = loader.load();
+
+    auto client = std::make_unique<regeocode::HttpClient>();
+    regeocode::ReverseGeocoder geocoder(
+        config_result.apis, std::move(adapters), std::move(client),
+        config_result.quota_file_path);
+
+    std::vector<std::string> priority_list;
+    priority_list.push_back("nominatim");
+
+    regeocode::Coordinates coords{gps.x(), gps.y()};
+    nlohmann::json result = geocoder.reverse_geocode_fallback(
+        coords, priority_list, "");
+
+    if (result.contains("meta") && result.contains("result")) {
+      auto metaObj = result["meta"];
+      auto resObj = result["result"];
+      QString address_en = QString::fromStdString(resObj.value("address_english", ""));
+      QString address_local = QString::fromStdString(resObj.value("address_local", ""));
+      QString country_code = QString::fromStdString(resObj.value("country_code", ""));
+      QString timezone = QString::fromStdString(resObj.value("timezone_id", ""));
+
+      RzMetadata::DefaultMetaStruct meta;
+      if (!address_en.isEmpty())
+        meta.xmpDefault["Xmp.dc.address_english"] = address_en;
+      if (!address_local.isEmpty())
+        meta.xmpDefault["Xmp.dc.address_local"] = address_local;
+      if (!country_code.isEmpty())
+        meta.xmpDefault["Xmp.dc.country_code"] = country_code;
+      if (!timezone.isEmpty())
+        meta.xmpDefault["Xmp.dc.timezone"] = timezone;
+
+      if (p.writeAllMetadata(meta)) {
+        qDebug() << "Regeocode Data written to:" << QFileInfo(path).fileName();
+      }
+    }
+  } catch (const std::exception &e) {
+    qWarning() << "Regeocode-Fehler:" << e.what();
+  }
+  m_geoLookupQueue.dequeue();
+  processNextRegeocodeLookup();
 }
 
 void MainWindow::processNextGeoLookup() {
   if (m_geoLookupQueue.isEmpty()) {
     m_statusLabel->setText(tr("Lookup finished."));
-    QMessageBox::information(this, tr("Finished"),
-                             tr("Address lookup completed."));
+    QMessageBox::information(this, tr("Finished"), tr("Address lookup completed."));
     m_galleryModel->select();
     return;
   }
@@ -768,10 +907,6 @@ void MainWindow::processNextGeoLookup() {
   QNetworkRequest request(url);
   request.setAttribute(QNetworkRequest::User, path);
   request.setRawHeader("User-Agent", "DesktopGalleryApp/1.0");
-  request.setRawHeader("Accept-Language", "en");
-  m_statusLabel->setText(tr("Lookup: %1 / %2 ...")
-                             .arg(m_geoTotalCount - m_geoLookupQueue.size() + 1)
-                             .arg(m_geoTotalCount));
   m_netManager->get(request);
 }
 
@@ -818,7 +953,7 @@ void MainWindow::onGeoNamesReply(QNetworkReply *reply) {
     QString countryCode = addr["country_code"].toString().toUpper();
     if (!city.isEmpty()) {
       meta.iptcDefault["Iptc.Application2.City"] = city;
-      meta.xmpDefault["Xmp.photoshop.City"] = city;
+      meta.xmpDefault["Xmp.dc.address_english"] = city;
     }
     if (!fullStreet.isEmpty()) {
       meta.iptcDefault["Iptc.Application2.SubLocation"] = fullStreet;

@@ -28,6 +28,7 @@
 #include <QMainWindow>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QProgressBar>
 #include <QProgressDialog>
 #include <QQueue>
 #include <QSettings>
@@ -109,6 +110,8 @@ private slots:
   // --- GEONAMES / SETTINGS ---
   void openSettingsDialog();
   void startGeoNamesLookup();
+  void processNextGeoLookup();       // existing Nominatim
+  void processNextRegeocodeLookup(); // Regeocode-Lookup für Batch
   void onGeoNamesReply(QNetworkReply *reply);
 
 private:
@@ -143,18 +146,19 @@ private:
   QTranslator m_translatorQt;
   QString m_currLang;
 
-  // Helper to start the next request in the queue
-  void processNextGeoLookup();
-
   // --- NETWORK & SETTINGS ---
   QSettings *m_settings;
   QNetworkAccessManager *m_netManager;
+
+  // Pfad zur Regeocode-INI
+  QString m_regeocodeIniPath;
 
   // Queue: Stores paths that still need to be processed
   QQueue<QString> m_geoLookupQueue;
 
   // Progress indicator for the batch process
   int m_geoTotalCount{0};
+  QProgressBar *m_geoProgressBar; // NEW
 
   // --- GUI MEMBERS (NEW: Must be members for retranslateUi) ---
 
@@ -177,6 +181,7 @@ private:
 
   // Settings Actions
   QAction *geoUserAct;
+  QAction *regeocodeIniAct;
 
   // Metadata Actions
   QAction *metaAct;

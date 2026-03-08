@@ -7,6 +7,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to Semantic Versioning.
 
+## [1.1.0] - 2026-03-08
+
+### Added
+
+- Integrated regeocode libraries for geocoding and timezone lookup
+- Menu item to set the path to desktop-gallery_regeocode.ini
+- User prompt and API selection in the menu
+- Saving address_english, address_local, country_code, timezone_id, local_time, gmt_offset as XMP metadata in the image
+
+### Fixed
+
+- Synchronization of function signatures and bugfixes in implementation
+
+### Changed
+
+- Project version updated to 1.1.0
+
 ## [Unreleased]
 
 ## [0.2.0] - 2026-03-07

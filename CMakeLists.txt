@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.23)
 
 # cmake -B build -S .
-# cmake --build build
+# cmake --build build -j$(nproc)
 
 # nvm use --lts
 # atom -J-Xmx16g usages -o ./docs/app.atom --slice-outfile ./docs/atom_usages_v1.0.0.json -l cpp ./src
@@ -9,7 +9,7 @@ cmake_minimum_required(VERSION 3.23)
 
 project(
   desktop-gallery
-  VERSION 1.0.0
+  VERSION 1.1.0
   DESCRIPTION "Desktop-Gallery for Linux, MacOS and Windows. Part of the Crow Web-Gallery project."
   HOMEPAGE_URL "https://github.com/Zheng-Bote/web-gallery_desktop-gallery"
   LANGUAGES CXX)
@@ -26,6 +26,25 @@ set(CMAKE_AUTORCC ON)
 # WICHTIG: LinguistTools für Übersetzungen, Sql für Datenbank, Concurrent für Threads
 find_package(Qt6 REQUIRED COMPONENTS Widgets Gui Sql Concurrent LinguistTools Network WebEngineWidgets)
 find_package(exiv2lib REQUIRED CONFIG NAMES exiv2)
+find_package(CURL REQUIRED)
+
+include(FetchContent)
+
+# --- 1. JSON ---
+FetchContent_Declare(
+    json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG v3.11.3
+)
+FetchContent_MakeAvailable(json)
+
+# --- 2. inifile-cpp ---
+FetchContent_Declare(
+  inifile-cpp
+  GIT_REPOSITORY https://github.com/Rookfighter/inifile-cpp.git
+  GIT_TAG master
+)
+FetchContent_MakeAvailable(inifile-cpp)
 
 # --- Configure ---
 set(EXECUTABLE_NAME "${PROJECT_NAME}")
@@ -43,6 +62,7 @@ add_subdirectory(configure)
 
 # Include Verzeichnis global setzen
 include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(${inifile-cpp_SOURCE_DIR}/include)
 
 # --- I18N / Übersetzungen ---
 # Liste hier deine Sprachdateien auf (müssen im Ordner i18n/ existieren)
@@ -69,6 +89,16 @@ set(PROJECT_SOURCES
     src/picture_widget.cpp
     src/UploadManager.cpp
     src/MapWindow.cpp
+
+    # Regeocode Library Sources
+    src/regeocode/re_geocode_core.cpp
+    src/regeocode/http_client.cpp
+    src/regeocode/adapter_nominatim.cpp
+    src/regeocode/adapter_google.cpp
+    src/regeocode/adapter_opencage.cpp
+    src/regeocode/adapter_geonames_timezone.cpp
+    src/regeocode/adapter_bing.cpp
+    src/regeocode/quota_manager.cpp
 
     # Header Files (Zwingend notwendig für MOC!)
     include/MainWindow.hpp
@@ -127,6 +157,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt6::Network
     Qt6::WebEngineWidgets
     Exiv2::exiv2lib
+    nlohmann_json::nlohmann_json
+    inicpp
+    CURL::libcurl
 )
 
 # --- INSTALLATION RULES ---
