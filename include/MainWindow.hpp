@@ -186,6 +186,7 @@ private:
   // Settings Actions
   QAction *geoUserAct;
   QAction *regeocodeIniAct;
+  QAction *setUploadUrlAct;
 
   // Metadata Actions
   QAction *metaAct;

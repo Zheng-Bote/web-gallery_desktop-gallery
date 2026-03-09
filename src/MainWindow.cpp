@@ -1,3 +1,4 @@
+
 #include <inicpp.h>
 /**
  * SPDX-FileComment: Main Application Logic
@@ -244,6 +245,18 @@ void MainWindow::createMenu() {
       m_regeocodeIniPath = iniPath;
       m_settings->setValue("Regeocode/iniPath", iniPath);
       QMessageBox::information(this, tr("INI Path Set"), tr("Regeocode INI path set to:\n") + iniPath);
+    }
+  });
+
+  // Upload-URL konfigurieren
+  setUploadUrlAct = settingsMenu->addAction(tr("Set upload URL..."));
+  connect(setUploadUrlAct, &QAction::triggered, this, [this]() {
+    bool ok = false;
+    QString currentUrl = m_settings->value("Server/uploadUrl").toString();
+    QString url = QInputDialog::getText(this, tr("Set upload URL"), tr("Enter the server upload URL:"), QLineEdit::Normal, currentUrl.isEmpty() ? "http://localhost:8080" : currentUrl, &ok);
+    if (ok && !url.trimmed().isEmpty()) {
+      m_settings->setValue("Server/uploadUrl", url.trimmed());
+      QMessageBox::information(this, tr("Upload URL Set"), tr("Upload URL set to:\n") + url.trimmed());
     }
   });
 
@@ -1152,9 +1165,18 @@ void MainWindow::uploadSelectedImages() {
     return;
   }
 
-  QString url =
-      m_settings->value("Server/uploadUrl", "http://localhost:8080").toString();
-  m_uploader->setServerUrl(url);
+
+  QString url = m_settings->value("Server/uploadUrl").toString();
+  if (url.trimmed().isEmpty()) {
+    bool ok = false;
+    url = QInputDialog::getText(this, tr("Set upload URL"), tr("Enter the server upload URL:"), QLineEdit::Normal, "http://localhost:8080", &ok);
+    if (!ok || url.trimmed().isEmpty()) {
+      QMessageBox::warning(this, tr("Upload"), tr("No upload URL set. Upload canceled."));
+      return;
+    }
+    m_settings->setValue("Server/uploadUrl", url.trimmed());
+  }
+  m_uploader->setServerUrl(url.trimmed());
 
   LoginDialog loginDlg(this);
   if (loginDlg.exec() != QDialog::Accepted)
