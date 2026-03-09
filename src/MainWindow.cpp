@@ -1144,6 +1144,7 @@ void MainWindow::showAboutDialog() {
       this, tr("About") + " " + QString::fromStdString(PROG_LONGNAME), info);
 }
 
+// TODO: Upload-Funktion überarbeiten, damit sie den neuen LoginDialog nutzt und die Upload-Logik entsprechend anpasst (inkl. Fortschrittsanzeige, Fehlerbehandlung, etc.)
 void MainWindow::uploadSelectedImages() {
   QList<QString> files = getSelectedFilePaths();
   if (files.isEmpty()) {
