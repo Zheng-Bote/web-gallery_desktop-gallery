@@ -1,3 +1,4 @@
+#include <inicpp.h>
 /**
  * SPDX-FileComment: Main Application Logic
  * SPDX-FileType: SOURCE
@@ -793,7 +794,7 @@ void MainWindow::startGeoNamesLookup() {
         m_settings->setValue("Regeocode/iniPath", iniPath);
         QMessageBox::information(this, tr("INI Path Set"), tr("Regeocode INI path set to:\n") + iniPath);
         // Hier kann dann die neue Methode für Regeocode-Lookup aufgerufen werden
-        processNextRegeocodeLookup();
+        processNextRegeocodeLookup(iniPath);
         return;
       } else {
         // Abbruch
@@ -811,7 +812,7 @@ void MainWindow::startGeoNamesLookup() {
 }
 
 // --- Regeocode Batch-Lookup ---
-void MainWindow::processNextRegeocodeLookup() {
+void MainWindow::processNextRegeocodeLookup(const QString &iniPath) {
   if (m_geoLookupQueue.isEmpty()) {
     m_statusLabel->setText(tr("Lookup finished."));
     QMessageBox::information(this, tr("Finished"), tr("Address lookup completed."));
@@ -836,7 +837,9 @@ void MainWindow::processNextRegeocodeLookup() {
     adapters.push_back(std::make_unique<regeocode::BingAdapter>());
     adapters.push_back(std::make_unique<regeocode::GeoNamesTimezoneAdapter>());
 
-    regeocode::ConfigLoader loader(m_regeocodeIniPath.toStdString());
+    // INI-Pfad: entweder explizit oder aus Member
+    std::string ini_path = iniPath.isEmpty() ? m_regeocodeIniPath.toStdString() : iniPath.toStdString();
+    regeocode::ConfigLoader loader(ini_path);
     auto config_result = loader.load();
 
     auto client = std::make_unique<regeocode::HttpClient>();
@@ -845,7 +848,30 @@ void MainWindow::processNextRegeocodeLookup() {
         config_result.quota_file_path);
 
     std::vector<std::string> priority_list;
-    priority_list.push_back("nominatim");
+    // Strategie aus INI laden
+    ini::IniFile ini;
+    ini.load(ini_path);
+    auto it = ini.find("strategies");
+    if (it != ini.end()) {
+      auto &section = it->second;
+      auto sit = section.find("default");
+      if (sit != section.end()) {
+        std::string strategy_raw = sit->second.as<std::string>();
+        std::stringstream ss(strategy_raw);
+        std::string segment;
+        while (std::getline(ss, segment, ',')) {
+          size_t first = segment.find_first_not_of(' ');
+          if (first != std::string::npos) {
+            size_t last = segment.find_last_not_of(' ');
+            priority_list.push_back(segment.substr(first, (last - first + 1)));
+          }
+        }
+      } else {
+        priority_list.push_back("nominatim"); // Fallback
+      }
+    } else {
+      priority_list.push_back("nominatim"); // Fallback
+    }
 
     regeocode::Coordinates coords{gps.x(), gps.y()};
     nlohmann::json result = geocoder.reverse_geocode_fallback(

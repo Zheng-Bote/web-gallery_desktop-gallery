@@ -26,6 +26,16 @@ and this project adheres to Semantic Versioning.
 
 ## [Unreleased]
 
+### Changed
+
+- The API strategy for regeocode lookups is now dynamically loaded from the INI configuration ([strategies]->default) and no longer hardcoded.
+- The quota file ([config]->quota-file) is correctly loaded from the INI and passed to the QuotaManager.
+- Bugfixes: More robust INI parsing logic, correct type conversion and section checking.
+
+### Fixed
+
+- Compilation errors due to incorrect method calls and type conversions in INI parsing resolved.
+
 ## [0.2.0] - 2026-03-07
 
 ### Added

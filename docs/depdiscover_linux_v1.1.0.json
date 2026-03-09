@@ -1,0 +1,401 @@
+{
+  "dependencies": [
+    {
+      "cves": [
+        {
+          "fixed_version": "",
+          "id": "SAFE",
+          "severity": "NONE",
+          "summary": "No vulnerabilities found in ecosystem 'Debian'. Checked on 2026-03-09",
+          "suppressed": false,
+          "suppression_reason": ""
+        }
+      ],
+      "headers": [],
+      "libraries": [],
+      "licenses": [
+        "UNKNOWN"
+      ],
+      "name": "Qt6::Widgets",
+      "source": "cmake_target",
+      "type": "cmake_target",
+      "version": "System/Qt"
+    },
+    {
+      "cves": [
+        {
+          "fixed_version": "",
+          "id": "SAFE",
+          "severity": "NONE",
+          "summary": "No vulnerabilities found in ecosystem 'Debian'. Checked on 2026-03-09",
+          "suppressed": false,
+          "suppression_reason": ""
+        }
+      ],
+      "headers": [],
+      "libraries": [],
+      "licenses": [
+        "UNKNOWN"
+      ],
+      "name": "Qt6::Gui",
+      "source": "cmake_target",
+      "type": "cmake_target",
+      "version": "System/Qt"
+    },
+    {
+      "cves": [
+        {
+          "fixed_version": "",
+          "id": "SAFE",
+          "severity": "NONE",
+          "summary": "No vulnerabilities found in ecosystem 'Debian'. Checked on 2026-03-09",
+          "suppressed": false,
+          "suppression_reason": ""
+        }
+      ],
+      "headers": [],
+      "libraries": [],
+      "licenses": [
+        "UNKNOWN"
+      ],
+      "name": "Qt6::Sql",
+      "source": "cmake_target",
+      "type": "cmake_target",
+      "version": "System/Qt"
+    },
+    {
+      "cves": [
+        {
+          "fixed_version": "",
+          "id": "SAFE",
+          "severity": "NONE",
+          "summary": "No vulnerabilities found in ecosystem 'Debian'. Checked on 2026-03-09",
+          "suppressed": false,
+          "suppression_reason": ""
+        }
+      ],
+      "headers": [],
+      "libraries": [],
+      "licenses": [
+        "UNKNOWN"
+      ],
+      "name": "Qt6::Concurrent",
+      "source": "cmake_target",
+      "type": "cmake_target",
+      "version": "System/Qt"
+    },
+    {
+      "cves": [
+        {
+          "fixed_version": "",
+          "id": "SAFE",
+          "severity": "NONE",
+          "summary": "No vulnerabilities found in ecosystem 'Debian'. Checked on 2026-03-09",
+          "suppressed": false,
+          "suppression_reason": ""
+        }
+      ],
+      "headers": [],
+      "libraries": [],
+      "licenses": [
+        "UNKNOWN"
+      ],
+      "name": "Qt6::Network",
+      "source": "cmake_target",
+      "type": "cmake_target",
+      "version": "System/Qt"
+    },
+    {
+      "cves": [
+        {
+          "fixed_version": "",
+          "id": "SAFE",
+          "severity": "NONE",
+          "summary": "No vulnerabilities found in ecosystem 'Debian'. Checked on 2026-03-09",
+          "suppressed": false,
+          "suppression_reason": ""
+        }
+      ],
+      "headers": [],
+      "libraries": [],
+      "licenses": [
+        "UNKNOWN"
+      ],
+      "name": "Qt6::WebEngineWidgets",
+      "source": "cmake_target",
+      "type": "cmake_target",
+      "version": "System/Qt"
+    },
+    {
+      "cves": [
+        {
+          "fixed_version": "",
+          "id": "NOT-CHECKED",
+          "severity": "UNKNOWN",
+          "summary": "Version unknown or latest, cannot query OSV",
+          "suppressed": false,
+          "suppression_reason": ""
+        }
+      ],
+      "headers": [],
+      "libraries": [],
+      "licenses": [
+        "UNKNOWN"
+      ],
+      "name": "Exiv2::exiv2lib",
+      "source": "cmake_target",
+      "type": "cmake_target",
+      "version": "unknown"
+    },
+    {
+      "cves": [
+        {
+          "fixed_version": "",
+          "id": "NOT-CHECKED",
+          "severity": "UNKNOWN",
+          "summary": "Version unknown or latest, cannot query OSV",
+          "suppressed": false,
+          "suppression_reason": ""
+        }
+      ],
+      "headers": [
+        "/home/zb_bamboo/DEV/__NEW__/Web/Crow_Web-Gallery/web-gallery_desktop-gallery/build/_deps/json-src/include/nlohmann/json.hpp"
+      ],
+      "libraries": [],
+      "licenses": [
+        "UNKNOWN"
+      ],
+      "name": "nlohmann_json::nlohmann_json",
+      "source": "cmake_target",
+      "type": "cmake_target",
+      "version": "unknown"
+    },
+    {
+      "cves": [
+        {
+          "fixed_version": "",
+          "id": "NOT-CHECKED",
+          "severity": "UNKNOWN",
+          "summary": "Version unknown or latest, cannot query OSV",
+          "suppressed": false,
+          "suppression_reason": ""
+        }
+      ],
+      "headers": [
+        "/home/zb_bamboo/DEV/__NEW__/Web/Crow_Web-Gallery/web-gallery_desktop-gallery/build/_deps/inifile-cpp-src/include/inicpp.h"
+      ],
+      "libraries": [],
+      "licenses": [
+        "MIT"
+      ],
+      "name": "inicpp",
+      "source": "cmake_target",
+      "type": "cmake_target",
+      "version": "unknown"
+    },
+    {
+      "cves": [
+        {
+          "fixed_version": "",
+          "id": "NOT-CHECKED",
+          "severity": "UNKNOWN",
+          "summary": "Version unknown or latest, cannot query OSV",
+          "suppressed": false,
+          "suppression_reason": ""
+        }
+      ],
+      "headers": [],
+      "libraries": [],
+      "licenses": [
+        "UNKNOWN"
+      ],
+      "name": "CURL::libcurl",
+      "source": "cmake_target",
+      "type": "cmake_target",
+      "version": "unknown"
+    },
+    {
+      "cves": [],
+      "headers": [],
+      "libraries": [
+        "libQt6Core.so.6"
+      ],
+      "licenses": [
+        "UNKNOWN"
+      ],
+      "name": "libQt6Core.so.6",
+      "source": "elf_scan",
+      "type": "system",
+      "version": ""
+    },
+    {
+      "cves": [],
+      "headers": [],
+      "libraries": [
+        "libQt6Gui.so.6"
+      ],
+      "licenses": [
+        "UNKNOWN"
+      ],
+      "name": "libQt6Gui.so.6",
+      "source": "elf_scan",
+      "type": "system",
+      "version": ""
+    },
+    {
+      "cves": [],
+      "headers": [],
+      "libraries": [
+        "libQt6Network.so.6"
+      ],
+      "licenses": [
+        "UNKNOWN"
+      ],
+      "name": "libQt6Network.so.6",
+      "source": "elf_scan",
+      "type": "system",
+      "version": ""
+    },
+    {
+      "cves": [],
+      "headers": [],
+      "libraries": [
+        "libQt6Sql.so.6"
+      ],
+      "licenses": [
+        "UNKNOWN"
+      ],
+      "name": "libQt6Sql.so.6",
+      "source": "elf_scan",
+      "type": "system",
+      "version": ""
+    },
+    {
+      "cves": [],
+      "headers": [],
+      "libraries": [
+        "libQt6WebEngineWidgets.so.6"
+      ],
+      "licenses": [
+        "UNKNOWN"
+      ],
+      "name": "libQt6WebEngineWidgets.so.6",
+      "source": "elf_scan",
+      "type": "system",
+      "version": ""
+    },
+    {
+      "cves": [],
+      "headers": [],
+      "libraries": [
+        "libQt6Widgets.so.6"
+      ],
+      "licenses": [
+        "UNKNOWN"
+      ],
+      "name": "libQt6Widgets.so.6",
+      "source": "elf_scan",
+      "type": "system",
+      "version": ""
+    },
+    {
+      "cves": [],
+      "headers": [],
+      "libraries": [
+        "libc.so.6"
+      ],
+      "licenses": [
+        "UNKNOWN"
+      ],
+      "name": "libc.so.6",
+      "source": "elf_scan",
+      "type": "system",
+      "version": ""
+    },
+    {
+      "cves": [],
+      "headers": [],
+      "libraries": [
+        "libcurl.so.4"
+      ],
+      "licenses": [
+        "UNKNOWN"
+      ],
+      "name": "libcurl.so.4",
+      "source": "elf_scan",
+      "type": "system",
+      "version": ""
+    },
+    {
+      "cves": [],
+      "headers": [],
+      "libraries": [
+        "libexiv2.so.30"
+      ],
+      "licenses": [
+        "UNKNOWN"
+      ],
+      "name": "libexiv2.so.30",
+      "source": "elf_scan",
+      "type": "system",
+      "version": ""
+    },
+    {
+      "cves": [],
+      "headers": [],
+      "libraries": [
+        "libgcc_s.so.1"
+      ],
+      "licenses": [
+        "UNKNOWN"
+      ],
+      "name": "libgcc_s.so.1",
+      "source": "elf_scan",
+      "type": "system",
+      "version": ""
+    },
+    {
+      "cves": [],
+      "headers": [],
+      "libraries": [
+        "libm.so.6"
+      ],
+      "licenses": [
+        "UNKNOWN"
+      ],
+      "name": "libm.so.6",
+      "source": "elf_scan",
+      "type": "system",
+      "version": ""
+    },
+    {
+      "cves": [],
+      "headers": [],
+      "libraries": [
+        "libstdc++.so.6"
+      ],
+      "licenses": [
+        "UNKNOWN"
+      ],
+      "name": "libstdc++.so.6",
+      "source": "elf_scan",
+      "type": "system",
+      "version": ""
+    }
+  ],
+  "header": {
+    "project": {
+      "name": "Desktop Gallery",
+      "workspace_root": "/home/zb_bamboo/DEV/__NEW__/Web/Crow_Web-Gallery/web-gallery_desktop-gallery"
+    },
+    "scan_date": "2026-03-09",
+    "schema_version": "1.2",
+    "tool": {
+      "author": "ZHENG Bote",
+      "description": "Native C++ Dependency Scanner & SBOM Generator",
+      "homepage": "https://github.com/zb-bamboo/Dependency_Tracker_2",
+      "name": "depdiscover",
+      "version": "1.2.0"
+    }
+  }
+}

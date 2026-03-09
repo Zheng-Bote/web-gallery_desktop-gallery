@@ -1,0 +1,330 @@
+{
+  "bomFormat": "CycloneDX",
+  "components": [
+    {
+      "bom-ref": "pkg:generic/Qt6::Widgets@System/Qt",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNKNOWN"
+          }
+        }
+      ],
+      "name": "Qt6::Widgets",
+      "purl": "pkg:generic/Qt6::Widgets@System/Qt",
+      "type": "library",
+      "version": "System/Qt"
+    },
+    {
+      "bom-ref": "pkg:generic/Qt6::Gui@System/Qt",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNKNOWN"
+          }
+        }
+      ],
+      "name": "Qt6::Gui",
+      "purl": "pkg:generic/Qt6::Gui@System/Qt",
+      "type": "library",
+      "version": "System/Qt"
+    },
+    {
+      "bom-ref": "pkg:generic/Qt6::Sql@System/Qt",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNKNOWN"
+          }
+        }
+      ],
+      "name": "Qt6::Sql",
+      "purl": "pkg:generic/Qt6::Sql@System/Qt",
+      "type": "library",
+      "version": "System/Qt"
+    },
+    {
+      "bom-ref": "pkg:generic/Qt6::Concurrent@System/Qt",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNKNOWN"
+          }
+        }
+      ],
+      "name": "Qt6::Concurrent",
+      "purl": "pkg:generic/Qt6::Concurrent@System/Qt",
+      "type": "library",
+      "version": "System/Qt"
+    },
+    {
+      "bom-ref": "pkg:generic/Qt6::Network@System/Qt",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNKNOWN"
+          }
+        }
+      ],
+      "name": "Qt6::Network",
+      "purl": "pkg:generic/Qt6::Network@System/Qt",
+      "type": "library",
+      "version": "System/Qt"
+    },
+    {
+      "bom-ref": "pkg:generic/Qt6::WebEngineWidgets@System/Qt",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNKNOWN"
+          }
+        }
+      ],
+      "name": "Qt6::WebEngineWidgets",
+      "purl": "pkg:generic/Qt6::WebEngineWidgets@System/Qt",
+      "type": "library",
+      "version": "System/Qt"
+    },
+    {
+      "bom-ref": "pkg:generic/Exiv2::exiv2lib@unknown",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNKNOWN"
+          }
+        }
+      ],
+      "name": "Exiv2::exiv2lib",
+      "purl": "pkg:generic/Exiv2::exiv2lib@unknown",
+      "type": "library",
+      "version": "unknown"
+    },
+    {
+      "bom-ref": "pkg:generic/nlohmann_json::nlohmann_json@unknown",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNKNOWN"
+          }
+        }
+      ],
+      "name": "nlohmann_json::nlohmann_json",
+      "purl": "pkg:generic/nlohmann_json::nlohmann_json@unknown",
+      "type": "library",
+      "version": "unknown"
+    },
+    {
+      "bom-ref": "pkg:generic/inicpp@unknown",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "inicpp",
+      "purl": "pkg:generic/inicpp@unknown",
+      "type": "library",
+      "version": "unknown"
+    },
+    {
+      "bom-ref": "pkg:generic/CURL::libcurl@unknown",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNKNOWN"
+          }
+        }
+      ],
+      "name": "CURL::libcurl",
+      "purl": "pkg:generic/CURL::libcurl@unknown",
+      "type": "library",
+      "version": "unknown"
+    },
+    {
+      "bom-ref": "pkg:generic/libQt6Core.so.6@",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNKNOWN"
+          }
+        }
+      ],
+      "name": "libQt6Core.so.6",
+      "purl": "pkg:generic/libQt6Core.so.6@",
+      "type": "library",
+      "version": ""
+    },
+    {
+      "bom-ref": "pkg:generic/libQt6Gui.so.6@",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNKNOWN"
+          }
+        }
+      ],
+      "name": "libQt6Gui.so.6",
+      "purl": "pkg:generic/libQt6Gui.so.6@",
+      "type": "library",
+      "version": ""
+    },
+    {
+      "bom-ref": "pkg:generic/libQt6Network.so.6@",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNKNOWN"
+          }
+        }
+      ],
+      "name": "libQt6Network.so.6",
+      "purl": "pkg:generic/libQt6Network.so.6@",
+      "type": "library",
+      "version": ""
+    },
+    {
+      "bom-ref": "pkg:generic/libQt6Sql.so.6@",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNKNOWN"
+          }
+        }
+      ],
+      "name": "libQt6Sql.so.6",
+      "purl": "pkg:generic/libQt6Sql.so.6@",
+      "type": "library",
+      "version": ""
+    },
+    {
+      "bom-ref": "pkg:generic/libQt6WebEngineWidgets.so.6@",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNKNOWN"
+          }
+        }
+      ],
+      "name": "libQt6WebEngineWidgets.so.6",
+      "purl": "pkg:generic/libQt6WebEngineWidgets.so.6@",
+      "type": "library",
+      "version": ""
+    },
+    {
+      "bom-ref": "pkg:generic/libQt6Widgets.so.6@",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNKNOWN"
+          }
+        }
+      ],
+      "name": "libQt6Widgets.so.6",
+      "purl": "pkg:generic/libQt6Widgets.so.6@",
+      "type": "library",
+      "version": ""
+    },
+    {
+      "bom-ref": "pkg:generic/libc.so.6@",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNKNOWN"
+          }
+        }
+      ],
+      "name": "libc.so.6",
+      "purl": "pkg:generic/libc.so.6@",
+      "type": "library",
+      "version": ""
+    },
+    {
+      "bom-ref": "pkg:generic/libcurl.so.4@",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNKNOWN"
+          }
+        }
+      ],
+      "name": "libcurl.so.4",
+      "purl": "pkg:generic/libcurl.so.4@",
+      "type": "library",
+      "version": ""
+    },
+    {
+      "bom-ref": "pkg:generic/libexiv2.so.30@",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNKNOWN"
+          }
+        }
+      ],
+      "name": "libexiv2.so.30",
+      "purl": "pkg:generic/libexiv2.so.30@",
+      "type": "library",
+      "version": ""
+    },
+    {
+      "bom-ref": "pkg:generic/libgcc_s.so.1@",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNKNOWN"
+          }
+        }
+      ],
+      "name": "libgcc_s.so.1",
+      "purl": "pkg:generic/libgcc_s.so.1@",
+      "type": "library",
+      "version": ""
+    },
+    {
+      "bom-ref": "pkg:generic/libm.so.6@",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNKNOWN"
+          }
+        }
+      ],
+      "name": "libm.so.6",
+      "purl": "pkg:generic/libm.so.6@",
+      "type": "library",
+      "version": ""
+    },
+    {
+      "bom-ref": "pkg:generic/libstdc++.so.6@",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNKNOWN"
+          }
+        }
+      ],
+      "name": "libstdc++.so.6",
+      "purl": "pkg:generic/libstdc++.so.6@",
+      "type": "library",
+      "version": ""
+    }
+  ],
+  "metadata": {
+    "component": {
+      "name": "Desktop Gallery",
+      "type": "application"
+    },
+    "timestamp": "2026-03-09T13:38:35Z",
+    "tools": [
+      {
+        "name": "depdiscover",
+        "vendor": "ZHENG Bote",
+        "version": "1.2.0"
+      }
+    ]
+  },
+  "serialNumber": "urn:uuid:3ba259fe-7dc7-423e-a3e0-f957d444c4dc",
+  "specVersion": "1.4",
+  "version": 1
+}

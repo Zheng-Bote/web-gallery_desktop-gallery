@@ -111,7 +111,11 @@ private slots:
   void openSettingsDialog();
   void startGeoNamesLookup();
   void processNextGeoLookup();       // existing Nominatim
-  void processNextRegeocodeLookup(); // Regeocode-Lookup für Batch
+  /**
+   * @brief Batch-Regeocode-Lookup gemäß INI-Konfiguration.
+   * @param iniPath Optionaler Pfad zur INI-Konfiguration. Falls leer, wird der Member m_regeocodeIniPath verwendet.
+   */
+  void processNextRegeocodeLookup(const QString &iniPath = QString()); // Regeocode-Lookup für Batch
   void onGeoNamesReply(QNetworkReply *reply);
 
 private:

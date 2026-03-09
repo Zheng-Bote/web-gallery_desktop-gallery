@@ -1,0 +1,101 @@
+[strategies]
+# Default Strategy: First OSM, then Google, then OpenCage
+default = nominatim, google, opencage
+# Free Strategy: Only free services
+free_only = nominatim, nearbyWikipedia
+type = strategies
+
+[config]
+quota-file = quota_status.json
+type = config
+
+[nominatim]
+URI = https://nominatim.openstreetmap.org/reverse?lat={{ latitude }}&lon={{ longitude }}&format=json&accept-language={{ lang }}
+API-Key =
+Adapter = nominatim
+# API daily limit for cost-control or fair-use-policy. 0 = no limit
+daily-limit = 100
+# API request timeout in seconds
+timeout = 60
+# type of API: geocoding (default) or information
+type = geocoding
+
+[google]
+URI = https://maps.googleapis.com/maps/api/geocode/json?latlng={{ latitude }},{{ longitude }}&key={{ apikey }}&language={{ lang }}
+API-Key = abcxyz123
+Adapter = google
+daily-limit = 100
+timeout = 60
+type = geocoding
+
+[opencage]
+URI = https://api.opencagedata.com/geocode/v1/json?q={{ latitude }}+{{ longitude }}&key={{ apikey }}&language={{ lang }}
+API-Key = abcxyz123
+Adapter = opencage
+daily-limit = 100
+timeout = 60
+type = geocoding
+
+[bing]
+URI = https://atlas.microsoft.com/search/address/reverse/json?api-version=1.0&query={{ latitude }},{{ longitude }}&subscription-key={{ apikey }}&language={{ lang }}
+API-Key = abcxyz123
+Adapter = bing
+daily-limit = 1000
+timeout = 10
+type = geocoding
+
+[nearbyWikipedia]
+URI = http://api.geonames.org/findNearbyWikipediaJSON?lat={{ latitude }}&lng={{ longitude }}&username={{ apikey }}&lang={{ lang }}
+API-Key = abcxyz123
+Adapter = nearbyWikipedia
+daily-limit = 1000
+timeout = 10
+type = info
+
+[timezone]
+URI = http://api.geonames.org/timezoneJSON?lat={{ latitude }}&lng={{ longitude }}&username={{ apikey }}
+API-Key = abcxyz123
+Adapter = timezone
+daily-limit = 1000
+timeout = 10
+type = info
+
+[openweather]
+URI = https://api.openweathermap.org/data/2.5/weather?lat={{ latitude }}&lon={{ longitude }}&appid={{ apikey }}&units=metric&lang={{ lang }}
+API-Key = abcxyz123
+Adapter = openweather
+daily-limit = 1000
+timeout = 10
+type = info
+
+[pollution]
+URI = https://api.openweathermap.org/data/2.5/air_pollution?lat={{ latitude }}&lon={{ longitude }}&appid={{ apikey }}
+API-Key = abcxyz123
+Adapter = pollution
+daily-limit = 1000
+timeout = 10
+type = info
+
+[tides]
+URI = https://tides.p.rapidapi.com/tides?interval=60&longitude={{ longitude }}&latitude={{ latitude }}&duration=1440&rapidapi-key={{ apikey }}
+API-Key = abcxyz123
+Adapter = tides
+daily-limit = 60
+timeout = 10
+type = info
+
+[marea_tides]
+URI = https://api.marea.ooo/v2/tides?duration=1440&interval=60&latitude={{ latitude }}&longitude={{ longitude }}&model=FES2014&datum=MSL&token={{ apikey }}
+API-Key = abcxyz123
+Adapter = marea_tides
+daily-limit = 100
+timeout = 10
+type = info
+
+[seaweather]
+URI = https://api.stormglass.io/v2/weather/point?lat={{ latitude }}&lng={{ longitude }}&key={{ apikey }}&params=waveHeight,airTemperature
+API-Key = abcxyz123
+Adapter = seaweather
+daily-limit = 50
+timeout = 10
+type = info
