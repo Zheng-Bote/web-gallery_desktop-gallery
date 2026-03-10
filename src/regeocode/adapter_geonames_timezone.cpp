@@ -7,15 +7,17 @@
  *
  * @file adapter_geonames_timezone.cpp
  * @brief Implementation of the GeoNames Timezone API adapter.
- * @version 0.1.0
- * @date 2026-02-14
+ * @version 0.2.0
+ * @date 2026-03-10
  *
  * @author ZHENG Robert
  * @license MIT License
  */
 
 #include "regeocode/adapter_geonames_timezone.hpp"
+#include <QDebug>
 #include <nlohmann/json.hpp>
+#include <sstream>
 
 namespace regeocode {
 
@@ -29,9 +31,11 @@ AddressResult GeoNamesTimezoneAdapter::parse_response(
 
     // Error handling: GeoNames often returns a "status" object on errors
     if (j.contains("status")) {
-      // If we have time/inclination, we could throw an exception here
-      // or leave it in raw_json. For now, we simply continue parsing
-      // if data is available.
+      const auto &status = j["status"];
+      std::string msg = status.value("message", "Unknown GeoNames error");
+      int code = status.value("value", -1);
+      qDebug() << "[ERROR] GeoNames API error (code " << code << "): " << msg;
+      return res; // Return empty result on error
     }
 
     // Mapping fields
@@ -49,8 +53,14 @@ AddressResult GeoNamesTimezoneAdapter::parse_response(
       res.attributes["local_time"] = res.address_local; // For JSON Data
     }
     if (j.contains("gmtOffset")) {
-      res.attributes["gmt_offset"] =
-          std::to_string(j["gmtOffset"].get<double>());
+      // res.attributes["gmt_offset"] =
+      //    std::to_string(j["gmtOffset"].get<double>());
+
+      double offset = j["gmtOffset"].get<double>();
+      // Format without trailing zeros: 5.5 → "5.5", 3.0 → "3"
+      std::ostringstream oss;
+      oss << offset;
+      res.attributes["gmt_offset"] = oss.str();
     }
 
     // Optional: If countryName exists and we don't have an "address" yet,

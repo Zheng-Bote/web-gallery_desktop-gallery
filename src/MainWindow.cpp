@@ -17,22 +17,22 @@
  *
  * @license MIT License
  */
-#include "MainWindow.hpp"
 #include "DatabaseManager.hpp"
 #include "DefaultMetaWidget.hpp"
 #include "ImageIndexer.hpp"
 #include "LoginDialog.hpp"
+#include "MainWindow.hpp"
 #include "MapWindow.hpp"
 #include "ThumbnailDelegate.hpp"
 #include "picture_widget.h"
-#include "rz_config.hpp"
-#include "rz_photo.hpp"
-#include "regeocode/re_geocode_core.hpp"
-#include "regeocode/adapter_nominatim.hpp"
-#include "regeocode/adapter_google.hpp"
-#include "regeocode/adapter_opencage.hpp"
 #include "regeocode/adapter_bing.hpp"
 #include "regeocode/adapter_geonames_timezone.hpp"
+#include "regeocode/adapter_google.hpp"
+#include "regeocode/adapter_nominatim.hpp"
+#include "regeocode/adapter_opencage.hpp"
+#include "regeocode/re_geocode_core.hpp"
+#include "rz_config.hpp"
+#include "rz_photo.hpp"
 
 #include <QApplication>
 #include <QClipboard>
@@ -137,8 +137,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   // Important: Default value must be sysLang if key does not exist
   QString savedLang = m_settings->value("Language/current", sysLang).toString();
 
-  qDebug() << "[Init] Language Detection: System=" << sysLang
-           << " | Saved in INI=" << savedLang;
+  //qDebug() << "[Init] Language Detection: System=" << sysLang
+  //         << " | Saved in INI=" << savedLang;
 
   // Here the language is applied
   loadLanguage(savedLang);
@@ -239,12 +239,18 @@ void MainWindow::createMenu() {
   // Regeocode-INI Pfad konfigurieren
   regeocodeIniAct = settingsMenu->addAction(tr("Set Regeocode INI Path..."));
   connect(regeocodeIniAct, &QAction::triggered, this, [this]() {
-    QString currentPath = m_regeocodeIniPath.isEmpty() ? QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) : m_regeocodeIniPath;
-    QString iniPath = QFileDialog::getOpenFileName(this, tr("Select desktop-gallery_regeocode.ini"), currentPath, tr("INI Files (*.ini)"));
+    QString currentPath =
+        m_regeocodeIniPath.isEmpty()
+            ? QStandardPaths::writableLocation(QStandardPaths::ConfigLocation)
+            : m_regeocodeIniPath;
+    QString iniPath = QFileDialog::getOpenFileName(
+        this, tr("Select desktop-gallery_regeocode.ini"), currentPath,
+        tr("INI Files (*.ini)"));
     if (!iniPath.isEmpty()) {
       m_regeocodeIniPath = iniPath;
       m_settings->setValue("Regeocode/iniPath", iniPath);
-      QMessageBox::information(this, tr("INI Path Set"), tr("Regeocode INI path set to:\n") + iniPath);
+      QMessageBox::information(this, tr("INI Path Set"),
+                               tr("Regeocode INI path set to:\n") + iniPath);
     }
   });
 
@@ -253,10 +259,14 @@ void MainWindow::createMenu() {
   connect(setUploadUrlAct, &QAction::triggered, this, [this]() {
     bool ok = false;
     QString currentUrl = m_settings->value("Server/uploadUrl").toString();
-    QString url = QInputDialog::getText(this, tr("Set upload URL"), tr("Enter the server upload URL:"), QLineEdit::Normal, currentUrl.isEmpty() ? "http://localhost:8080" : currentUrl, &ok);
+    QString url = QInputDialog::getText(
+        this, tr("Set upload URL"), tr("Enter the server upload URL:"),
+        QLineEdit::Normal,
+        currentUrl.isEmpty() ? "http://localhost:8080" : currentUrl, &ok);
     if (ok && !url.trimmed().isEmpty()) {
       m_settings->setValue("Server/uploadUrl", url.trimmed());
-      QMessageBox::information(this, tr("Upload URL Set"), tr("Upload URL set to:\n") + url.trimmed());
+      QMessageBox::information(this, tr("Upload URL Set"),
+                               tr("Upload URL set to:\n") + url.trimmed());
     }
   });
 
@@ -792,21 +802,30 @@ void MainWindow::startGeoNamesLookup() {
   if (m_regeocodeIniPath.isEmpty()) {
     QMessageBox msgBox;
     msgBox.setWindowTitle(tr("Geocoding-Konfiguration fehlt"));
-    msgBox.setText(tr("Kein Pfad zur desktop-gallery_regeocode.ini konfiguriert.\n\nMöchten Sie die Default-API (Nominatim) verwenden oder den Pfad zur INI eingeben?"));
-    QPushButton *defaultApiBtn = msgBox.addButton(tr("Default-API (Nominatim)"), QMessageBox::AcceptRole);
-    QPushButton *setIniBtn = msgBox.addButton(tr("INI-Pfad eingeben"), QMessageBox::ActionRole);
+    msgBox.setText(tr("Kein Pfad zur desktop-gallery_regeocode.ini "
+                      "konfiguriert.\n\nMöchten Sie die Default-API "
+                      "(Nominatim) verwenden oder den Pfad zur INI eingeben?"));
+    QPushButton *defaultApiBtn = msgBox.addButton(tr("Default-API (Nominatim)"),
+                                                  QMessageBox::AcceptRole);
+    QPushButton *setIniBtn =
+        msgBox.addButton(tr("INI-Pfad eingeben"), QMessageBox::ActionRole);
     msgBox.addButton(QMessageBox::Cancel);
     msgBox.exec();
     if (msgBox.clickedButton() == defaultApiBtn) {
       processNextGeoLookup();
       return;
     } else if (msgBox.clickedButton() == setIniBtn) {
-      QString iniPath = QFileDialog::getOpenFileName(this, tr("Select desktop-gallery_regeocode.ini"), QStandardPaths::writableLocation(QStandardPaths::ConfigLocation), tr("INI Files (*.ini)"));
+      QString iniPath = QFileDialog::getOpenFileName(
+          this, tr("Select desktop-gallery_regeocode.ini"),
+          QStandardPaths::writableLocation(QStandardPaths::ConfigLocation),
+          tr("INI Files (*.ini)"));
       if (!iniPath.isEmpty()) {
         m_regeocodeIniPath = iniPath;
         m_settings->setValue("Regeocode/iniPath", iniPath);
-        QMessageBox::information(this, tr("INI Path Set"), tr("Regeocode INI path set to:\n") + iniPath);
-        // Hier kann dann die neue Methode für Regeocode-Lookup aufgerufen werden
+        QMessageBox::information(this, tr("INI Path Set"),
+                                 tr("Regeocode INI path set to:\n") + iniPath);
+        // Hier kann dann die neue Methode für Regeocode-Lookup aufgerufen
+        // werden
         processNextRegeocodeLookup(iniPath);
         return;
       } else {
@@ -828,7 +847,8 @@ void MainWindow::startGeoNamesLookup() {
 void MainWindow::processNextRegeocodeLookup(const QString &iniPath) {
   if (m_geoLookupQueue.isEmpty()) {
     m_statusLabel->setText(tr("Lookup finished."));
-    QMessageBox::information(this, tr("Finished"), tr("Address lookup completed."));
+    QMessageBox::information(this, tr("Finished"),
+                             tr("Address lookup completed."));
     m_galleryModel->select();
     return;
   }
@@ -851,14 +871,15 @@ void MainWindow::processNextRegeocodeLookup(const QString &iniPath) {
     adapters.push_back(std::make_unique<regeocode::GeoNamesTimezoneAdapter>());
 
     // INI-Pfad: entweder explizit oder aus Member
-    std::string ini_path = iniPath.isEmpty() ? m_regeocodeIniPath.toStdString() : iniPath.toStdString();
+    std::string ini_path = iniPath.isEmpty() ? m_regeocodeIniPath.toStdString()
+                                             : iniPath.toStdString();
     regeocode::ConfigLoader loader(ini_path);
     auto config_result = loader.load();
 
     auto client = std::make_unique<regeocode::HttpClient>();
-    regeocode::ReverseGeocoder geocoder(
-        config_result.apis, std::move(adapters), std::move(client),
-        config_result.quota_file_path);
+    regeocode::ReverseGeocoder geocoder(config_result.apis, std::move(adapters),
+                                        std::move(client),
+                                        config_result.quota_file_path);
 
     std::vector<std::string> priority_list;
     // Strategie aus INI laden
@@ -887,29 +908,39 @@ void MainWindow::processNextRegeocodeLookup(const QString &iniPath) {
     }
 
     regeocode::Coordinates coords{gps.x(), gps.y()};
-    nlohmann::json result = geocoder.reverse_geocode_fallback(
-        coords, priority_list, "");
+    nlohmann::json result =
+        geocoder.reverse_geocode_fallback(coords, priority_list, "");
+
+    nlohmann::json tz_result = geocoder.reverse_geocode_json(coords, "timezone");
+    QString timezone;
 
     if (result.contains("meta") && result.contains("result")) {
       auto metaObj = result["meta"];
       auto resObj = result["result"];
-      QString address_en = QString::fromStdString(resObj.value("address_english", ""));
-      QString address_local = QString::fromStdString(resObj.value("address_local", ""));
-      QString country_code = QString::fromStdString(resObj.value("country_code", ""));
-      QString timezone = QString::fromStdString(resObj.value("timezone_id", ""));
+      QString address_en =
+          QString::fromStdString(resObj.value("address_english", ""));
+      QString address_local =
+          QString::fromStdString(resObj.value("address_local", ""));
+      QString country_code =
+          QString::fromStdString(resObj.value("country_code", ""));
+
+      if (tz_result.contains("meta") && tz_result.contains("result")) {
+          auto resObjTz = tz_result["result"]["data"];
+          timezone = QString::fromStdString(resObjTz.value("timezone_id", ""));
+      }
 
       RzMetadata::DefaultMetaStruct meta;
       if (!address_en.isEmpty())
-        meta.xmpDefault["Xmp.dc.address_english"] = address_en;
+          meta.xmpDefault["Xmp.dc.address_english"] = address_en;
       if (!address_local.isEmpty())
-        meta.xmpDefault["Xmp.dc.address_local"] = address_local;
+          meta.xmpDefault["Xmp.dc.address_local"] = address_local;
       if (!country_code.isEmpty())
-        meta.xmpDefault["Xmp.dc.country_code"] = country_code;
+          meta.xmpDefault["Xmp.dc.country_code"] = country_code;
       if (!timezone.isEmpty())
-        meta.xmpDefault["Xmp.dc.timezone"] = timezone;
+          meta.xmpDefault["Xmp.dc.timezone"] = timezone;
 
       if (p.writeAllMetadata(meta)) {
-        qDebug() << "Regeocode Data written to:" << QFileInfo(path).fileName();
+          qDebug() << "Regeocode Data written to:" << QFileInfo(path).fileName();
       }
     }
   } catch (const std::exception &e) {
@@ -922,7 +953,8 @@ void MainWindow::processNextRegeocodeLookup(const QString &iniPath) {
 void MainWindow::processNextGeoLookup() {
   if (m_geoLookupQueue.isEmpty()) {
     m_statusLabel->setText(tr("Lookup finished."));
-    QMessageBox::information(this, tr("Finished"), tr("Address lookup completed."));
+    QMessageBox::information(this, tr("Finished"),
+                             tr("Address lookup completed."));
     m_galleryModel->select();
     return;
   }
@@ -1157,7 +1189,9 @@ void MainWindow::showAboutDialog() {
       this, tr("About") + " " + QString::fromStdString(PROG_LONGNAME), info);
 }
 
-// TODO: Upload-Funktion überarbeiten, damit sie den neuen LoginDialog nutzt und die Upload-Logik entsprechend anpasst (inkl. Fortschrittsanzeige, Fehlerbehandlung, etc.)
+// TODO: Upload-Funktion überarbeiten, damit sie den neuen LoginDialog nutzt und
+// die Upload-Logik entsprechend anpasst (inkl. Fortschrittsanzeige,
+// Fehlerbehandlung, etc.)
 void MainWindow::uploadSelectedImages() {
   QList<QString> files = getSelectedFilePaths();
   if (files.isEmpty()) {
@@ -1165,13 +1199,15 @@ void MainWindow::uploadSelectedImages() {
     return;
   }
 
-
   QString url = m_settings->value("Server/uploadUrl").toString();
   if (url.trimmed().isEmpty()) {
     bool ok = false;
-    url = QInputDialog::getText(this, tr("Set upload URL"), tr("Enter the server upload URL:"), QLineEdit::Normal, "http://localhost:8080", &ok);
+    url = QInputDialog::getText(
+        this, tr("Set upload URL"), tr("Enter the server upload URL:"),
+        QLineEdit::Normal, "http://localhost:8080", &ok);
     if (!ok || url.trimmed().isEmpty()) {
-      QMessageBox::warning(this, tr("Upload"), tr("No upload URL set. Upload canceled."));
+      QMessageBox::warning(this, tr("Upload"),
+                           tr("No upload URL set. Upload canceled."));
       return;
     }
     m_settings->setValue("Server/uploadUrl", url.trimmed());

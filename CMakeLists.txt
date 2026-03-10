@@ -1,16 +1,17 @@
 cmake_minimum_required(VERSION 3.23)
 
-# cmake -B build -S .
-# cmake --build build -j$(nproc)
+# cmake -B build -S . cmake --build build -j$(nproc)
 
-# nvm use --lts
-# atom -J-Xmx16g usages -o ./docs/app.atom --slice-outfile ./docs/atom_usages_v1.0.0.json -l cpp ./src
-# cdxgen -o ./docs/sbom_v1.0.0.json -t cpp --usages-slices-file ./docs/atom_usages_v1.0.0.json --author "ZHENG Robert" --deep -r ./src
+# nvm use --lts atom -J-Xmx16g usages -o ./docs/app.atom --slice-outfile
+# ./docs/atom_usages_v1.0.0.json -l cpp ./src cdxgen -o ./docs/sbom_v1.0.0.json
+# -t cpp --usages-slices-file ./docs/atom_usages_v1.0.0.json --author "ZHENG
+# Robert" --deep -r ./src
 
 project(
   desktop-gallery
-  VERSION 1.1.0
-  DESCRIPTION "Desktop-Gallery for Linux, MacOS and Windows. Part of the Crow Web-Gallery project."
+  VERSION 1.1.1
+  DESCRIPTION
+    "Desktop-Gallery for Linux, MacOS and Windows. Part of the Crow Web-Gallery project."
   HOMEPAGE_URL "https://github.com/Zheng-Bote/web-gallery_desktop-gallery"
   LANGUAGES CXX)
 
@@ -23,8 +24,17 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 # --- Dependencies ---
-# WICHTIG: LinguistTools für Übersetzungen, Sql für Datenbank, Concurrent für Threads
-find_package(Qt6 REQUIRED COMPONENTS Widgets Gui Sql Concurrent LinguistTools Network WebEngineWidgets)
+# WICHTIG: LinguistTools für Übersetzungen, Sql für Datenbank, Concurrent für
+# Threads
+find_package(
+  Qt6 REQUIRED
+  COMPONENTS Widgets
+             Gui
+             Sql
+             Concurrent
+             LinguistTools
+             Network
+             WebEngineWidgets)
 find_package(exiv2lib REQUIRED CONFIG NAMES exiv2)
 find_package(CURL REQUIRED)
 
@@ -32,18 +42,16 @@ include(FetchContent)
 
 # --- 1. JSON ---
 FetchContent_Declare(
-    json
-    GIT_REPOSITORY https://github.com/nlohmann/json.git
-    GIT_TAG v3.11.3
-)
+  json
+  GIT_REPOSITORY https://github.com/nlohmann/json.git
+  GIT_TAG v3.11.3)
 FetchContent_MakeAvailable(json)
 
 # --- 2. inifile-cpp ---
 FetchContent_Declare(
   inifile-cpp
   GIT_REPOSITORY https://github.com/Rookfighter/inifile-cpp.git
-  GIT_TAG master
-)
+  GIT_TAG master)
 FetchContent_MakeAvailable(inifile-cpp)
 
 # --- Configure ---
@@ -54,9 +62,9 @@ set(PROG_AUTHOR "ZHENG Bote")
 set(PROG_ORGANIZATION_NAME "ZHENG Robert")
 set(PROG_ORGANIZATION_DOMAIN "net.hase-zheng")
 if(Qt6_FOUND)
-    set(CMAKE_QTV "${Qt6_VERSION}")
+  set(CMAKE_QTV "${Qt6_VERSION}")
 else()
-    set(CMAKE_QTV "Unknown")
+  set(CMAKE_QTV "Unknown")
 endif()
 add_subdirectory(configure)
 
@@ -66,13 +74,11 @@ include_directories(${inifile-cpp_SOURCE_DIR}/include)
 
 # --- I18N / Übersetzungen ---
 # Liste hier deine Sprachdateien auf (müssen im Ordner i18n/ existieren)
-set(TS_FILES
-    i18n/gallery_de.ts
-    i18n/gallery_en.ts
-)
+set(TS_FILES i18n/gallery_de.ts i18n/gallery_en.ts)
 
 # .ts zu .qm kompilieren (REGEL 1: Hier werden die Regeln erstellt)
-set_source_files_properties(${TS_FILES} PROPERTIES OUTPUT_LOCATION "${CMAKE_BINARY_DIR}/i18n")
+set_source_files_properties(${TS_FILES} PROPERTIES OUTPUT_LOCATION
+                                                   "${CMAKE_BINARY_DIR}/i18n")
 qt6_add_translation(QM_FILES ${TS_FILES})
 
 # --- Sources & Headers ---
@@ -89,7 +95,6 @@ set(PROJECT_SOURCES
     src/picture_widget.cpp
     src/UploadManager.cpp
     src/MapWindow.cpp
-
     # Regeocode Library Sources
     src/regeocode/re_geocode_core.cpp
     src/regeocode/http_client.cpp
@@ -99,7 +104,6 @@ set(PROJECT_SOURCES
     src/regeocode/adapter_geonames_timezone.cpp
     src/regeocode/adapter_bing.cpp
     src/regeocode/quota_manager.cpp
-
     # Header Files (Zwingend notwendig für MOC!)
     include/MainWindow.hpp
     include/DatabaseManager.hpp
@@ -114,79 +118,77 @@ set(PROJECT_SOURCES
     include/LoginDialog.hpp
     include/UploadManager.hpp
     include/MapWindow.hpp
-
     # ui
     src/picture_widget.ui
     src/DefaultMetaWidget.ui
     src/MainWindow.ui
-
     # Ressources
     resources.qrc
-
     # Übersetzungsdateien (Binary)
-    ${QM_FILES}
-)
+    ${QM_FILES})
 
 # Mac Icon configuring
 if(APPLE)
-    set(APP_ICON_MACOS "${CMAKE_SOURCE_DIR}/resources/desktop-gallery.icns")
-    set_source_files_properties(${APP_ICON_MACOS} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
-    list(APPEND PROJECT_SOURCES ${APP_ICON_MACOS})
+  set(APP_ICON_MACOS "${CMAKE_SOURCE_DIR}/resources/desktop-gallery.icns")
+  set_source_files_properties(${APP_ICON_MACOS}
+                              PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+  list(APPEND PROJECT_SOURCES ${APP_ICON_MACOS})
 endif()
 
 # Executable erstellen
 add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${PROJECT_SOURCES})
 
 if(APPLE)
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        MACOSX_BUNDLE_INFO_STRING "${PROG_LONGNAME}"
-        MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}"
-        MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}"
-        MACOSX_BUNDLE_BUNDLE_NAME "${PROG_LONGNAME}"
-        MACOSX_BUNDLE_GUI_IDENTIFIER "${PROG_ORGANIZATION_DOMAIN}.${PROJECT_NAME}"
-        MACOSX_BUNDLE_ICON_FILE "desktop-gallery.icns"
-    )
+  set_target_properties(
+    ${PROJECT_NAME}
+    PROPERTIES MACOSX_BUNDLE_INFO_STRING "${PROG_LONGNAME}"
+               MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}"
+               MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}"
+               MACOSX_BUNDLE_BUNDLE_NAME "${PROG_LONGNAME}"
+               MACOSX_BUNDLE_GUI_IDENTIFIER
+               "${PROG_ORGANIZATION_DOMAIN}.${PROJECT_NAME}"
+               MACOSX_BUNDLE_ICON_FILE "desktop-gallery.icns")
 endif()
 
 # Bibliotheken linken
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    Qt6::Widgets
-    Qt6::Gui
-    Qt6::Sql
-    Qt6::Concurrent
-    Qt6::Network
-    Qt6::WebEngineWidgets
-    Exiv2::exiv2lib
-    nlohmann_json::nlohmann_json
-    inicpp
-    CURL::libcurl
-)
+target_link_libraries(
+  ${PROJECT_NAME}
+  PRIVATE Qt6::Widgets
+          Qt6::Gui
+          Qt6::Sql
+          Qt6::Concurrent
+          Qt6::Network
+          Qt6::WebEngineWidgets
+          Exiv2::exiv2lib
+          nlohmann_json::nlohmann_json
+          inicpp
+          CURL::libcurl)
 
 # --- INSTALLATION RULES ---
 
-# Das Executable nach /usr/bin (im AppDir Kontext auf Linux) 
-# oder in den Root-Ordner des DMG (auf macOS)
+# Das Executable nach /usr/bin (im AppDir Kontext auf Linux) oder in den
+# Root-Ordner des DMG (auf macOS)
 if(APPLE)
-    install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION .)
+  install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION .)
 else()
-    install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+  install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 endif()
 
 # Der Ordner i18n nach /usr/bin/i18n
 install(FILES ${QM_FILES} DESTINATION bin/i18n)
 
-# Auch die Ressourcen (falls du sie nicht in qrc hast)
-# install(FILES resources/img/qt_desktop-gallery.png DESTINATION share/icons/hicolor/256x256/apps)
-
+# Auch die Ressourcen (falls du sie nicht in qrc hast) install(FILES
+# resources/img/qt_desktop-gallery.png DESTINATION
+# share/icons/hicolor/256x256/apps)
 
 # --- 5. Custom Generators (Original Code) ---
 
 # CPack configuration
 if(APPLE)
-    set(CPACK_GENERATOR "DragNDrop")
-    set(CPACK_DMG_FORMAT "UDBZ")
-    set(CPACK_DMG_VOLUME_NAME "${PROG_LONGNAME}")
-    include(CPack)
+  set(CPACK_GENERATOR "DragNDrop")
+  set(CPACK_DMG_FORMAT "UDBZ")
+  set(CPACK_DMG_VOLUME_NAME "${PROG_LONGNAME}")
+  include(CPack)
 endif()
 
 # CMake File API Query (Datei erzeugen)
@@ -195,9 +197,10 @@ file(MAKE_DIRECTORY "${QUERY_DIR}")
 file(WRITE "${QUERY_DIR}/codemodel-v2" "")
 
 # libs.txt Generierung (Timing-sicher via GENERATE)
-file(GENERATE OUTPUT "${CMAKE_BINARY_DIR}/libs.txt"
-     CONTENT "$<TARGET_PROPERTY:${PROJECT_NAME},LINK_LIBRARIES>")
+file(
+  GENERATE
+  OUTPUT "${CMAKE_BINARY_DIR}/libs.txt"
+  CONTENT "$<TARGET_PROPERTY:${PROJECT_NAME},LINK_LIBRARIES>")
 
-################
+# ##############################################################################
 message(STATUS "Build setup complete for ${PROJECT_NAME}")
-
