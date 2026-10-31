@@ -1,0 +1,29 @@
+---
+feature: "Supply-Chain Commit Pinning & Subresource Integrity (SEC-03)"
+status: "Implemented"
+priority: "Medium (3.3)"
+target_files:
+  - "CMakeLists.txt"
+  - "src/MapWindow.cpp"
+  - "src/picture_widget.cpp"
+---
+
+# 1. Context & Problem Statement
+
+- **SEC-03 (`CMakeLists.txt`, `MapWindow::generateHtml`, `PictureWidget::setupMapTab`):**
+  1. `FetchContent_Declare(inifile-cpp ...)` in `CMakeLists.txt` referenced the mutable branch `GIT_TAG master` instead of an immutable commit hash, leaving builds vulnerable to upstream supply-chain tampering or breaking changes.
+  2. Both `MapWindow::generateHtml()` and `PictureWidget::setupMapTab()` loaded `leaflet@1.9.4` CSS and JavaScript from `https://unpkg.com` without Subresource Integrity (`integrity` and `crossorigin`) attributes.
+
+# 2. Technical Specification
+
+1. **Pin `inifile-cpp` in `CMakeLists.txt`:**
+   - Replace `GIT_TAG master` with the immutable commit hash `7bb1ec3534768e0d1fd9893d01027468b72af5ec`.
+2. **Add Official Leaflet 1.9.4 SRI Hashes (`MapWindow.cpp`, `picture_widget.cpp`):**
+   - `leaflet.css`: `integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""`
+   - `leaflet.js`: `integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""`
+
+# 3. Acceptance Criteria
+
+- [x] `inifile-cpp` is pinned to commit `7bb1ec3534768e0d1fd9893d01027468b72af5ec` in `CMakeLists.txt`.
+- [x] Both `MapWindow::generateHtml()` and `PictureWidget::setupMapTab()` include `integrity` and `crossorigin` attributes on the Leaflet 1.9.4 CDN `<link>` and `<script>` tags.
+- [x] Compiles cleanly with CMake and `-std=gnu++26`.

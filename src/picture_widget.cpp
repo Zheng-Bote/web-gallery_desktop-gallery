@@ -23,6 +23,8 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QInputDialog>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QMessageBox>
 
 #include <QPointF>
@@ -47,8 +49,13 @@ PictureWidget::PictureWidget(QWidget *parent)
       QIcon(":/resources/img/icons8-arrow-pointing-left-50.png"));
   ui->exportSrcToWebp_Btn->setIcon(
       QIcon(":/resources/img/icons8-send-file-50.png"));
+  ui->exportSrcToAvif_Btn->setIcon(
+      QIcon(":/resources/img/icons8-send-file-50.png"));
 
-  picture = nullptr;
+  m_resizeTimer = new QTimer(this);
+  m_resizeTimer->setSingleShot(true);
+  m_resizeTimer->setInterval(100);
+  connect(m_resizeTimer, &QTimer::timeout, this, &PictureWidget::resizePicture);
 
   // --- MAP VIEW INITIALISIEREN ---
   m_mapView = new QWebEngineView(this);
@@ -58,43 +65,30 @@ PictureWidget::PictureWidget(QWidget *parent)
 
   createRotateMenu();
   createExportMenu();
+  createAvifExportMenu();
 }
 
-PictureWidget::~PictureWidget() {
-  delete ui;
-
-  if (picture) {
-    delete picture;
-    picture = nullptr;
-  }
-}
+PictureWidget::~PictureWidget() { delete ui; }
 
 void PictureWidget::setImage(QString pathToFile) {
   pathToImage = pathToFile;
   QFile srcFile(pathToFile);
   QFileInfo fileInfo(srcFile.fileName());
 
-  if (picture) {
-    delete picture;
-  }
-  picture = new QPixmap(pathToImage);
+  picture = QPixmap(pathToImage);
 
   QString pictureData = fileInfo.fileName() + " \n(" +
-                        QString::number(picture->width()) + "x" +
-                        QString::number(picture->height()) + " " +
+                        QString::number(picture.width()) + "x" +
+                        QString::number(picture.height()) + " " +
                         QString::number(fileInfo.size() / 1024) + " KiB)";
   ui->filename_label->setText(pictureData);
   ui->filename_label->setToolTip(pathToFile);
 
-  ui->picture_label->setPixmap(picture->scaled(ui->picture_label->size(),
-                                               Qt::KeepAspectRatio,
-                                               Qt::SmoothTransformation));
+  ui->picture_label->setPixmap(picture.scaled(ui->picture_label->size(),
+                                              Qt::KeepAspectRatio,
+                                              Qt::SmoothTransformation));
 
-  QFuture<void> futureExif =
-      QtConcurrent::run(&PictureWidget::readSrcExif, this);
-  QFuture<void> futureIptc =
-      QtConcurrent::run(&PictureWidget::readSrcIptc, this);
-  QFuture<void> futureXmp = QtConcurrent::run(&PictureWidget::readSrcXmp, this);
+  loadMetadataAsync();
 
   // Karte laden (Das machen wir im GUI Thread, da WebEngine das mag)
   loadMap();
@@ -122,9 +116,12 @@ void PictureWidget::loadMap() {
   ui->tabWidget->setTabVisible(mapIndex, true);
 
   // HTML für EINEN Marker generieren
-  double lat = gps.x();
-  double lng = gps.y();
-  QString title = QFileInfo(pathToImage).fileName();
+  QJsonObject markerObj;
+  markerObj["lat"] = gps.x();
+  markerObj["lng"] = gps.y();
+  markerObj["title"] = QFileInfo(pathToImage).fileName().toHtmlEscaped();
+  QString markerJson =
+      QString::fromUtf8(QJsonDocument(markerObj).toJson(QJsonDocument::Compact));
 
   QString html = R"(
     <!DOCTYPE html>
@@ -135,28 +132,25 @@ void PictureWidget::loadMap() {
             body, html, #map { height: 100%; margin: 0; padding: 0; } 
             /* Optional: Etwas CSS damit es hübsch aussieht */
         </style>
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     </head>
     <body>
         <div id="map"></div>
         <script>
+            var item = )" +
+                 markerJson + R"(;
             // Karte auf die Koordinaten zentrieren, Zoom 15 (Detail)
-            var map = L.map('map').setView([)" +
-                 QString::number(lat, 'f', 6) + ", " +
-                 QString::number(lng, 'f', 6) + R"(], 15);
+            var map = L.map('map').setView([item.lat, item.lng], 15);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap contributors'
             }).addTo(map);
 
             // Marker setzen
-            L.marker([)" +
-                 QString::number(lat, 'f', 6) + ", " +
-                 QString::number(lng, 'f', 6) + R"(])
+            L.marker([item.lat, item.lng])
              .addTo(map)
-             .bindPopup("<b>)" +
-                 title + R"(</b>")
+             .bindPopup("<b>" + item.title + "</b>")
              .openPopup();
         </script>
     </body>
@@ -170,7 +164,12 @@ void PictureWidget::on_closeBtn_clicked() { this->close(); }
 
 void PictureWidget::resizeEvent(QResizeEvent *event) {
   QWidget::resizeEvent(event);
-  resizePicture();
+  if (!picture.isNull()) {
+    ui->picture_label->setPixmap(picture.scaled(ui->picture_label->size(),
+                                                Qt::KeepAspectRatio,
+                                                Qt::FastTransformation));
+    m_resizeTimer->start();
+  }
 }
 
 void PictureWidget::closeEvent(QCloseEvent *event) {
@@ -193,241 +192,235 @@ void PictureWidget::closeEvent(QCloseEvent *event) {
 }
 
 void PictureWidget::resizePicture() {
-  if (picture && !picture->isNull()) {
-    ui->picture_label->setPixmap(picture->scaled(ui->picture_label->size(),
-                                                 Qt::KeepAspectRatio,
-                                                 Qt::SmoothTransformation));
+  if (!picture.isNull()) {
+    ui->picture_label->setPixmap(picture.scaled(ui->picture_label->size(),
+                                                Qt::KeepAspectRatio,
+                                                Qt::SmoothTransformation));
   }
 }
 
 bool PictureWidget::checkValidMetaImg() {
-  bool ret{false};
-  Photo *photo = new Photo(pathToImage);
-  QString photoExtension = photo->getSuffix().toLower();
+  Photo photo(pathToImage);
+  const QString photoExtension = photo.getSuffix().toLower();
 
   // Hinweis: Wir nutzen hier die statische Liste aus Photo
-  if (Photo::metaSupportedTypes.contains(photoExtension, Qt::CaseInsensitive)) {
-    ret = true;
-  }
-
-  delete photo;
-  return ret;
+  return Photo::metaSupportedTypes.contains(photoExtension,
+                                            Qt::CaseInsensitive);
 }
 
 void PictureWidget::disableMetaTabs(int tab) {
   ui->tabWidget->setTabVisible(tab, false);
 }
 
-const void PictureWidget::readSrcExif() {
-  if (!checkValidMetaImg()) {
-    disableMetaTabs(1);
+void PictureWidget::populateMetaTable(
+    QTableWidget *table, const QString &headerPrefix,
+    const QVector<QPair<QString, QString>> &entries,
+    const QHash<QString, QString> &descriptions, bool resizeRowsAndCols) {
+  if (!table)
     return;
-  }
-
-  QFile file(pathToImage);
-  auto exif_image =
-      Exiv2::ImageFactory::open(file.fileName().toUtf8().toStdString());
 
   QFont font_11_bold("Times New Roman", 11);
   font_11_bold.setBold(true);
 
-  ui->exifTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
-  ui->exifTableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+  table->setUpdatesEnabled(false);
+  table->setSelectionBehavior(QAbstractItemView::SelectRows);
+  table->setSelectionMode(QAbstractItemView::SingleSelection);
+  table->setRowCount(0);
+  table->setColumnCount(3);
 
-  ui->exifTableWidget->setRowCount(0);
-  ui->exifTableWidget->setColumnCount(3);
+  auto createHeader = [&](const QString &title) {
+    QTableWidgetItem *item = new QTableWidgetItem(title);
+    item->setBackground(Qt::lightGray);
+    item->setFont(font_11_bold);
+    item->setTextAlignment(Qt::AlignCenter);
+    return item;
+  };
 
-  QTableWidgetItem *tlbCol1 = new QTableWidgetItem();
-  tlbCol1->setText("EXIF key");
-  tlbCol1->setBackground(Qt::lightGray);
-  tlbCol1->setFont(font_11_bold);
-  tlbCol1->setTextAlignment(Qt::AlignCenter);
-  ui->exifTableWidget->setHorizontalHeaderItem(0, tlbCol1);
+  table->setHorizontalHeaderItem(0, createHeader(headerPrefix + " key"));
+  table->setHorizontalHeaderItem(1, createHeader(headerPrefix + " value"));
+  table->setHorizontalHeaderItem(2, createHeader(headerPrefix + " description"));
 
-  QTableWidgetItem *tlbCol2 = new QTableWidgetItem();
-  tlbCol2->setText("EXIF value");
-  tlbCol2->setBackground(Qt::lightGray);
-  tlbCol2->setFont(font_11_bold);
-  tlbCol2->setTextAlignment(Qt::AlignCenter);
-  ui->exifTableWidget->setHorizontalHeaderItem(1, tlbCol2);
+  table->setRowCount(entries.size());
+  for (int row = 0; row < entries.size(); ++row) {
+    const QString &key = entries[row].first;
+    const QString &val = entries[row].second;
 
-  QTableWidgetItem *tlbCol3 = new QTableWidgetItem();
-  tlbCol3->setText("EXIF description");
-  tlbCol3->setBackground(Qt::lightGray);
-  tlbCol3->setFont(font_11_bold);
-  tlbCol3->setTextAlignment(Qt::AlignCenter);
-  ui->exifTableWidget->setHorizontalHeaderItem(2, tlbCol3);
+    table->setItem(row, 0, new QTableWidgetItem(key));
+    table->setItem(row, 1, new QTableWidgetItem(val));
 
-  exif_image->readMetadata();
-
-  Exiv2::ExifData &exifData = exif_image->exifData();
-
-  if (!exifData.empty()) {
-    auto end = exifData.end();
-    for (auto md = exifData.begin(); md != end; ++md) {
-      ui->exifTableWidget->insertRow(ui->exifTableWidget->rowCount());
-      ui->exifTableWidget->setItem(ui->exifTableWidget->rowCount() - 1, 0,
-                                   new QTableWidgetItem(md->key().c_str()));
-
-      QTableWidgetItem *tlbCol2val = new QTableWidgetItem();
-      tlbCol2val->setText(md->value().toString().c_str());
-      ui->exifTableWidget->setItem(ui->exifTableWidget->rowCount() - 1, 1,
-                                   tlbCol2val);
-
-      if (RzMetadata::exifTagDescriptions.contains(md->key().c_str())) {
-        QTableWidgetItem *tlbCol3val = new QTableWidgetItem();
-        tlbCol3val->setText(
-            RzMetadata::exifTagDescriptions.value(md->key().c_str(), ""));
-        ui->exifTableWidget->setItem(ui->exifTableWidget->rowCount() - 1, 2,
-                                     tlbCol3val);
-      }
+    if (descriptions.contains(key)) {
+      table->setItem(row, 2,
+                     new QTableWidgetItem(descriptions.value(key, "")));
     }
   }
-  // Keine Default-Rows mehr anzeigen, nur echte Daten.
-  file.close();
+
+  if (resizeRowsAndCols) {
+    table->resizeColumnsToContents();
+    table->resizeRowsToContents();
+  }
+  table->setUpdatesEnabled(true);
+}
+
+void PictureWidget::loadMetadataAsync() {
+  if (!checkValidMetaImg()) {
+    disableMetaTabs(1);
+    disableMetaTabs(2);
+    disableMetaTabs(3);
+    return;
+  }
+
+  ui->tabWidget->setTabVisible(1, true);
+  ui->tabWidget->setTabVisible(2, true);
+  ui->tabWidget->setTabVisible(3, true);
+
+  const QString targetPath = pathToImage;
+
+  (void)QtConcurrent::run([this, targetPath]() {
+    QVector<QPair<QString, QString>> exifEntries;
+    QVector<QPair<QString, QString>> iptcEntries;
+    QVector<QPair<QString, QString>> xmpEntries;
+
+    try {
+      auto image =
+          Exiv2::ImageFactory::open(targetPath.toUtf8().toStdString());
+      if (image) {
+        image->readMetadata();
+
+        const Exiv2::ExifData &exifData = image->exifData();
+        for (auto md = exifData.begin(); md != exifData.end(); ++md) {
+          exifEntries.append({QString::fromStdString(md->key()),
+                              QString::fromStdString(md->value().toString())});
+        }
+
+        const Exiv2::IptcData &iptcData = image->iptcData();
+        for (auto md = iptcData.begin(); md != iptcData.end(); ++md) {
+          iptcEntries.append({QString::fromStdString(md->key()),
+                              QString::fromStdString(md->value().toString())});
+        }
+
+        const Exiv2::XmpData &xmpData = image->xmpData();
+        for (auto md = xmpData.begin(); md != xmpData.end(); ++md) {
+          xmpEntries.append({QString::fromStdString(md->key()),
+                             QString::fromStdString(md->value().toString())});
+        }
+      }
+    } catch (const Exiv2::Error &e) {
+      qWarning() << "Exiv2 Error reading metadata for" << targetPath << ":"
+                 << e.what();
+    } catch (...) {
+      qWarning() << "Unknown error reading metadata for" << targetPath;
+    }
+
+    QMetaObject::invokeMethod(
+        this,
+        [this, targetPath, exifEntries = std::move(exifEntries),
+         iptcEntries = std::move(iptcEntries),
+         xmpEntries = std::move(xmpEntries)]() {
+          if (pathToImage != targetPath)
+            return;
+          populateMetaTable(ui->exifTableWidget, "EXIF", exifEntries,
+                            RzMetadata::exifTagDescriptions, false);
+          populateMetaTable(ui->iptcTableWidget, "IPTC", iptcEntries,
+                            RzMetadata::iptcTagDescriptions, false);
+          populateMetaTable(ui->xmpTableWidget, "XMP", xmpEntries,
+                            RzMetadata::xmpTagDescriptions, true);
+        },
+        Qt::QueuedConnection);
+  });
+}
+
+const void PictureWidget::readSrcExif() {
+  if (!checkValidMetaImg()) {
+    QMetaObject::invokeMethod(this, [this]() { disableMetaTabs(1); });
+    return;
+  }
+
+  const QString targetPath = pathToImage;
+  QVector<QPair<QString, QString>> exifEntries;
+  try {
+    auto exif_image =
+        Exiv2::ImageFactory::open(targetPath.toUtf8().toStdString());
+    exif_image->readMetadata();
+    const Exiv2::ExifData &exifData = exif_image->exifData();
+    for (auto md = exifData.begin(); md != exifData.end(); ++md) {
+      exifEntries.append({QString::fromStdString(md->key()),
+                          QString::fromStdString(md->value().toString())});
+    }
+  } catch (const Exiv2::Error &e) {
+    qWarning() << "Exiv2 Error in readSrcExif:" << e.what();
+  }
+
+  QMetaObject::invokeMethod(
+      this, [this, targetPath, exifEntries = std::move(exifEntries)]() {
+        if (pathToImage != targetPath)
+          return;
+        populateMetaTable(ui->exifTableWidget, "EXIF", exifEntries,
+                          RzMetadata::exifTagDescriptions, false);
+      });
 }
 
 void PictureWidget::markExif(QString searchFor) {
-  // Diese Funktion wird in der aktuellen Logik nicht mehr zwingend benötigt,
-  // da wir keine Defaults mehr "markieren".
-  // Der Vollständigkeit halber bleibt sie drin oder kann entfernt werden.
+  // Retained for interface compatibility.
 }
 
 const void PictureWidget::readSrcIptc() {
   if (!checkValidMetaImg()) {
-    disableMetaTabs(2);
+    QMetaObject::invokeMethod(this, [this]() { disableMetaTabs(2); });
     return;
   }
-  QFile file(pathToImage);
-  auto iptc_image =
-      Exiv2::ImageFactory::open(file.fileName().toUtf8().toStdString());
 
-  QFont font_11_bold("Times New Roman", 11);
-  font_11_bold.setBold(true);
-
-  ui->iptcTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
-  ui->iptcTableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
-
-  ui->iptcTableWidget->setRowCount(0);
-  ui->iptcTableWidget->setColumnCount(3);
-
-  QTableWidgetItem *tlbCol1 = new QTableWidgetItem();
-  tlbCol1->setText("IPTC key");
-  tlbCol1->setBackground(Qt::lightGray);
-  tlbCol1->setFont(font_11_bold);
-  tlbCol1->setTextAlignment(Qt::AlignCenter);
-  ui->iptcTableWidget->setHorizontalHeaderItem(0, tlbCol1);
-
-  QTableWidgetItem *tlbCol2 = new QTableWidgetItem();
-  tlbCol2->setText("IPTC value");
-  tlbCol2->setBackground(Qt::lightGray);
-  tlbCol2->setFont(font_11_bold);
-  tlbCol2->setTextAlignment(Qt::AlignCenter);
-  ui->iptcTableWidget->setHorizontalHeaderItem(1, tlbCol2);
-
-  QTableWidgetItem *tlbCol3 = new QTableWidgetItem();
-  tlbCol3->setText("IPTC description");
-  tlbCol3->setBackground(Qt::lightGray);
-  tlbCol3->setFont(font_11_bold);
-  tlbCol3->setTextAlignment(Qt::AlignCenter);
-  ui->iptcTableWidget->setHorizontalHeaderItem(2, tlbCol3);
-
-  iptc_image->readMetadata();
-
-  Exiv2::IptcData &iptcData = iptc_image->iptcData();
-
-  if (!iptcData.empty()) {
-    auto end = iptcData.end();
-    for (auto md = iptcData.begin(); md != end; ++md) {
-      ui->iptcTableWidget->insertRow(ui->iptcTableWidget->rowCount());
-      ui->iptcTableWidget->setItem(ui->iptcTableWidget->rowCount() - 1, 0,
-                                   new QTableWidgetItem(md->key().c_str()));
-
-      QTableWidgetItem *tlbCol2val = new QTableWidgetItem();
-      tlbCol2val->setText(md->value().toString().c_str());
-      ui->iptcTableWidget->setItem(ui->iptcTableWidget->rowCount() - 1, 1,
-                                   tlbCol2val);
-
-      if (RzMetadata::iptcTagDescriptions.contains(md->key().c_str())) {
-        QTableWidgetItem *tlbCol3val = new QTableWidgetItem();
-        tlbCol3val->setText(
-            RzMetadata::iptcTagDescriptions.value(md->key().c_str(), ""));
-        ui->iptcTableWidget->setItem(ui->iptcTableWidget->rowCount() - 1, 2,
-                                     tlbCol3val);
-      }
+  const QString targetPath = pathToImage;
+  QVector<QPair<QString, QString>> iptcEntries;
+  try {
+    auto iptc_image =
+        Exiv2::ImageFactory::open(targetPath.toUtf8().toStdString());
+    iptc_image->readMetadata();
+    const Exiv2::IptcData &iptcData = iptc_image->iptcData();
+    for (auto md = iptcData.begin(); md != iptcData.end(); ++md) {
+      iptcEntries.append({QString::fromStdString(md->key()),
+                          QString::fromStdString(md->value().toString())});
     }
+  } catch (const Exiv2::Error &e) {
+    qWarning() << "Exiv2 Error in readSrcIptc:" << e.what();
   }
-  file.close();
+
+  QMetaObject::invokeMethod(
+      this, [this, targetPath, iptcEntries = std::move(iptcEntries)]() {
+        if (pathToImage != targetPath)
+          return;
+        populateMetaTable(ui->iptcTableWidget, "IPTC", iptcEntries,
+                          RzMetadata::iptcTagDescriptions, false);
+      });
 }
 
 const void PictureWidget::readSrcXmp() {
   if (!checkValidMetaImg()) {
-    disableMetaTabs(3);
+    QMetaObject::invokeMethod(this, [this]() { disableMetaTabs(3); });
     return;
   }
-  QFile file(pathToImage);
-  auto xmp_image =
-      Exiv2::ImageFactory::open(file.fileName().toUtf8().toStdString());
 
-  QFont font_11_bold("Times New Roman", 11);
-  font_11_bold.setBold(true);
-
-  ui->xmpTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
-  ui->xmpTableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
-
-  ui->xmpTableWidget->setRowCount(0);
-  ui->xmpTableWidget->setColumnCount(3);
-
-  QTableWidgetItem *tlbCol1 = new QTableWidgetItem();
-  tlbCol1->setText("XMP key");
-  tlbCol1->setBackground(Qt::lightGray);
-  tlbCol1->setFont(font_11_bold);
-  tlbCol1->setTextAlignment(Qt::AlignCenter);
-  ui->xmpTableWidget->setHorizontalHeaderItem(0, tlbCol1);
-
-  QTableWidgetItem *tlbCol2 = new QTableWidgetItem();
-  tlbCol2->setText("XMP value");
-  tlbCol2->setBackground(Qt::lightGray);
-  tlbCol2->setFont(font_11_bold);
-  tlbCol2->setTextAlignment(Qt::AlignCenter);
-  ui->xmpTableWidget->setHorizontalHeaderItem(1, tlbCol2);
-
-  QTableWidgetItem *tlbCol3 = new QTableWidgetItem();
-  tlbCol3->setText("XMP description");
-  tlbCol3->setBackground(Qt::lightGray);
-  tlbCol3->setFont(font_11_bold);
-  tlbCol3->setTextAlignment(Qt::AlignCenter);
-  ui->xmpTableWidget->setHorizontalHeaderItem(2, tlbCol3);
-
-  xmp_image->readMetadata();
-
-  Exiv2::XmpData &xmpData = xmp_image->xmpData();
-
-  if (!xmpData.empty()) {
-    auto end = xmpData.end();
-    for (auto md = xmpData.begin(); md != end; ++md) {
-      ui->xmpTableWidget->insertRow(ui->xmpTableWidget->rowCount());
-      ui->xmpTableWidget->setItem(ui->xmpTableWidget->rowCount() - 1, 0,
-                                  new QTableWidgetItem(md->key().c_str()));
-
-      QTableWidgetItem *tlbCol2val = new QTableWidgetItem();
-      tlbCol2val->setText(md->value().toString().c_str());
-      ui->xmpTableWidget->setItem(ui->xmpTableWidget->rowCount() - 1, 1,
-                                  tlbCol2val);
-
-      if (RzMetadata::xmpTagDescriptions.contains(md->key().c_str())) {
-        QTableWidgetItem *tlbCol3val = new QTableWidgetItem();
-        tlbCol3val->setText(
-            RzMetadata::xmpTagDescriptions.value(md->key().c_str(), ""));
-        ui->xmpTableWidget->setItem(ui->xmpTableWidget->rowCount() - 1, 2,
-                                    tlbCol3val);
-      }
+  const QString targetPath = pathToImage;
+  QVector<QPair<QString, QString>> xmpEntries;
+  try {
+    auto xmp_image =
+        Exiv2::ImageFactory::open(targetPath.toUtf8().toStdString());
+    xmp_image->readMetadata();
+    const Exiv2::XmpData &xmpData = xmp_image->xmpData();
+    for (auto md = xmpData.begin(); md != xmpData.end(); ++md) {
+      xmpEntries.append({QString::fromStdString(md->key()),
+                         QString::fromStdString(md->value().toString())});
     }
+  } catch (const Exiv2::Error &e) {
+    qWarning() << "Exiv2 Error in readSrcXmp:" << e.what();
   }
-  file.close();
 
-  ui->xmpTableWidget->resizeColumnsToContents();
-  ui->xmpTableWidget->resizeRowsToContents();
+  QMetaObject::invokeMethod(
+      this, [this, targetPath, xmpEntries = std::move(xmpEntries)]() {
+        if (pathToImage != targetPath)
+          return;
+        populateMetaTable(ui->xmpTableWidget, "XMP", xmpEntries,
+                          RzMetadata::xmpTagDescriptions, true);
+      });
 }
 
 void PictureWidget::markXmp(QString searchFor) {
@@ -447,7 +440,7 @@ void PictureWidget::createRotateMenu() {
   ui->rotateSrcImg_Btn->setIcon(
       QIcon(":/resources/img/icons8-available-updates-50.png"));
 
-  rotateMnu = new QMenu();
+  rotateMnu = new QMenu(this);
 
   rotate_90 = new QAction(QIcon(":/resources/img/icons8-rotate-right-50.png"),
                           tr("rotate") + " 90°", this);
@@ -479,7 +472,7 @@ void PictureWidget::createRotateMenu() {
 }
 
 void PictureWidget::createExportMenu() {
-  exportMnu = new QMenu();
+  exportMnu = new QMenu(this);
   exportMnu->setIcon(QIcon(":/resources/img/icons8-send-file-50.png"));
 
   auto addExportAction = [this](int size) {
@@ -523,6 +516,53 @@ void PictureWidget::createExportMenu() {
   exportMnu->addAction(webp_watermarkWebpAct);
 
   ui->exportSrcToWebp_Btn->setMenu(exportMnu);
+}
+
+void PictureWidget::createAvifExportMenu() {
+  exportAvifMnu = new QMenu(this);
+  exportAvifMnu->setIcon(QIcon(":/resources/img/icons8-send-file-50.png"));
+
+  auto addExportAction = [this](int size) {
+    QAction *act =
+        new QAction(QIcon(":/resources/img/icons8-ausgang-48.png"),
+                    tr("export to size") + " " + QString::number(size), this);
+    connect(act, &QAction::triggered, this,
+            [this, size] { PictureWidget::exportSrcImgToAvif(size); });
+    exportAvifMnu->addAction(act);
+  };
+
+  addExportAction(480);
+  addExportAction(640);
+  addExportAction(800);
+  addExportAction(1024);
+  addExportAction(1280);
+
+  exportAvifMnu->addSeparator();
+
+  avif_size_all = new QAction(QIcon(":/resources/img/icons8-send-file-50.png"),
+                              tr("export to all sizes"), this);
+  connect(avif_size_all, &QAction::triggered, this,
+          [this] { PictureWidget::exportSrcImgToAvifThread(); });
+  exportAvifMnu->addAction(avif_size_all);
+
+  exportAvifMnu->addSeparator();
+
+  avif_oversizeAct = new QAction(tr("increase too small picture"), this);
+  avif_oversizeAct->setCheckable(true);
+  avif_oversizeAct->setChecked(true);
+  exportAvifMnu->addAction(avif_oversizeAct);
+
+  avif_overwriteAvifAct = new QAction(tr("overwrite existing AVIF"), this);
+  avif_overwriteAvifAct->setCheckable(true);
+  avif_overwriteAvifAct->setChecked(true);
+  exportAvifMnu->addAction(avif_overwriteAvifAct);
+
+  avif_watermarkAvifAct = new QAction(tr("watermark AVIF"), this);
+  avif_watermarkAvifAct->setCheckable(true);
+  avif_watermarkAvifAct->setChecked(true);
+  exportAvifMnu->addAction(avif_watermarkAvifAct);
+
+  ui->exportSrcToAvif_Btn->setMenu(exportAvifMnu);
 }
 
 void PictureWidget::_on_resizeSmallerImage_Btn_clicked() {
@@ -680,13 +720,10 @@ void PictureWidget::on_xmpTableWidget_itemDoubleClicked(
 }
 
 void PictureWidget::rotateSrcImg(int val) {
-  Photo *photo = new Photo(pathToImage);
-  photo->rotateImage(val);
-  delete photo;
+  Photo photo(pathToImage);
+  photo.rotateImage(val);
 
-  if (picture)
-    delete picture;
-  picture = new QPixmap(pathToImage);
+  picture = QPixmap(pathToImage);
   resizePicture();
 
   // Signal emitten für Thumbnail Refresh
@@ -694,7 +731,6 @@ void PictureWidget::rotateSrcImg(int val) {
 }
 
 void PictureWidget::exportSrcImgToWebpThread() {
-  bool oknok{false};
   Photo phot(pathToImage);
 
   if (webp_oversizeAct->isChecked())
@@ -704,17 +740,25 @@ void PictureWidget::exportSrcImgToWebpThread() {
   if (webp_watermarkWebpAct->isChecked())
     phot.setWatermarkWebp(true);
 
-  QFuture<bool> future = QtConcurrent::run(&Photo::convertImages, phot, 75);
-  oknok = future.result();
-
-  QMessageBox msgBox(this);
-  msgBox.setWindowTitle(oknok ? tr("Success") : tr("Error"));
-  msgBox.setIcon(oknok ? QMessageBox::Information : QMessageBox::Warning);
-  msgBox.setText(tr("WebP export to subfolder WebP") +
-                 (oknok ? " " + tr("successful") : " " + tr("failed")));
-  msgBox.setInformativeText("<i>" + pathToImage + "</i>");
-  msgBox.setFixedWidth(900);
-  msgBox.exec();
+  const QString targetPath = pathToImage;
+  (void)QtConcurrent::run([this, phot, targetPath]() mutable {
+    bool oknok = phot.convertImages(75);
+    QMetaObject::invokeMethod(
+        this,
+        [this, targetPath, oknok]() {
+          QMessageBox msgBox(this);
+          msgBox.setWindowTitle(oknok ? tr("Success") : tr("Error"));
+          msgBox.setIcon(oknok ? QMessageBox::Information
+                               : QMessageBox::Warning);
+          msgBox.setText(tr("WebP export to subfolder WebP") +
+                         (oknok ? " " + tr("successful") : " " + tr("failed")));
+          msgBox.setInformativeText("<i>" + targetPath.toHtmlEscaped() +
+                                    "</i>");
+          msgBox.setFixedWidth(900);
+          msgBox.exec();
+        },
+        Qt::QueuedConnection);
+  });
 }
 
 void PictureWidget::exportSrcImgToWebP(int size) {
@@ -735,6 +779,59 @@ void PictureWidget::exportSrcImgToWebP(int size) {
   msgBox.setText(tr("WebP export") +
                  (result ? " " + tr("successful") : " " + tr("failed")));
   msgBox.setInformativeText("<i>" + pathToImage + "</i>");
+  msgBox.setFixedWidth(900);
+  msgBox.exec();
+}
+
+void PictureWidget::exportSrcImgToAvifThread() {
+  Photo phot(pathToImage);
+
+  if (avif_oversizeAct->isChecked())
+    phot.setOversizeSmallerPicture(true);
+  if (avif_overwriteAvifAct->isChecked())
+    phot.setOverwriteExistingWebp(true);
+  if (avif_watermarkAvifAct->isChecked())
+    phot.setWatermarkWebp(true);
+
+  const QString targetPath = pathToImage;
+  (void)QtConcurrent::run([this, phot, targetPath]() mutable {
+    bool oknok = phot.convertImagesAvif(75);
+    QMetaObject::invokeMethod(
+        this,
+        [this, targetPath, oknok]() {
+          QMessageBox msgBox(this);
+          msgBox.setWindowTitle(oknok ? tr("Success") : tr("Error"));
+          msgBox.setIcon(oknok ? QMessageBox::Information
+                               : QMessageBox::Warning);
+          msgBox.setText(tr("AVIF export to subfolder AVIF") +
+                         (oknok ? " " + tr("successful") : " " + tr("failed")));
+          msgBox.setInformativeText("<i>" + targetPath.toHtmlEscaped() +
+                                    "</i>");
+          msgBox.setFixedWidth(900);
+          msgBox.exec();
+        },
+        Qt::QueuedConnection);
+  });
+}
+
+void PictureWidget::exportSrcImgToAvif(int size) {
+  Photo photo(pathToImage);
+
+  if (avif_oversizeAct->isChecked())
+    photo.setOversizeSmallerPicture(true);
+  if (avif_overwriteAvifAct->isChecked())
+    photo.setOverwriteExistingWebp(true);
+  if (avif_watermarkAvifAct->isChecked())
+    photo.setWatermarkWebp(true);
+
+  bool result = photo.convertImageAvif(size, 75);
+
+  QMessageBox msgBox(this);
+  msgBox.setWindowTitle(result ? tr("Success") : tr("Error"));
+  msgBox.setIcon(result ? QMessageBox::Information : QMessageBox::Warning);
+  msgBox.setText(tr("AVIF export") +
+                 (result ? " " + tr("successful") : " " + tr("failed")));
+  msgBox.setInformativeText("<i>" + pathToImage.toHtmlEscaped() + "</i>");
   msgBox.setFixedWidth(900);
   msgBox.exec();
 }

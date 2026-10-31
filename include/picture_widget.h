@@ -1,9 +1,31 @@
+/**
+ * SPDX-FileComment: Window for viewing and editing details of a single image
+ * SPDX-FileType: HEADER
+ * SPDX-FileContributor: ZHENG Robert
+ * SPDX-FileCopyrightText: 2026 ZHENG Robert
+ * SPDX-License-Identifier: MIT
+ *
+ * @file picture_widget.h
+ * @brief Window for viewing and editing details of a single image.
+ * @version 1.1.0
+ * @date 2026-10-31
+ *
+ * @author ZHENG Robert (robert@hase-zheng.net)
+ * @copyright Copyright (c) 2026 ZHENG Robert
+ *
+ * @license MIT License
+ */
 #pragma once
 
 #include <QCloseEvent>
+#include <QHash>
 #include <QMenu>
+#include <QPair>
+#include <QPixmap>
 #include <QResizeEvent>
 #include <QTableWidgetItem>
+#include <QTimer>
+#include <QVector>
 #include <QWidget>
 
 #include "rz_photo.hpp"
@@ -57,6 +79,8 @@ private slots:
   void rotateSrcImg(int val);
   void exportSrcImgToWebpThread();
   void exportSrcImgToWebP(int size);
+  void exportSrcImgToAvifThread();
+  void exportSrcImgToAvif(int size);
 
   void on_tabWidget_tabBarClicked(int index);
 
@@ -82,6 +106,13 @@ private:
   QAction *webp_size_1024;
   QAction *webp_size_1280;
 
+  void createAvifExportMenu();
+  QMenu *exportAvifMnu;
+  QAction *avif_oversizeAct;
+  QAction *avif_overwriteAvifAct;
+  QAction *avif_watermarkAvifAct;
+  QAction *avif_size_all;
+
   void resizeEvent(QResizeEvent *event);
   void closeEvent(QCloseEvent *event);
 
@@ -89,7 +120,8 @@ private:
 
   bool dataModified_bool{false};
   QString pathToImage;
-  QPixmap *picture;
+  QPixmap picture;
+  QTimer *m_resizeTimer{nullptr};
 
   QWebEngineView *m_mapView;
   void loadMap();
@@ -101,6 +133,11 @@ private:
                                               "tiff"};
   bool checkValidMetaImg();
   void disableMetaTabs(int tab);
+  void loadMetadataAsync();
+  void populateMetaTable(QTableWidget *table, const QString &headerPrefix,
+                         const QVector<QPair<QString, QString>> &entries,
+                         const QHash<QString, QString> &descriptions,
+                         bool resizeRowsAndCols = false);
   const void readSrcExif();
   void markIptc(QString searchFor);
   void markExif(QString searchFor);

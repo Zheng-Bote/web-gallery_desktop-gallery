@@ -1,0 +1,32 @@
+Spec: Feature Map View HTML & JS Injection Protection (2.1 / SEC-01)
+
+Purpose:
+  Prevent DOM-based XSS and HTML/JavaScript injection in QWebEngineView map popups when rendering image filenames in MapWindow and PictureWidget.
+
+Platform: C++26 (Linux) / C++23 (Windows, macOS), Qt6
+
+References:
+  ../../../desktop-gallery.sdd
+
+Owns:
+  ./**
+
+Can modify:
+  /src/MapWindow.cpp
+  /src/picture_widget.cpp
+  /data/Prioritaetenliste.md
+
+Must:
+  HTML-escape all image filenames using QString::toHtmlEscaped() before embedding them into Leaflet popup templates.
+  Serialize marker data in PictureWidget::loadMap() and MapWindow::generateHtml() via QJsonDocument so quotes, backslashes, and control characters cannot break out of the JavaScript context or prematurely close the <script> tag.
+
+Must not:
+  Concatenate raw, unescaped filesystem filenames directly into HTML or JavaScript code executed by QWebEngineView.
+
+Tasks:
+  [x] #1 Escape marker titles with toHtmlEscaped() in src/MapWindow.cpp.
+  [x] #2 Escape marker title with toHtmlEscaped() and serialize via QJsonObject/QJsonDocument in src/picture_widget.cpp.
+  [x] #3 Verify compilation via cmake --build build and mark item 2.1 as completed in data/Prioritaetenliste.md.
+
+Done when:
+  cmake --build build succeeds without errors and both MapWindow and PictureWidget sanitize and JSON-encode marker titles before passing them to Leaflet.

@@ -58,7 +58,7 @@ QString MapWindow::generateHtml(const QList<QString> &filePaths) {
       QJsonObject m;
       m["lat"] = gps.x();
       m["lng"] = gps.y();
-      m["title"] = QFileInfo(path).fileName();
+      m["title"] = QFileInfo(path).fileName().toHtmlEscaped();
       // Optional: Add more infos to Popup (e.g. Thumbnail Path, but local file
       // access in browser is tricky)
       markers.append(m);
@@ -75,8 +75,8 @@ QString MapWindow::generateHtml(const QList<QString> &filePaths) {
     <head>
         <meta charset="utf-8">
         <title>Map</title>
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
         <style>
             body, html, #map { height: 100%; margin: 0; padding: 0; }
         </style>

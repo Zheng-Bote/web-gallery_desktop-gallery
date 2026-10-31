@@ -1,0 +1,35 @@
+---
+feature: "Persistent SQLite Metadata Index with Incremental mtime Check (PERF-02)"
+status: "Implemented"
+priority: "Medium (3.1)"
+target_files:
+  - "src/DatabaseManager.cpp"
+  - "src/ImageIndexer.cpp"
+  - "include/MainWindow.hpp"
+  - "src/MainWindow.cpp"
+---
+
+# 1. Context & Problem Statement
+
+- **PERF-02 (`DatabaseManager::init()`):** Previously, `DatabaseManager::init()` deleted `gallery_cache.db` via `QFile::remove(m_dbPath)` on every application startup. As a result, all previously indexed metadata had to be re-parsed with Exiv2 from scratch every time the user launched `desktop-gallery` and opened a folder.
+
+# 2. Technical Specification
+
+1. **Preserve SQLite Cache Across Restarts (`DatabaseManager::init()`):**
+   - Remove the unconditional `QFile::remove(m_dbPath)` call on startup.
+   - Extend the `images` table schema with `file_mtime INTEGER DEFAULT 0` (appended as column 10 to preserve existing column index constants `0..9`).
+   - Automatically migrate pre-existing databases that lack `file_mtime` via `ALTER TABLE images ADD COLUMN file_mtime INTEGER DEFAULT 0`.
+2. **Incremental Indexing (`ImageIndexer::run()`):**
+   - Load existing `(path, file_size, file_mtime)` entries from `images` into an in-memory `QHash` at the start of `ImageIndexer::run()`.
+   - Skip `Photo::readSummary()` and SQL writes when a file's `file_size` and `lastModified().toSecsSinceEpoch()` match the cached entry.
+   - Use `INSERT OR REPLACE INTO images` including `file_mtime` for new or modified files.
+3. **Explicit Cache Clearing Action (`MainWindow`):**
+   - Provide a menu action (`clearCacheAct`) in the Settings menu allowing the user to explicitly clear the SQLite cache (`DatabaseManager::instance().clearDatabase()`) and `QPixmapCache`.
+
+# 3. Acceptance Criteria
+
+- [x] `gallery_cache.db` is preserved across application restarts.
+- [x] Unchanged files (`file_size` and `file_mtime` identical) are skipped during folder re-indexing.
+- [x] Modified or new files are updated in `images` via `INSERT OR REPLACE`.
+- [x] User can manually clear the cache from the Settings menu, with full `retranslateUi()` support.
+- [x] Compiles cleanly with CMake and `-std=gnu++26`.

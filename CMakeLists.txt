@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.25)
 
 # cmake -B build -S . cmake --build build -j$(nproc)
 
@@ -9,14 +9,20 @@ cmake_minimum_required(VERSION 3.23)
 
 project(
   desktop-gallery
-  VERSION 1.1.1
+  VERSION 1.2.0
   DESCRIPTION
     "Desktop-Gallery for Linux, MacOS and Windows. Part of the Crow Web-Gallery project."
   HOMEPAGE_URL "https://github.com/Zheng-Bote/web-gallery_desktop-gallery"
   LANGUAGES CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_STANDARD 23)
+if(LINUX)
+  set(CMAKE_CXX_STANDARD 26)
+elseif(WIN32)
+  set(CMAKE_CXX_STANDARD 23)
+else()
+  set(CMAKE_CXX_STANDARD 23)
+endif()
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_AUTOUIC ON)
@@ -37,6 +43,48 @@ find_package(
              WebEngineWidgets)
 find_package(exiv2lib REQUIRED CONFIG NAMES exiv2)
 find_package(CURL REQUIRED)
+find_package(PkgConfig REQUIRED)
+
+set(_MAGICK_PC_NAMES
+    Magick++-7.Q16HDRI
+    Magick++-7.Q16
+    Magick++-6.Q16HDRI
+    Magick++-6.Q16
+    Magick++
+    ImageMagick++)
+set(MAGICKPP_FOUND FALSE)
+foreach(_name IN LISTS _MAGICK_PC_NAMES)
+  pkg_check_modules(MAGICKPP QUIET ${_name})
+  if(MAGICKPP_FOUND)
+    message(STATUS "Found Magick++ via pkg-config name: ${_name}")
+    add_library(Magick++::Magick++ INTERFACE IMPORTED)
+    target_compile_options(Magick++::Magick++ INTERFACE ${MAGICKPP_CFLAGS})
+    target_link_libraries(Magick++::Magick++ INTERFACE ${MAGICKPP_LDFLAGS})
+    break()
+  endif()
+endforeach()
+if(NOT MAGICKPP_FOUND)
+  find_program(MAGICKPP_CONFIG NAMES Magick++-config MagickCore-config)
+  if(MAGICKPP_CONFIG)
+    execute_process(
+      COMMAND ${MAGICKPP_CONFIG} --cxxflags
+      OUTPUT_VARIABLE _MC_CXXFLAGS
+      OUTPUT_STRIP_TRAILING_WHITESPACE)
+    execute_process(
+      COMMAND ${MAGICKPP_CONFIG} --libs
+      OUTPUT_VARIABLE _MC_LIBS
+      OUTPUT_STRIP_TRAILING_WHITESPACE)
+    separate_arguments(_MC_CXXFLAGS_LIST UNIX_COMMAND "${_MC_CXXFLAGS}")
+    separate_arguments(_MC_LIBS_LIST UNIX_COMMAND "${_MC_LIBS}")
+    add_library(Magick++::Magick++ INTERFACE IMPORTED)
+    target_compile_options(Magick++::Magick++ INTERFACE ${_MC_CXXFLAGS_LIST})
+    target_link_libraries(Magick++::Magick++ INTERFACE ${_MC_LIBS_LIST})
+    set(MAGICKPP_FOUND TRUE)
+  endif()
+endif()
+if(NOT MAGICKPP_FOUND)
+  message(FATAL_ERROR "Magick++ not found. Please install libmagick++-dev.")
+endif()
 
 include(FetchContent)
 
@@ -51,7 +99,7 @@ FetchContent_MakeAvailable(json)
 FetchContent_Declare(
   inifile-cpp
   GIT_REPOSITORY https://github.com/Rookfighter/inifile-cpp.git
-  GIT_TAG master)
+  GIT_TAG 7bb1ec3534768e0d1fd9893d01027468b72af5ec)
 FetchContent_MakeAvailable(inifile-cpp)
 
 # --- Configure ---
@@ -162,7 +210,8 @@ target_link_libraries(
           Exiv2::exiv2lib
           nlohmann_json::nlohmann_json
           inicpp
-          CURL::libcurl)
+          CURL::libcurl
+          Magick++::Magick++)
 
 # --- INSTALLATION RULES ---
 

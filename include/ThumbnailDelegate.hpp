@@ -17,6 +17,8 @@
  */
 #pragma once
 #include <QPainter>
+#include <QSet>
+#include <QString>
 #include <QStyledItemDelegate>
 
 /**
@@ -70,4 +72,5 @@ public:
 private:
   bool m_showCopyright{false};
   bool m_showGps{false};
+  mutable QSet<QString> m_loadingCacheKeys;
 };

@@ -1,0 +1,46 @@
+---
+feature: "AVIF Image Export with Quality 75 (Single & Multi-Size)"
+status: "Implemented"
+priority: "Feature Request"
+target_files:
+  - "CMakeLists.txt"
+  - "include/rz_photo.hpp"
+  - "src/rz_photo.cpp"
+  - "include/MainWindow.hpp"
+  - "src/MainWindow.cpp"
+  - "include/picture_widget.h"
+  - "src/picture_widget.cpp"
+  - "src/picture_widget.ui"
+---
+
+# 1. Context & Problem Statement
+
+Users need the ability to export images to the **AVIF** format with quality level **75**, mirroring the existing **WebP** export functionality in both `MainWindow` (batch export via menu and context menu) and `PictureWidget` (single-size and all-sizes export via toolbar button menu).
+
+# 2. Technical Specification
+
+1. **AVIF Encoding (`CMakeLists.txt`, `include/rz_photo.hpp`, `src/rz_photo.cpp`):**
+   - Detect and link `Magick++` (ImageMagick 7 / 6) via `PkgConfig` (`Magick++-7.Q16HDRI`, `Magick++-7.Q16`, `Magick++`, etc.) in `CMakeLists.txt`.
+   - Implement `Photo::convertImageAvif(const int &targetSize, const int &quality = 75)` and `Photo::convertImagesAvif(const int &quality = 75)`.
+   - Output into the `"AVIF"` subfolder with `.avif` extension and identical options (`oversizeSmallerPicture`, `overwriteExisting`, `watermark` `"reduced copy"`, `renameToTimestamp`) and target sizes (`Original`, `480`, `680`/`640`, `800`, `1024`, `1280`).
+   - Primary encoder: `QImageWriter(targetPath, "avif")` when a Qt AVIF imageformat plugin is present; automatic fallback to `Magick++` (`Magick::Image` initialized from `QImage::Format_RGBA8888`, encoded as `"AVIF"` at `quality = 75`).
+2. **`MainWindow` Integration (`include/MainWindow.hpp`, `src/MainWindow.cpp`):**
+   - Add an `AVIF Export` submenu (`avifMenu`) under `&Pictures` with options:
+     - `Increase too small pictures` (`actAvifOversize`)
+     - `Overwrite existing AVIF` (`actAvifOverwrite`)
+     - `Watermark AVIF` (`actAvifWatermark`)
+     - `Rename Export to Timestamp` (`actAvifRename`)
+     - `Export selected to all AVIF sizes` (`actExportAvif`)
+   - Add `"Export to AVIF..."` to the gallery right-click context menu.
+   - Implement `MainWindow::exportSelectedToAvif()` asynchronously via `QtConcurrent::run` and `QFutureWatcher<void>` at quality `75`.
+3. **`PictureWidget` Integration (`src/picture_widget.ui`, `include/picture_widget.h`, `src/picture_widget.cpp`):**
+   - Add toolbar button `exportSrcToAvif_Btn` (`"export to AVIF"`) next to `exportSrcToWebp_Btn`.
+   - Populate `exportAvifMnu` (`createAvifExportMenu()`) with single sizes (`480`, `640`, `800`, `1024`, `1280`), `"export to all sizes"`, and option toggles (`avif_oversizeAct`, `avif_overwriteAvifAct`, `avif_watermarkAvifAct`).
+   - Implement `PictureWidget::exportSrcImgToAvif(int size)` and `PictureWidget::exportSrcImgToAvifThread()` using quality `75`.
+
+# 3. Acceptance Criteria
+
+- [x] `Photo::convertImageAvif` and `Photo::convertImagesAvif` export `.avif` files at quality `75` into the `AVIF` subfolder using `QImageWriter("avif")` with `Magick++` fallback.
+- [x] `MainWindow` provides the `AVIF Export` submenu (with full `retranslateUi()` support) and context menu action.
+- [x] `PictureWidget` provides the `export to AVIF` button and menu for single-size and multi-size export.
+- [x] Compiles cleanly with CMake and `-std=gnu++26`.

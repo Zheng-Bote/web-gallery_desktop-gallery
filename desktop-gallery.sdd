@@ -1,0 +1,36 @@
+Spec: Desktop-Gallery
+
+Purpose:
+  Provision of a high-performance, cross-platform desktop picture gallery, metadata editor (EXIF/IPTC/XMP), reverse geocoding tool, and cloud uploader for the Crow Web-Gallery ecosystem.
+
+Platform: C++26 (Linux) / C++23 (Windows, macOS), Qt6
+
+Owns:
+  ./**
+
+Must:
+  Adhere to C++26 standard on Linux and C++23 on Windows/macOS using modern C++ idioms (RAII, smart pointers, value semantics, strong types).
+  Follow the layered MVC architecture separating Presentation Layer (Qt6 Widgets/WebEngine), Business Logic Layer (ImageIndexer, Photo/Exiv2 wrapper, regeocode, UploadManager), and Data Persistence Layer (DatabaseManager/SQLite3).
+  Execute heavy I/O, recursive folder scanning, thumbnail generation, Exiv2 metadata writes, and network calls asynchronously via QtConcurrent / QThreadPool or QtNetwork without blocking the Qt GUI main thread.
+  Maintain synchronized metadata across EXIF, IPTC, and XMP standards via the Photo (Exiv2) wrapper.
+  Use prepared SQL statements (QSqlQuery::prepare) for all SQLite operations in DatabaseManager.
+  Respect API rate limits via QuotaManager when performing reverse geocoding requests.
+  Keep API keys (e.g., re-geocode.ini) and JWT/Refresh tokens out of source code and version control.
+  Register all headers containing Q_OBJECT in CMakeLists.txt for Qt AUTOMOC processing.
+  Wrap all user-facing UI strings in Qt's tr() macro and maintain translations in i18n/gallery_de.ts and i18n/gallery_en.ts.
+  Write all source code documentation, Doxygen comments, and inline comments in English.
+  Include a standardized SPDX & Doxygen header (C++ style block comment) with MIT License (SPDX-License-Identifier: MIT) in every source and header file.
+
+Must not:
+  Block the Qt GUI event loop with synchronous disk I/O, bulk Exiv2 parsing, or blocking HTTP requests.
+  Access the SQLite database directly from UI widgets bypassing DatabaseManager or QSqlTableModel.
+  Hardcode external API keys, credentials, or server tokens in source files.
+  Manually edit generated files such as include/rz_config.hpp (generated from configure/rz_config.hpp.in via CMake).
+
+References:
+  ./docs/SpecDD_SpecKit_Integration_EN.md
+  ./docs/SpecDD_SpecKit_Integration_DE.md
+  ./docs/SDD-Howto_en.md
+  ./docs/SDD-Howto_de.md
+  ./docs/AI_Workflow_DE.md
+  ./docs/AI_Workflow_EN.md

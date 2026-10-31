@@ -1,0 +1,35 @@
+Spec: Feature Asynchronous Batch Regeocoding & WebP Export (2.4 / STAB-03 & STAB-05)
+
+Purpose:
+  Eliminate GUI-thread blocking and recursive call-stack growth in MainWindow::processNextRegeocodeLookup() and remove synchronous future.result() blocking in PictureWidget::exportSrcImgToWebpThread().
+
+Platform: C++26 (Linux) / C++23 (Windows, macOS), Qt6
+
+References:
+  ../../../desktop-gallery.sdd
+
+Owns:
+  ./**
+
+Can modify:
+  /src/MainWindow.cpp
+  /src/picture_widget.cpp
+  /data/Prioritaetenliste.md
+
+Must:
+  Execute batch reverse geocoding in a background worker thread using an iterative loop rather than synchronous recursion on the GUI thread.
+  Load the INI configuration, strategy priority list, and ReverseGeocoder instance once per batch instead of re-initializing them for every image.
+  Isolate optional timezone lookup exceptions so address metadata is still written even if no timezone section is configured.
+  Replace blocking future.result() in PictureWidget::exportSrcImgToWebpThread() with an asynchronous QMetaObject::invokeMethod callback on the GUI thread.
+
+Must not:
+  Call synchronous libcurl network requests or future.result() on the Qt GUI main thread.
+  Use unbounded recursion to iterate through m_geoLookupQueue.
+
+Tasks:
+  [x] #1 Refactor MainWindow::processNextRegeocodeLookup() in src/MainWindow.cpp to run iteratively in QtConcurrent::run with single-pass INI initialization.
+  [x] #2 Replace future.result() blocking in PictureWidget::exportSrcImgToWebpThread() in src/picture_widget.cpp with an asynchronous GUI-thread callback.
+  [x] #3 Verify compilation via cmake --build build and mark item 2.4 as completed in data/Prioritaetenliste.md.
+
+Done when:
+  cmake --build build succeeds without errors and both batch reverse geocoding and WebP export execute asynchronously without freezing the GUI thread.

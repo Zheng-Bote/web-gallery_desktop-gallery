@@ -17,6 +17,7 @@
  */
 #pragma once
 
+#include "ImageIndexer.hpp"
 #include "LoginDialog.hpp"
 #include "MapWindow.hpp"
 #include "UploadManager.hpp"
@@ -28,6 +29,7 @@
 #include <QMainWindow>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QPointer>
 #include <QProgressBar>
 #include <QProgressDialog>
 #include <QQueue>
@@ -85,6 +87,7 @@ private slots:
 
   void showContextMenu(const QPoint &pos);
   void exportSelectedToWebP();
+  void exportSelectedToAvif();
 
   void showDefaultMetaWidget();
   void onImageChanged(const QString &path);
@@ -174,6 +177,7 @@ private:
   QMenu *picMenu;
   QMenu *viewMenu;
   QMenu *webpMenu;
+  QMenu *avifMenu;
   QMenu *helpMenu; // NEW
 
   // File Actions
@@ -187,6 +191,7 @@ private:
   QAction *geoUserAct;
   QAction *regeocodeIniAct;
   QAction *setUploadUrlAct;
+  QAction *clearCacheAct;
 
   // Metadata Actions
   QAction *metaAct;
@@ -211,10 +216,18 @@ private:
   QAction *actWebpRename;
   QAction *actExportWebp;
 
+  // AVIF Options
+  QAction *actAvifOversize;
+  QAction *actAvifOverwrite;
+  QAction *actAvifWatermark;
+  QAction *actAvifRename;
+  QAction *actExportAvif;
+
   // Help Actions
   QAction *aboutAct; // NEW
 
   // Uploads
   UploadManager *m_uploader;
   QProgressDialog *m_uploadProgressDlg;
+  QPointer<ImageIndexer> m_activeIndexer;
 };

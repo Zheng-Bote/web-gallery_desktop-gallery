@@ -46,12 +46,13 @@
 
 # Description
 
-[![Qt6](https://img.shields.io/badge/Qt-6.9-41CD52?logo=qt)](https://www.qt.io/)
-[![C++23](https://img.shields.io/badge/C++-23-blue?logo=cplusplus)](https://en.cppreference.com/w/cpp/23)
+[![Qt6](https://img.shields.io/badge/Qt-6.9+-41CD52?logo=qt)](https://www.qt.io/)
+[![C++26](https://img.shields.io/badge/C++-26%20%7C%2023-blue?logo=cplusplus)](https://en.cppreference.com/w/cpp/26)
+[![Version](https://img.shields.io/badge/version-1.2.0-informational)](CHANGELOG.md)
 
-**Desktop-Gallery** is a powerful Picture Gallery and Image management tool built with **C++23** and **Qt6**. It is designed to handle large photo collections efficiently using a multithreaded architecture and a local SQLite database.
+**Desktop-Gallery** is a powerful Picture Gallery and Image management tool built with **C++26 (Linux) / C++23 (Windows & macOS)** and **Qt6**. It is designed to handle large photo collections efficiently using a multithreaded architecture and a persistent local SQLite database.
 
-Beyond viewing images, it serves as a comprehensive **Metadata Editor** and **Workflow Tool**, allowing photographers to synchronize EXIF/IPTC/XMP data, geocode images via OpenStreetMap, visualize locations on an interactive map, and bulk-export assets to WebP or upload them directly to a CrowQtServer ([Crow Web-Gallery](https://github.com/Zheng-Bote/web-gallery_webserver)) instance.
+Beyond viewing images, it serves as a comprehensive **Metadata Editor** and **Workflow Tool**, allowing photographers to synchronize EXIF/IPTC/XMP data, geocode images via OpenStreetMap/Regeocode adapters, visualize locations on an interactive map, and bulk-export assets to **WebP** and **AVIF** or upload them directly to a CrowQtServer ([Crow Web-Gallery](https://github.com/Zheng-Bote/web-gallery_webserver)) instance.
 
 ## Key Features
 
@@ -80,7 +81,7 @@ Beyond viewing images, it serves as a comprehensive **Metadata Editor** and **Wo
 
 ### ☁️ Export & Cloud
 
-- **WebP Bulk Export:** Convert images to WebP with customizable quality, resizing, and watermarking.
+- **WebP & AVIF Bulk Export:** Convert images to **WebP** (`WebP/` subfolder) and **AVIF** (`AVIF/` subfolder, quality 75) in multiple sizes (`Original`, `480`, `680`/`640`, `800`, `1024`, `1280`) with resizing, timestamp renaming, and watermarking (`QImageWriter` with automatic `Magick++` fallback for AVIF).
 - **Cloud Upload Client:** Integrated client to upload images and metadata to a CrowQtServer (supports JWT Auth & Refresh Tokens).
 
 ### 🌐 Internationalization
@@ -116,10 +117,12 @@ Beyond viewing images, it serves as a comprehensive **Metadata Editor** and **Wo
 
 To build this project, you need the following dependencies installed:
 
-- **CMake** (3.16+)
-- **C++ Compiler** supporting C++23 (GCC 13+, Clang 16+, MSVC 2022)
-- **Qt6** (Core, Gui, Widgets, Sql, Concurrent, Network, WebEngineWidgets, LinguistTools)
-- **Exiv2** (Library for image metadata)
+- **CMake** (3.25+)
+- **C++ Compiler** supporting C++26 on Linux (GCC 14+/15+, Clang 18+) or C++23 on Windows/macOS (MSVC 2022, AppleClang)
+- **Qt6** (Core, Gui, Widgets, Sql, Concurrent, Network, WebEngineWidgets, WebChannel, Positioning, LinguistTools)
+- **Exiv2** (Library for EXIF/IPTC/XMP image metadata)
+- **Magick++** (ImageMagick 7 / 6 C++ library for AVIF encoding fallback)
+- **libcurl** (HTTP client for reverse geocoding adapters)
 
 ## Project Structure
 
@@ -188,20 +191,20 @@ cmake --build .
 
 # Architecture Overview
 
-**Desktop-Gallery** is a high-performance, multithreaded desktop application designed for managing, editing, and distributing digital photography. It is built using **modern C++ (C++23)** and the **Qt 6 Framework**.
+**Desktop-Gallery** is a high-performance, multithreaded desktop application designed for managing, editing, and distributing digital photography. It is built using **modern C++ (C++26 on Linux / C++23 on Windows & macOS)** and the **Qt 6 Framework**, following **Spec-Driven Development (SpecDD & GitHub Spec Kit)**.
 
 The application follows a **Model-View-Controller (MVC)** architectural pattern, leveraging Qt's efficient signal/slot mechanism for event-driven communication and SQLite for persistent data storage.
 
 ## 1. Technology Stack
 
-- **Language:** C++23
+- **Language:** C++26 (Linux) / C++23 (Windows, macOS)
 - **GUI Framework:** Qt 6.x (Widgets, GUI, Core)
-- **Database:** SQLite 3 (via QtSql)
+- **Database:** SQLite 3 (via QtSql, WAL mode with incremental `file_mtime` indexing)
 - **Concurrency:** QtConcurrent / QThreadPool
-- **Networking:** QtNetwork (REST API / Multipart Uploads)
+- **Networking:** QtNetwork (REST API / Multipart Uploads) & libcurl (`regeocode`)
 - **Web Engine:** QtWebEngine (Chromium-based) for Map rendering
-- **Metadata Library:** Exiv2 (via custom `Photo` wrapper)
-- **Build System:** CMake
+- **Metadata & Image Libraries:** Exiv2 (via custom `Photo` wrapper) & Magick++ (ImageMagick)
+- **Build System:** CMake (3.25+)
 
 ## 2. High-Level Architecture Diagram
 

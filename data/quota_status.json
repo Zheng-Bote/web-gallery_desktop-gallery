@@ -6,5 +6,13 @@
     "google": {
         "count": 100,
         "date": "2026-03-09"
+    },
+    "nominatim": {
+        "count": 2,
+        "date": "2026-10-31"
+    },
+    "timezone": {
+        "count": 1,
+        "date": "2026-10-31"
     }
 }

@@ -16,15 +16,21 @@
 
 #include "regeocode/http_client.hpp"
 #include <curl/curl.h>
+#include <mutex>
 #include <string>
 
 namespace regeocode {
 
+namespace {
+void ensureCurlInitialized() {
+  static std::once_flag curlInitFlag;
+  std::call_once(curlInitFlag, []() { curl_global_init(CURL_GLOBAL_DEFAULT); });
+}
+} // namespace
+
 // --- FIX START: Implement Constructor & Destructor ---
 // These were missing and caused the linker error.
-HttpClient::HttpClient() {
-  // We could call curl_global_init here, but it's often optional
-}
+HttpClient::HttpClient() { ensureCurlInitialized(); }
 
 HttpClient::~HttpClient() {
   // We could do cleanup here

@@ -54,15 +54,6 @@ bool DatabaseManager::init() {
   }
 
   m_dbPath = dir.filePath("gallery_cache.db");
-  if (QFile::exists(m_dbPath)) {
-    if (QFile::remove(m_dbPath)) {
-      qDebug() << "Old cache database deleted.";
-    } else {
-      qWarning() << "Could not delete old cache database (maybe locked?):"
-                 << m_dbPath;
-    }
-  }
-
   qDebug() << "Database Path:" << m_dbPath;
 
   m_db.setDatabaseName(m_dbPath);
@@ -94,7 +85,10 @@ bool DatabaseManager::init() {
             
             -- For Overlay Display
             copyright TEXT,
-            gps_decimal TEXT
+            gps_decimal TEXT,
+
+            -- Modification timestamp for incremental indexing
+            file_mtime INTEGER DEFAULT 0
         );
     )");
 
@@ -102,6 +96,20 @@ bool DatabaseManager::init() {
     qCritical() << "Could not create table 'images':"
                 << query.lastError().text();
     return false;
+  }
+
+  // Schema migration for databases created without file_mtime
+  bool hasFileMtime = false;
+  if (query.exec("PRAGMA table_info(images);")) {
+    while (query.next()) {
+      if (query.value(1).toString() == "file_mtime") {
+        hasFileMtime = true;
+        break;
+      }
+    }
+  }
+  if (!hasFileMtime) {
+    query.exec("ALTER TABLE images ADD COLUMN file_mtime INTEGER DEFAULT 0;");
   }
 
   query.exec("CREATE INDEX IF NOT EXISTS idx_folder ON images(folder_path);");

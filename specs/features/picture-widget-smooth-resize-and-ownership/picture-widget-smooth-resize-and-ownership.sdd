@@ -1,0 +1,33 @@
+---
+feature: "Debounced Smooth Resizing & Modernized Ownership in PictureWidget (PERF-05 & STAB-07)"
+status: "Implemented"
+priority: "Low (4.1 & 4.2)"
+target_files:
+  - "include/picture_widget.h"
+  - "src/picture_widget.cpp"
+---
+
+# 1. Context & Problem Statement
+
+- **PERF-05 (`PictureWidget::resizeEvent`):** Every `QResizeEvent` triggered `picture.scaled(..., Qt::SmoothTransformation)` synchronously on the full-resolution source image on the GUI thread, causing noticeable frame drops when resizing the viewer window with high-resolution photos.
+- **STAB-07 (`PictureWidget`):**
+  1. `rotateMnu` and `exportMnu` were allocated with `new QMenu()` without a `QObject` parent and were leaked every time a `PictureWidget` was opened and closed.
+  2. `picture` was managed via manual `new QPixmap` / `delete picture` instead of storing `QPixmap` by value (which is implicitly shared in Qt).
+  3. `checkValidMetaImg()` and `rotateSrcImg()` used manual `new Photo` / `delete photo` instead of stack allocation.
+
+# 2. Technical Specification
+
+1. **Debounced Smooth Resizing (`PERF-05`):**
+   - Add a single-shot `QTimer *m_resizeTimer` (100 ms interval, parented to `this`) connected to `PictureWidget::resizePicture()`.
+   - In `PictureWidget::resizeEvent()`, immediately render using `Qt::FastTransformation` and restart `m_resizeTimer` to apply `Qt::SmoothTransformation` once resizing settles.
+2. **Modernized Resource Ownership (`STAB-07`):**
+   - Store `QPixmap picture;` by value in `PictureWidget`.
+   - Pass `this` as parent to `new QMenu(this)` in `createRotateMenu()` and `createExportMenu()`.
+   - Use stack-allocated `Photo` instances in `checkValidMetaImg()` and `rotateSrcImg()`.
+
+# 3. Acceptance Criteria
+
+- [x] Interactive window resizing uses `Qt::FastTransformation` and upgrades to `Qt::SmoothTransformation` after 100 ms via `m_resizeTimer`.
+- [x] `rotateMnu` and `exportMnu` are parented to `this` (`new QMenu(this)`).
+- [x] `picture` is stored by value (`QPixmap picture;`) without manual `new`/`delete`.
+- [x] Compiles cleanly with CMake and `-std=gnu++26`.

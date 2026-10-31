@@ -111,7 +111,4 @@ private:
 
   enum State { IDLE, LOGGING_IN, UPLOADING };
   State m_state{IDLE};
-
-  QString m_lastUser;
-  QString m_lastPass;
 };

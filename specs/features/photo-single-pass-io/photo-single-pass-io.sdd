@@ -1,0 +1,37 @@
+Spec: Feature Photo Single-Pass Exiv2 & WebP I/O Optimization (2.3 / PERF-01)
+
+Purpose:
+  Eliminate redundant file openings, Exiv2 metadata parses, image decodes, and disk writes in Photo, ImageIndexer, MainWindow, and UploadManager.
+
+Platform: C++26 (Linux) / C++23 (Windows, macOS), Qt6
+
+References:
+  ../../../desktop-gallery.sdd
+
+Owns:
+  ./**
+
+Can modify:
+  /include/rz_photo.hpp
+  /src/rz_photo.cpp
+  /src/ImageIndexer.cpp
+  /src/MainWindow.cpp
+  /src/UploadManager.cpp
+  /data/Prioritaetenliste.md
+
+Must:
+  Provide Photo::readSummary() to extract copyright and decimal GPS coordinates in a single Exiv2::ImageFactory::open() pass.
+  Use Photo::readSummary() in ImageIndexer::run(), MainWindow::onImageChanged(), MainWindow::updateDbMetadata(), and UploadManager::startNextUpload().
+  Implement Photo::writeToAllCopyrightOwner() via a single writeAllMetadata() call instead of 7 separate file writes.
+  Decode the source image and resolve its timestamp once in Photo::convertImages() when exporting multiple WebP sizes.
+
+Must not:
+  Re-open and re-parse the same image file multiple times for a single indexing, upload, or multi-size WebP export operation.
+
+Tasks:
+  [x] #1 Add BasicSummary and readSummary() to include/rz_photo.hpp and implement single-pass I/O in src/rz_photo.cpp.
+  [x] #2 Update callers in src/ImageIndexer.cpp, src/MainWindow.cpp, and src/UploadManager.cpp to use Photo::readSummary().
+  [x] #3 Verify compilation via cmake --build build and mark item 2.3 as completed in data/Prioritaetenliste.md.
+
+Done when:
+  cmake --build build succeeds without errors and Photo performs single-pass Exiv2 reads/writes and single-decode multi-size WebP exports.

@@ -25,6 +25,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QMimeDatabase>
+#include <QRegularExpression>
 
 UploadManager::UploadManager(QObject *parent) : QObject(parent) {
   m_netManager = new QNetworkAccessManager(this);
@@ -39,8 +40,6 @@ void UploadManager::setServerUrl(const QString &url) {
 }
 
 void UploadManager::login(const QString &user, const QString &pass) {
-  m_lastUser = user;
-  m_lastPass = pass;
   m_state = LOGGING_IN;
 
   QUrl url(m_serverUrl + "/login");
@@ -105,6 +104,7 @@ void UploadManager::startNextUpload() {
   // 1. Image Part
   QHttpPart imagePart;
   QString fileName = QFileInfo(job.filePath).fileName();
+  fileName.remove(QRegularExpression(R"(["\r\n\\])"));
   QString mimeType = QMimeDatabase().mimeTypeForFile(job.filePath).name();
 
   imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant(mimeType));
@@ -126,9 +126,10 @@ void UploadManager::startNextUpload() {
 
   // 3. Metadata Part
   Photo p(job.filePath);
+  const auto summary = p.readSummary();
   QJsonObject metaJson;
-  metaJson["copyright"] = p.getCopyright();
-  metaJson["gps"] = p.getGpsDecimalString();
+  metaJson["copyright"] = summary.copyright;
+  metaJson["gps"] = summary.gpsDecimal;
 
   QHttpPart metaPart;
   metaPart.setHeader(QNetworkRequest::ContentDispositionHeader,

@@ -1,0 +1,27 @@
+---
+feature: "Asynchronous Bulk Metadata Operations & Batched SQLite Transactions (PERF-04)"
+status: "Implemented"
+priority: "Medium (3.2)"
+target_files:
+  - "src/MainWindow.cpp"
+---
+
+# 1. Context & Problem Statement
+
+- **PERF-04 (`MainWindow::renameSelectedImages`, `writeDefaultCopyrightToSelection`, `writeDefaultGpsToSelection`, `writeAllDefaultsToSelection`):**
+  1. All four bulk operations previously iterated over selected files synchronously on the Qt GUI thread, freezing the UI when processing dozens or hundreds of images.
+  2. Each file update executed an individual auto-committed SQL `UPDATE` statement (`updateDbMetadata(path)`), causing $N$ separate SQLite disk syncs instead of a single transaction.
+
+# 2. Technical Specification
+
+1. **Asynchronous File I/O (`QtConcurrent::run`):**
+   - Execute disk rename and Exiv2 metadata write/read operations on a background worker thread for `renameSelectedImages()`, `writeDefaultCopyrightToSelection()`, `writeDefaultGpsToSelection()`, and `writeAllDefaultsToSelection()`.
+2. **Batched SQLite Transaction (`db.transaction()` / `db.commit()`):**
+   - Return collected metadata/rename results to the GUI thread via `QMetaObject::invokeMethod` (`QPointer<MainWindow>`-guarded).
+   - Wrap all `UPDATE images` statements for the batch inside a single `db.transaction()` / `db.commit()` block using a single prepared `QSqlQuery`.
+
+# 3. Acceptance Criteria
+
+- [x] Bulk rename and default metadata write actions no longer block the Qt GUI thread during file I/O.
+- [x] Database updates for bulk actions execute inside a single SQLite transaction (`db.transaction()` / `db.commit()`).
+- [x] Compiles cleanly with CMake and `-std=gnu++26`.

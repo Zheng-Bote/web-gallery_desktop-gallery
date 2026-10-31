@@ -1,0 +1,36 @@
+Spec: Feature SQLite Concurrency & Indexer Synchronization (1.3 / STAB-04)
+
+Purpose:
+  Prevent SQLITE_BUSY errors, journal mode conflicts, and shutdown race conditions between DatabaseManager (GUI thread) and ImageIndexer (worker thread).
+
+Platform: C++26 (Linux) / C++23 (Windows, macOS), Qt6
+
+References:
+  ../../../desktop-gallery.sdd
+
+Owns:
+  ./**
+
+Can modify:
+  /include/ImageIndexer.hpp
+  /src/ImageIndexer.cpp
+  /include/MainWindow.hpp
+  /src/MainWindow.cpp
+  /data/Prioritaetenliste.md
+
+Must:
+  Preserve the SQLite WAL journal mode configured in DatabaseManager::init() instead of overriding it with PRAGMA journal_mode = MEMORY in ImageIndexer::run().
+  Configure PRAGMA busy_timeout = 5000 on the ImageIndexer database connection to handle concurrent access gracefully.
+  Provide a thread-safe atomic cancellation mechanism (ImageIndexer::cancel()) and ensure MainWindow cancels any active indexer when starting a new scan or shutting down.
+
+Must not:
+  Switch SQLite journal_mode to MEMORY on a shared database connection.
+  Leave running ImageIndexer tasks uncancelled when MainWindow is destroyed.
+
+Tasks:
+  [x] #1 Add atomic cancellation support to include/ImageIndexer.hpp and update SQLite pragmas and loop check in src/ImageIndexer.cpp.
+  [x] #2 Track active ImageIndexer in MainWindow and ensure clean cancellation on re-scan and application exit.
+  [x] #3 Verify compilation via cmake --build build and mark item 1.3 as completed in data/Prioritaetenliste.md.
+
+Done when:
+  cmake --build build succeeds without errors and ImageIndexer operates in WAL mode with busy_timeout and clean cancellation lifecycle.

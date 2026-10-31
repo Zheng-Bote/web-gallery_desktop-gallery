@@ -1,0 +1,28 @@
+---
+feature: "Thread-Safe Time Formatting in QuotaManager & Deterministic curl_global_init (STAB-06)"
+status: "Implemented"
+priority: "Medium (3.4)"
+target_files:
+  - "src/regeocode/quota_manager.cpp"
+  - "src/regeocode/http_client.cpp"
+  - "src/main.cpp"
+---
+
+# 1. Context & Problem Statement
+
+- **STAB-06 (`QuotaManager::get_current_date`, `HttpClient::HttpClient`, `main`):**
+  1. `QuotaManager::get_current_date()` called `std::localtime(&in_time_t)`, which returns a pointer to a shared static `std::tm` buffer and is not thread-safe when called concurrently across background threads.
+  2. `HttpClient` relied on implicit `curl_global_init()` inside `curl_easy_init()` on worker threads, which is documented by libcurl as non-thread-safe.
+
+# 2. Technical Specification
+
+1. **Thread-Safe Local Time (`src/regeocode/quota_manager.cpp`):**
+   - Replace `std::localtime(&in_time_t)` with a local `std::tm tm_buf{}` populated via `localtime_r(&in_time_t, &tm_buf)` on POSIX and `localtime_s(&tm_buf, &in_time_t)` on Windows.
+2. **Thread-Safe `curl_global_init` (`src/regeocode/http_client.cpp`, `src/main.cpp`):**
+   - Guard `curl_global_init(CURL_GLOBAL_DEFAULT)` with a shared helper/once-flag and invoke it explicitly on the main thread at startup in `main()`.
+
+# 3. Acceptance Criteria
+
+- [x] `std::localtime` is no longer used in `QuotaManager::get_current_date()`.
+- [x] `curl_global_init(CURL_GLOBAL_DEFAULT)` is initialized deterministically before worker threads start.
+- [x] Compiles cleanly with CMake and `-std=gnu++26`.

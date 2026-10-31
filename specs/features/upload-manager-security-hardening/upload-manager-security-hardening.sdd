@@ -1,0 +1,35 @@
+Spec: Feature UploadManager Security Hardening (2.2 / SEC-02 & SEC-04)
+
+Purpose:
+  Prevent unnecessary retention of plaintext passwords in RAM, guard against unencrypted remote HTTP credential transmission, and sanitize multipart Content-Disposition filenames in UploadManager.
+
+Platform: C++26 (Linux) / C++23 (Windows, macOS), Qt6
+
+References:
+  ../../../desktop-gallery.sdd
+
+Owns:
+  ./**
+
+Can modify:
+  /include/UploadManager.hpp
+  /src/UploadManager.cpp
+  /src/MainWindow.cpp
+  /data/Prioritaetenliste.md
+
+Must:
+  Remove m_lastUser and m_lastPass from UploadManager so user passwords are not kept in memory beyond the login request serialization.
+  Sanitize filenames in Content-Disposition multipart headers by stripping quotes, backslashes, CR, and LF characters.
+  Warn the user and require explicit confirmation before logging in to a non-localhost server over unencrypted HTTP.
+
+Must not:
+  Persist or retain plaintext passwords in UploadManager member variables.
+  Insert unsanitized filenames containing quotes or control characters into HTTP multipart headers.
+
+Tasks:
+  [x] #1 Remove m_lastUser and m_lastPass from include/UploadManager.hpp and src/UploadManager.cpp.
+  [x] #2 Sanitize Content-Disposition filename in src/UploadManager.cpp and add non-localhost HTTP warning in src/MainWindow.cpp.
+  [x] #3 Verify compilation via cmake --build build and mark item 2.2 as completed in data/Prioritaetenliste.md.
+
+Done when:
+  cmake --build build succeeds without errors and UploadManager no longer stores plaintext passwords or allows header injection via filenames.

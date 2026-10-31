@@ -146,7 +146,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   resize(1200, 800);
 }
 
-MainWindow::~MainWindow() {}
+MainWindow::~MainWindow() {
+  if (m_activeIndexer) {
+    m_activeIndexer->cancel();
+  }
+  QThreadPool::globalInstance()->waitForDone(3000);
+}
 
 void MainWindow::setupDatabase() { DatabaseManager::instance().init(); }
 
@@ -179,6 +184,7 @@ void MainWindow::setupUi() {
   m_galleryModel =
       new QSqlTableModel(this, DatabaseManager::instance().getDb());
   m_galleryModel->setTable("images");
+  m_galleryModel->setFilter("1 = 0");
   m_galleryModel->select();
 
   m_galleryView->setModel(m_galleryModel);
@@ -270,6 +276,24 @@ void MainWindow::createMenu() {
     }
   });
 
+  settingsMenu->addSeparator();
+  clearCacheAct = settingsMenu->addAction(tr("Clear Database Cache..."));
+  connect(clearCacheAct, &QAction::triggered, this, [this]() {
+    if (QMessageBox::question(
+            this, tr("Clear Cache"),
+            tr("Do you really want to clear the local image metadata cache?"),
+            QMessageBox::Yes | QMessageBox::No,
+            QMessageBox::No) == QMessageBox::Yes) {
+      if (m_activeIndexer) {
+        m_activeIndexer->cancel();
+      }
+      DatabaseManager::instance().clearDatabase();
+      QPixmapCache::clear();
+      m_galleryModel->select();
+      m_statusLabel->setText(tr("Database cache cleared."));
+    }
+  });
+
   // Metadata
   metaMenu = menuBar()->addMenu(tr("&Metadata"));
   metaAct = metaMenu->addAction(tr("Edit Default Metadata..."));
@@ -334,6 +358,23 @@ void MainWindow::createMenu() {
   connect(actExportWebp, &QAction::triggered, this,
           &MainWindow::exportSelectedToWebP);
 
+  avifMenu = picMenu->addMenu(tr("AVIF Export"));
+  actAvifOversize = avifMenu->addAction(tr("Increase too small pictures"));
+  actAvifOversize->setCheckable(true);
+  actAvifOversize->setChecked(true);
+  actAvifOverwrite = avifMenu->addAction(tr("Overwrite existing AVIF"));
+  actAvifOverwrite->setCheckable(true);
+  actAvifWatermark = avifMenu->addAction(tr("Watermark AVIF"));
+  actAvifWatermark->setCheckable(true);
+  actAvifWatermark->setChecked(true);
+  avifMenu->addSeparator();
+  actAvifRename = avifMenu->addAction(tr("Rename Export to Timestamp"));
+  actAvifRename->setCheckable(true);
+  avifMenu->addSeparator();
+  actExportAvif = avifMenu->addAction(tr("Export selected to all AVIF sizes"));
+  connect(actExportAvif, &QAction::triggered, this,
+          &MainWindow::exportSelectedToAvif);
+
   QAction *uploadAct = picMenu->addAction(tr("Upload to Server..."));
   connect(uploadAct, &QAction::triggered, this,
           &MainWindow::uploadSelectedImages);
@@ -366,6 +407,7 @@ void MainWindow::retranslateUi() {
   settingsMenu->setTitle(tr("&Settings"));
   langMenu->setTitle(tr("&Language"));
   geoUserAct->setText(tr("Configure GeoNames User..."));
+  clearCacheAct->setText(tr("Clear Database Cache..."));
 
   metaMenu->setTitle(tr("&Metadata"));
   metaAct->setText(tr("Edit Default Metadata..."));
@@ -388,6 +430,13 @@ void MainWindow::retranslateUi() {
   actWebpWatermark->setText(tr("Watermark WebP"));
   actWebpRename->setText(tr("Rename Export to Timestamp"));
   actExportWebp->setText(tr("Export selected to all WebP sizes"));
+
+  avifMenu->setTitle(tr("AVIF Export"));
+  actAvifOversize->setText(tr("Increase too small pictures"));
+  actAvifOverwrite->setText(tr("Overwrite existing AVIF"));
+  actAvifWatermark->setText(tr("Watermark AVIF"));
+  actAvifRename->setText(tr("Rename Export to Timestamp"));
+  actExportAvif->setText(tr("Export selected to all AVIF sizes"));
 
   actSelectAll->setText(tr("Select all Pictures"));
   actRename->setText(tr("Rename selected to Timestamp"));
@@ -457,7 +506,11 @@ void MainWindow::openSrcFolder() {
     return;
   addFolderToTree(dir, false);
   m_statusLabel->setText(tr("Scanning: ") + dir);
+  if (m_activeIndexer) {
+    m_activeIndexer->cancel();
+  }
   ImageIndexer *indexer = new ImageIndexer(dir);
+  m_activeIndexer = indexer;
   indexer->setAutoDelete(true);
   connect(indexer, &ImageIndexer::finished, this,
           &MainWindow::onIndexerFinished);
@@ -471,7 +524,11 @@ void MainWindow::openSrcFolderRekursive() {
     return;
   addFolderToTree(dir, true);
   m_statusLabel->setText(tr("Scanning recursively: ") + dir);
+  if (m_activeIndexer) {
+    m_activeIndexer->cancel();
+  }
   ImageIndexer *indexer = new ImageIndexer(dir);
+  m_activeIndexer = indexer;
   indexer->setAutoDelete(true);
   connect(indexer, &ImageIndexer::finished, this,
           &MainWindow::onIndexerFinished);
@@ -490,6 +547,8 @@ void MainWindow::addFolderToTree(const QString &path, bool recursive) {
   if (recursive)
     addSubfoldersRecursively(path, rootItem);
   m_treeView->expand(rootItem->index());
+  m_treeView->setCurrentIndex(rootItem->index());
+  onFolderClicked(rootItem->index());
 }
 
 void MainWindow::addSubfoldersRecursively(const QString &path,
@@ -538,8 +597,9 @@ void MainWindow::onIndexerFinished() {
 void MainWindow::onImageChanged(const QString &path) {
   QPixmapCache::remove("thumb_" + path);
   Photo p(path);
-  QString cp = p.getCopyright();
-  QString gps = p.getGpsDecimalString();
+  const auto summary = p.readSummary();
+  const QString &cp = summary.copyright;
+  const QString &gps = summary.gpsDecimal;
   QModelIndexList matches = m_galleryModel->match(
       m_galleryModel->index(0, 1), Qt::DisplayRole, path, 1, Qt::MatchExactly);
   if (!matches.isEmpty()) {
@@ -562,40 +622,87 @@ void MainWindow::selectAllImages() {
   m_statusLabel->setText(tr("Selected %1 images.").arg(rows.size()));
 }
 
+namespace {
+struct RenamedItem {
+  QString oldPath;
+  QString newPath;
+  QString newFileName;
+};
+
+struct UpdatedMetaItem {
+  QString path;
+  QString copyright;
+  QString gpsDecimal;
+  qint64 fileSize{0};
+  qint64 fileMtime{0};
+};
+} // namespace
+
 void MainWindow::renameSelectedImages() {
   QList<QString> files = getSelectedFilePaths();
   if (files.isEmpty()) {
     QMessageBox::information(this, tr("Rename"), tr("No images selected."));
     return;
   }
-  int count = 0;
-  int failed = 0;
-  QApplication::setOverrideCursor(Qt::WaitCursor);
-  QSqlQuery query(DatabaseManager::instance().getDb());
-  for (const QString &oldPath : files) {
-    Photo p(oldPath);
-    auto [success, newPath] = p.renameImageToTimestamp();
-    if (success) {
-      query.prepare("UPDATE images SET path = ?, filename = ? WHERE path = ?");
-      query.addBindValue(newPath);
-      query.addBindValue(QFileInfo(newPath).fileName());
-      query.addBindValue(oldPath);
-      if (query.exec()) {
-        count++;
-        QPixmapCache::remove("thumb_" + oldPath);
-      } else
+  m_statusLabel->setText(tr("Renaming %1 images...").arg(files.size()));
+  QPointer<MainWindow> safeThis(this);
+
+  (void)QtConcurrent::run([safeThis, files]() {
+    QVector<RenamedItem> renamed;
+    renamed.reserve(files.size());
+    int failed = 0;
+
+    for (const QString &oldPath : files) {
+      Photo p(oldPath);
+      auto [success, newPath] = p.renameImageToTimestamp();
+      if (success) {
+        renamed.push_back(
+            {oldPath, newPath, QFileInfo(newPath).fileName()});
+      } else {
         failed++;
-    } else
-      failed++;
-  }
-  QApplication::restoreOverrideCursor();
-  if (count > 0) {
-    m_statusLabel->setText(tr("Renamed %1 images.").arg(count));
-    m_galleryModel->select();
-  }
-  if (failed > 0)
-    QMessageBox::warning(this, tr("Rename Results"),
-                         tr("Renamed: %1\nFailed: %2").arg(count).arg(failed));
+      }
+    }
+
+    QMetaObject::invokeMethod(
+        safeThis,
+        [safeThis, renamed = std::move(renamed), failed]() {
+          if (!safeThis)
+            return;
+
+          int count = 0;
+          int dbFailed = failed;
+          QSqlDatabase &db = DatabaseManager::instance().getDb();
+          db.transaction();
+          QSqlQuery query(db);
+          query.prepare(
+              "UPDATE images SET path = ?, filename = ? WHERE path = ?");
+          for (const auto &item : renamed) {
+            query.addBindValue(item.newPath);
+            query.addBindValue(item.newFileName);
+            query.addBindValue(item.oldPath);
+            if (query.exec()) {
+              count++;
+              QPixmapCache::remove("thumb_" + item.oldPath);
+            } else {
+              dbFailed++;
+            }
+          }
+          db.commit();
+
+          if (count > 0) {
+            safeThis->m_statusLabel->setText(
+                safeThis->tr("Renamed %1 images.").arg(count));
+            safeThis->m_galleryModel->select();
+          }
+          if (dbFailed > 0) {
+            QMessageBox::warning(safeThis, safeThis->tr("Rename Results"),
+                                 safeThis->tr("Renamed: %1\nFailed: %2")
+                                     .arg(count)
+                                     .arg(dbFailed));
+          }
+        },
+        Qt::QueuedConnection);
+  });
 }
 
 void MainWindow::writeDefaultCopyrightToSelection() {
@@ -621,18 +728,51 @@ void MainWindow::writeDefaultCopyrightToSelection() {
     return;
   }
   QList<QString> files = getSelectedFilePaths();
-  int count = 0;
-  QApplication::setOverrideCursor(Qt::WaitCursor);
-  for (const QString &path : files) {
-    Photo p(path);
-    if (p.writeAllMetadata(cpMeta)) {
-      updateDbMetadata(path);
-      count++;
+  if (files.isEmpty())
+    return;
+
+  m_statusLabel->setText(
+      tr("Writing default Copyright to %1 images...").arg(files.size()));
+  QPointer<MainWindow> safeThis(this);
+
+  (void)QtConcurrent::run([safeThis, files, cpMeta]() {
+    QVector<UpdatedMetaItem> updated;
+    updated.reserve(files.size());
+    for (const QString &path : files) {
+      Photo p(path);
+      if (p.writeAllMetadata(cpMeta)) {
+        const auto summary = p.readSummary();
+        QFileInfo fi(path);
+        updated.push_back({path, summary.copyright, summary.gpsDecimal,
+                           fi.size(), fi.lastModified().toSecsSinceEpoch()});
+      }
     }
-  }
-  QApplication::restoreOverrideCursor();
-  m_galleryModel->select();
-  m_statusLabel->setText(tr("Updated Copyright in %1 images.").arg(count));
+    QMetaObject::invokeMethod(
+        safeThis,
+        [safeThis, updated = std::move(updated)]() {
+          if (!safeThis)
+            return;
+          QSqlDatabase &db = DatabaseManager::instance().getDb();
+          db.transaction();
+          QSqlQuery query(db);
+          query.prepare("UPDATE images SET copyright = ?, gps_decimal = ?, "
+                        "file_size = ?, file_mtime = ? WHERE path = ?");
+          for (const auto &item : updated) {
+            query.addBindValue(item.copyright);
+            query.addBindValue(item.gpsDecimal);
+            query.addBindValue(item.fileSize);
+            query.addBindValue(item.fileMtime);
+            query.addBindValue(item.path);
+            query.exec();
+          }
+          db.commit();
+          safeThis->m_galleryModel->select();
+          safeThis->m_statusLabel->setText(
+              safeThis->tr("Updated Copyright in %1 images.")
+                  .arg(updated.size()));
+        },
+        Qt::QueuedConnection);
+  });
 }
 
 void MainWindow::writeDefaultGpsToSelection() {
@@ -649,34 +789,100 @@ void MainWindow::writeDefaultGpsToSelection() {
     return;
   }
   QList<QString> files = getSelectedFilePaths();
-  int count = 0;
-  QApplication::setOverrideCursor(Qt::WaitCursor);
-  for (const QString &path : files) {
-    Photo p(path);
-    if (p.writeAllMetadata(gpsMeta)) {
-      updateDbMetadata(path);
-      count++;
+  if (files.isEmpty())
+    return;
+
+  m_statusLabel->setText(
+      tr("Writing default GPS to %1 images...").arg(files.size()));
+  QPointer<MainWindow> safeThis(this);
+
+  (void)QtConcurrent::run([safeThis, files, gpsMeta]() {
+    QVector<UpdatedMetaItem> updated;
+    updated.reserve(files.size());
+    for (const QString &path : files) {
+      Photo p(path);
+      if (p.writeAllMetadata(gpsMeta)) {
+        const auto summary = p.readSummary();
+        QFileInfo fi(path);
+        updated.push_back({path, summary.copyright, summary.gpsDecimal,
+                           fi.size(), fi.lastModified().toSecsSinceEpoch()});
+      }
     }
-  }
-  QApplication::restoreOverrideCursor();
-  m_galleryModel->select();
-  m_statusLabel->setText(tr("Updated GPS in %1 images.").arg(count));
+    QMetaObject::invokeMethod(
+        safeThis,
+        [safeThis, updated = std::move(updated)]() {
+          if (!safeThis)
+            return;
+          QSqlDatabase &db = DatabaseManager::instance().getDb();
+          db.transaction();
+          QSqlQuery query(db);
+          query.prepare("UPDATE images SET copyright = ?, gps_decimal = ?, "
+                        "file_size = ?, file_mtime = ? WHERE path = ?");
+          for (const auto &item : updated) {
+            query.addBindValue(item.copyright);
+            query.addBindValue(item.gpsDecimal);
+            query.addBindValue(item.fileSize);
+            query.addBindValue(item.fileMtime);
+            query.addBindValue(item.path);
+            query.exec();
+          }
+          db.commit();
+          safeThis->m_galleryModel->select();
+          safeThis->m_statusLabel->setText(
+              safeThis->tr("Updated GPS in %1 images.").arg(updated.size()));
+        },
+        Qt::QueuedConnection);
+  });
 }
 
 void MainWindow::writeAllDefaultsToSelection() {
   QList<QString> files = getSelectedFilePaths();
-  int count = 0;
-  QApplication::setOverrideCursor(Qt::WaitCursor);
-  for (const QString &path : files) {
-    Photo p(path);
-    if (p.writeAllMetadata(defaultMeta)) {
-      updateDbMetadata(path);
-      count++;
+  if (files.isEmpty())
+    return;
+
+  RzMetadata::DefaultMetaStruct allMeta = defaultMeta;
+  m_statusLabel->setText(
+      tr("Writing default Metadata to %1 images...").arg(files.size()));
+  QPointer<MainWindow> safeThis(this);
+
+  (void)QtConcurrent::run([safeThis, files, allMeta]() {
+    QVector<UpdatedMetaItem> updated;
+    updated.reserve(files.size());
+    for (const QString &path : files) {
+      Photo p(path);
+      if (p.writeAllMetadata(allMeta)) {
+        const auto summary = p.readSummary();
+        QFileInfo fi(path);
+        updated.push_back({path, summary.copyright, summary.gpsDecimal,
+                           fi.size(), fi.lastModified().toSecsSinceEpoch()});
+      }
     }
-  }
-  QApplication::restoreOverrideCursor();
-  m_galleryModel->select();
-  m_statusLabel->setText(tr("Updated Metadata in %1 images.").arg(count));
+    QMetaObject::invokeMethod(
+        safeThis,
+        [safeThis, updated = std::move(updated)]() {
+          if (!safeThis)
+            return;
+          QSqlDatabase &db = DatabaseManager::instance().getDb();
+          db.transaction();
+          QSqlQuery query(db);
+          query.prepare("UPDATE images SET copyright = ?, gps_decimal = ?, "
+                        "file_size = ?, file_mtime = ? WHERE path = ?");
+          for (const auto &item : updated) {
+            query.addBindValue(item.copyright);
+            query.addBindValue(item.gpsDecimal);
+            query.addBindValue(item.fileSize);
+            query.addBindValue(item.fileMtime);
+            query.addBindValue(item.path);
+            query.exec();
+          }
+          db.commit();
+          safeThis->m_galleryModel->select();
+          safeThis->m_statusLabel->setText(
+              safeThis->tr("Updated Metadata in %1 images.")
+                  .arg(updated.size()));
+        },
+        Qt::QueuedConnection);
+  });
 }
 
 void MainWindow::setCopyrightAsDefaultFromCurrent() {
@@ -770,13 +976,17 @@ void MainWindow::setAllAsDefaultFromCurrent() {
 
 void MainWindow::updateDbMetadata(const QString &path) {
   Photo p(path);
-  QString cp = p.getCopyright();
-  QString gps = p.getGpsDecimalString();
+  const auto summary = p.readSummary();
+  const QString &cp = summary.copyright;
+  const QString &gps = summary.gpsDecimal;
+  QFileInfo fi(path);
   QSqlQuery query(DatabaseManager::instance().getDb());
-  query.prepare(
-      "UPDATE images SET copyright = ?, gps_decimal = ? WHERE path = ?");
+  query.prepare("UPDATE images SET copyright = ?, gps_decimal = ?, file_size = "
+                "?, file_mtime = ? WHERE path = ?");
   query.addBindValue(cp);
   query.addBindValue(gps);
+  query.addBindValue(fi.size());
+  query.addBindValue(fi.lastModified().toSecsSinceEpoch());
   query.addBindValue(path);
   query.exec();
 }
@@ -852,102 +1062,149 @@ void MainWindow::processNextRegeocodeLookup(const QString &iniPath) {
     m_galleryModel->select();
     return;
   }
-  QString path = m_geoLookupQueue.head();
-  Photo p(path);
-  QPointF gps = p.getGpsLatLon();
-  if (qAbs(gps.x()) < 0.0001 && qAbs(gps.y()) < 0.0001) {
-    qWarning() << "Skipping file without GPS:" << path;
-    m_geoLookupQueue.dequeue();
-    processNextRegeocodeLookup();
-    return;
+
+  QList<QString> batchFiles;
+  while (!m_geoLookupQueue.isEmpty()) {
+    batchFiles.append(m_geoLookupQueue.dequeue());
   }
 
-  try {
-    std::vector<regeocode::ApiAdapterPtr> adapters;
-    adapters.push_back(std::make_unique<regeocode::NominatimAdapter>());
-    adapters.push_back(std::make_unique<regeocode::GoogleAdapter>());
-    adapters.push_back(std::make_unique<regeocode::OpenCageAdapter>());
-    adapters.push_back(std::make_unique<regeocode::BingAdapter>());
-    adapters.push_back(std::make_unique<regeocode::GeoNamesTimezoneAdapter>());
+  const std::string ini_path = iniPath.isEmpty()
+                                   ? m_regeocodeIniPath.toStdString()
+                                   : iniPath.toStdString();
 
-    // INI-Pfad: entweder explizit oder aus Member
-    std::string ini_path = iniPath.isEmpty() ? m_regeocodeIniPath.toStdString()
-                                             : iniPath.toStdString();
-    regeocode::ConfigLoader loader(ini_path);
-    auto config_result = loader.load();
+  (void)QtConcurrent::run([this, batchFiles = std::move(batchFiles),
+                           ini_path]() {
+    try {
+      std::vector<regeocode::ApiAdapterPtr> adapters;
+      adapters.push_back(std::make_unique<regeocode::NominatimAdapter>());
+      adapters.push_back(std::make_unique<regeocode::GoogleAdapter>());
+      adapters.push_back(std::make_unique<regeocode::OpenCageAdapter>());
+      adapters.push_back(std::make_unique<regeocode::BingAdapter>());
+      adapters.push_back(
+          std::make_unique<regeocode::GeoNamesTimezoneAdapter>());
 
-    auto client = std::make_unique<regeocode::HttpClient>();
-    regeocode::ReverseGeocoder geocoder(config_result.apis, std::move(adapters),
-                                        std::move(client),
-                                        config_result.quota_file_path);
+      regeocode::ConfigLoader loader(ini_path);
+      auto config_result = loader.load();
 
-    std::vector<std::string> priority_list;
-    // Strategie aus INI laden
-    ini::IniFile ini;
-    ini.load(ini_path);
-    auto it = ini.find("strategies");
-    if (it != ini.end()) {
-      auto &section = it->second;
-      auto sit = section.find("default");
-      if (sit != section.end()) {
-        std::string strategy_raw = sit->second.as<std::string>();
-        std::stringstream ss(strategy_raw);
-        std::string segment;
-        while (std::getline(ss, segment, ',')) {
-          size_t first = segment.find_first_not_of(' ');
-          if (first != std::string::npos) {
-            size_t last = segment.find_last_not_of(' ');
-            priority_list.push_back(segment.substr(first, (last - first + 1)));
+      auto client = std::make_unique<regeocode::HttpClient>();
+      regeocode::ReverseGeocoder geocoder(
+          config_result.apis, std::move(adapters), std::move(client),
+          config_result.quota_file_path);
+
+      std::vector<std::string> priority_list;
+      ini::IniFile ini;
+      ini.load(ini_path);
+      auto it = ini.find("strategies");
+      if (it != ini.end()) {
+        auto &section = it->second;
+        auto sit = section.find("default");
+        if (sit != section.end()) {
+          std::string strategy_raw = sit->second.as<std::string>();
+          std::stringstream ss(strategy_raw);
+          std::string segment;
+          while (std::getline(ss, segment, ',')) {
+            size_t first = segment.find_first_not_of(' ');
+            if (first != std::string::npos) {
+              size_t last = segment.find_last_not_of(' ');
+              priority_list.push_back(
+                  segment.substr(first, (last - first + 1)));
+            }
           }
         }
-      } else {
-        priority_list.push_back("nominatim"); // Fallback
       }
-    } else {
-      priority_list.push_back("nominatim"); // Fallback
+      if (priority_list.empty()) {
+        priority_list.push_back("nominatim");
+      }
+
+      const int total = batchFiles.size();
+      int processed = 0;
+
+      for (const QString &path : batchFiles) {
+        ++processed;
+        Photo p(path);
+        QPointF gps = p.getGpsLatLon();
+        if (qAbs(gps.x()) < 0.0001 && qAbs(gps.y()) < 0.0001) {
+          qWarning() << "Skipping file without GPS:" << path;
+          continue;
+        }
+
+        try {
+          regeocode::Coordinates coords{gps.x(), gps.y()};
+          nlohmann::json result =
+              geocoder.reverse_geocode_fallback(coords, priority_list, "");
+
+          QString timezone;
+          try {
+            nlohmann::json tz_result =
+                geocoder.reverse_geocode_json(coords, "timezone");
+            if (tz_result.contains("meta") && tz_result.contains("result") &&
+                tz_result["result"].contains("data")) {
+              auto resObjTz = tz_result["result"]["data"];
+              timezone =
+                  QString::fromStdString(resObjTz.value("timezone_id", ""));
+            }
+          } catch (const std::exception &) {
+            // Optional timezone API might not be configured or exceeded quota
+          }
+
+          if (result.contains("meta") && result.contains("result")) {
+            auto resObj = result["result"];
+            QString address_en =
+                QString::fromStdString(resObj.value("address_english", ""));
+            QString address_local =
+                QString::fromStdString(resObj.value("address_local", ""));
+            QString country_code =
+                QString::fromStdString(resObj.value("country_code", ""));
+
+            RzMetadata::DefaultMetaStruct meta;
+            if (!address_en.isEmpty())
+              meta.xmpDefault["Xmp.dc.address_english"] = address_en;
+            if (!address_local.isEmpty())
+              meta.xmpDefault["Xmp.dc.address_local"] = address_local;
+            if (!country_code.isEmpty())
+              meta.xmpDefault["Xmp.dc.country_code"] = country_code;
+            if (!timezone.isEmpty())
+              meta.xmpDefault["Xmp.dc.timezone"] = timezone;
+
+            if (p.writeAllMetadata(meta)) {
+              qDebug() << "Regeocode Data written to:"
+                       << QFileInfo(path).fileName();
+            }
+          }
+        } catch (const std::exception &e) {
+          qWarning() << "Regeocode error for" << path << ":" << e.what();
+        }
+
+        QMetaObject::invokeMethod(
+            this,
+            [this, processed, total]() {
+              m_statusLabel->setText(
+                  tr("Geocoding %1 / %2...").arg(processed).arg(total));
+            },
+            Qt::QueuedConnection);
+      }
+
+      QMetaObject::invokeMethod(
+          this,
+          [this]() {
+            m_statusLabel->setText(tr("Lookup finished."));
+            QMessageBox::information(this, tr("Finished"),
+                                     tr("Address lookup completed."));
+            m_galleryModel->select();
+          },
+          Qt::QueuedConnection);
+    } catch (const std::exception &e) {
+      const QString errMsg = QString::fromStdString(e.what());
+      qWarning() << "Regeocode-Fehler:" << errMsg;
+      QMetaObject::invokeMethod(
+          this,
+          [this, errMsg]() {
+            m_statusLabel->setText(tr("Geocoding failed."));
+            QMessageBox::warning(this, tr("Geocoding Error"), errMsg);
+          },
+          Qt::QueuedConnection);
     }
-
-    regeocode::Coordinates coords{gps.x(), gps.y()};
-    nlohmann::json result =
-        geocoder.reverse_geocode_fallback(coords, priority_list, "");
-
-    nlohmann::json tz_result = geocoder.reverse_geocode_json(coords, "timezone");
-    QString timezone;
-
-    if (result.contains("meta") && result.contains("result")) {
-      auto metaObj = result["meta"];
-      auto resObj = result["result"];
-      QString address_en =
-          QString::fromStdString(resObj.value("address_english", ""));
-      QString address_local =
-          QString::fromStdString(resObj.value("address_local", ""));
-      QString country_code =
-          QString::fromStdString(resObj.value("country_code", ""));
-
-      if (tz_result.contains("meta") && tz_result.contains("result")) {
-          auto resObjTz = tz_result["result"]["data"];
-          timezone = QString::fromStdString(resObjTz.value("timezone_id", ""));
-      }
-
-      RzMetadata::DefaultMetaStruct meta;
-      if (!address_en.isEmpty())
-          meta.xmpDefault["Xmp.dc.address_english"] = address_en;
-      if (!address_local.isEmpty())
-          meta.xmpDefault["Xmp.dc.address_local"] = address_local;
-      if (!country_code.isEmpty())
-          meta.xmpDefault["Xmp.dc.country_code"] = country_code;
-      if (!timezone.isEmpty())
-          meta.xmpDefault["Xmp.dc.timezone"] = timezone;
-
-      if (p.writeAllMetadata(meta)) {
-          qDebug() << "Regeocode Data written to:" << QFileInfo(path).fileName();
-      }
-    }
-  } catch (const std::exception &e) {
-    qWarning() << "Regeocode-Fehler:" << e.what();
-  }
-  m_geoLookupQueue.dequeue();
-  processNextRegeocodeLookup();
+  });
 }
 
 void MainWindow::processNextGeoLookup() {
@@ -1071,6 +1328,9 @@ void MainWindow::showContextMenu(const QPoint &pos) {
     QAction *webpAct = contextMenu.addAction(tr("Export to WebP..."));
     connect(webpAct, &QAction::triggered, this,
             &MainWindow::exportSelectedToWebP);
+    QAction *avifAct = contextMenu.addAction(tr("Export to AVIF..."));
+    connect(avifAct, &QAction::triggered, this,
+            &MainWindow::exportSelectedToAvif);
     QAction *renameAct = contextMenu.addAction(tr("Rename to Timestamp"));
     connect(renameAct, &QAction::triggered, this,
             &MainWindow::renameSelectedImages);
@@ -1144,6 +1404,51 @@ void MainWindow::exportSelectedToWebP() {
       });
 }
 
+void MainWindow::exportSelectedToAvif() {
+  QList<QString> files = getSelectedFilePaths();
+  if (files.isEmpty()) {
+    QMessageBox::information(this, tr("AVIF Export"),
+                             tr("No images selected."));
+    return;
+  }
+  bool optOversize = actAvifOversize->isChecked();
+  bool optOverwrite = actAvifOverwrite->isChecked();
+  bool optWatermark = actAvifWatermark->isChecked();
+  bool optRename = actAvifRename->isChecked();
+  m_statusLabel->setText(
+      tr("Exporting %1 images to AVIF...").arg(files.size()));
+  QPointer<MainWindow> safeThis(this);
+  (void)QtConcurrent::run(
+      [files, safeThis, optOversize, optOverwrite, optWatermark, optRename]() {
+        int successCount = 0;
+        for (const QString &path : files) {
+          Photo photo(path);
+          photo.setOversizeSmallerPicture(optOversize);
+          photo.setOverwriteExistingWebp(optOverwrite);
+          photo.setWatermarkWebp(optWatermark);
+          photo.setRenameToTimestamp(optRename);
+          if (photo.convertImagesAvif(75))
+            successCount++;
+        }
+        QMetaObject::invokeMethod(
+            safeThis,
+            [safeThis, successCount, total = files.size()]() {
+              if (!safeThis)
+                return;
+              safeThis->m_statusLabel->setText(
+                  safeThis->tr("Export finished: %1 / %2 successful.")
+                      .arg(successCount)
+                      .arg(total));
+              QMessageBox::information(
+                  safeThis, safeThis->tr("AVIF Export"),
+                  safeThis->tr("Successfully exported %1 of %2 images.")
+                      .arg(successCount)
+                      .arg(total));
+            },
+            Qt::QueuedConnection);
+      });
+}
+
 QList<QString> MainWindow::getSelectedFilePaths() {
   QList<QString> paths;
   QModelIndexList selected = m_galleryView->selectionModel()->selectedIndexes();
@@ -1211,6 +1516,21 @@ void MainWindow::uploadSelectedImages() {
       return;
     }
     m_settings->setValue("Server/uploadUrl", url.trimmed());
+  }
+  QUrl parsedUrl(url.trimmed());
+  QString host = parsedUrl.host().toLower();
+  if (parsedUrl.scheme().toLower() == "http" && host != "localhost" &&
+      host != "127.0.0.1" && host != "::1") {
+    auto reply = QMessageBox::warning(
+        this, tr("Insecure Connection"),
+        tr("The configured server URL uses unencrypted HTTP (%1).\n"
+           "Credentials and tokens will be transmitted in plaintext.\n\n"
+           "Do you really want to continue?")
+            .arg(url.trimmed()),
+        QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    if (reply != QMessageBox::Yes) {
+      return;
+    }
   }
   m_uploader->setServerUrl(url.trimmed());
 

@@ -32,11 +32,13 @@
 #include <QUrl>
 #include <QtConcurrent>
 
+#include <curl/curl.h>
 #include <string_view>
 
 // rz_config.hpp contains PROJECT_NAME, PROJECT_VERSION, PROG_ORGANIZATION_NAME
 
 int main(int argc, char *argv[]) {
+  curl_global_init(CURL_GLOBAL_DEFAULT);
 
   // FIX: Disable hardware acceleration for WebEngine to avoid crashes
   // (GBM is not supported with the current configuration).
@@ -123,5 +125,7 @@ int main(int argc, char *argv[]) {
   });
 
   w.show();
-  return a.exec();
+  const int exitCode = a.exec();
+  curl_global_cleanup();
+  return exitCode;
 }

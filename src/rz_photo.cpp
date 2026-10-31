@@ -29,7 +29,16 @@
 #include <QPointF>
 #include <QRegularExpression>
 
+#include <Magick++.h>
 #include <cmath>
+#include <mutex>
+
+namespace {
+void ensureMagickInitialized() {
+  static std::once_flag magickInitFlag;
+  std::call_once(magickInitFlag, []() { Magick::InitializeMagick(nullptr); });
+}
+} // namespace
 
 #define CATCH_EXIV2                                                            \
   catch (Exiv2::Error & e) {                                                   \
@@ -112,68 +121,28 @@ QString Photo::determineTimestamp() {
   return "";
 }
 
-// --- WEBP CONVERSION ---
+// --- WEBP & AVIF CONVERSION ---
 
-const bool Photo::convertImages(const int &quality) {
-  bool allSuccess = true;
-  if (!convertImage(0, quality)) {
-    allSuccess = false;
-    qWarning() << "WebP Export failed for Original Size";
-  }
-  for (int size : imgStruct.webpSizes) {
-    if (!convertImage(size, quality)) {
-      allSuccess = false;
-      qWarning() << "WebP Export failed for size:" << size;
-    }
-  }
-  return allSuccess;
-}
-
-const bool Photo::convertImage(const int &targetSize, const int &quality) {
-  if (!isValidImageType())
-    return false;
-  if (!createWebpPath())
-    return false;
-
-  // Name Logic (Timestamp Rename)
-  QString targetBasename = imgStruct.fileBasename;
-  if (renameToTimestamp_bool) {
-    QString ts = determineTimestamp();
-    if (!ts.isEmpty()) {
-      targetBasename = ts;
-    }
-  }
-
+bool Photo::writeScaledExport(const QImage &sourceImg,
+                              const QString &targetBasename, int targetSize,
+                              int quality, const QString &folderName,
+                              const QString &formatSuffix) {
   QString sizeSuffix =
       (targetSize > 0) ? "_" + QString::number(targetSize) : "";
   QString targetPath = imgStruct.fileAbsolutePath.left(
                            imgStruct.fileAbsolutePath.lastIndexOf('/')) +
-                       "/" + imgStruct.newFolder + "/" + targetBasename +
-                       sizeSuffix + "." + imgStruct.newSuffix;
+                       "/" + folderName + "/" + targetBasename + sizeSuffix +
+                       "." + formatSuffix;
 
   QFile targetFile(targetPath);
   if (targetFile.exists() && !overwriteExitingWebp_bool)
     return true;
 
-  QImageReader reader(imgStruct.fileAbsolutePath);
-  if (!reader.canRead())
-    return false;
-
+  QImage img = sourceImg;
   if (targetSize > 0) {
-    QSize originalSize = reader.size();
-    if (originalSize.width() > targetSize ||
-        originalSize.height() > targetSize) {
-      reader.setScaledSize(
-          originalSize.scaled(targetSize, targetSize, Qt::KeepAspectRatio));
-    }
-  }
-
-  QImage img = reader.read();
-  if (img.isNull())
-    return false;
-
-  if (targetSize > 0 && oversizeSmallerPicture_bool) {
-    if (img.width() < targetSize && img.height() < targetSize) {
+    if (img.width() > targetSize || img.height() > targetSize ||
+        (oversizeSmallerPicture_bool && img.width() < targetSize &&
+         img.height() < targetSize)) {
       img = img.scaled(targetSize, targetSize, Qt::KeepAspectRatio,
                        Qt::SmoothTransformation);
     }
@@ -197,18 +166,199 @@ const bool Photo::convertImage(const int &targetSize, const int &quality) {
     p.drawText(textRect, Qt::AlignTop | Qt::AlignLeft, text);
   }
 
-  QImageWriter writer(targetPath, "webp");
-  writer.setQuality(quality);
-  return writer.write(img);
+  const QByteArray fmtBytes = formatSuffix.toLower().toLatin1();
+  if (QImageWriter::supportedImageFormats().contains(fmtBytes)) {
+    QImageWriter writer(targetPath, fmtBytes);
+    writer.setQuality(quality);
+    if (writer.write(img)) {
+      return true;
+    }
+  }
+
+  if (formatSuffix.compare("avif", Qt::CaseInsensitive) == 0) {
+    try {
+      ensureMagickInitialized();
+      QImage rgbaImg = img.convertToFormat(QImage::Format_RGBA8888);
+      Magick::Image magickImg(static_cast<std::size_t>(rgbaImg.width()),
+                              static_cast<std::size_t>(rgbaImg.height()),
+                              "RGBA", Magick::CharPixel, rgbaImg.constBits());
+      magickImg.magick("AVIF");
+      magickImg.quality(static_cast<std::size_t>(quality));
+      magickImg.write(targetPath.toStdString());
+      return QFile::exists(targetPath);
+    } catch (const std::exception &e) {
+      qWarning() << "Magick++ AVIF export error for" << targetPath << ":"
+                 << e.what();
+      return false;
+    }
+  }
+
+  return false;
 }
 
-bool Photo::createWebpPath() {
+bool Photo::writeScaledWebp(const QImage &sourceImg,
+                            const QString &targetBasename, int targetSize,
+                            int quality) {
+  return writeScaledExport(sourceImg, targetBasename, targetSize, quality,
+                           imgStruct.newFolder, imgStruct.newSuffix);
+}
+
+const bool Photo::convertImages(const int &quality) {
+  if (!isValidImageType())
+    return false;
+  if (!createWebpPath())
+    return false;
+
+  QString targetBasename = imgStruct.fileBasename;
+  if (renameToTimestamp_bool) {
+    QString ts = determineTimestamp();
+    if (!ts.isEmpty()) {
+      targetBasename = ts;
+    }
+  }
+
+  QImageReader reader(imgStruct.fileAbsolutePath);
+  reader.setAutoTransform(true);
+  if (!reader.canRead())
+    return false;
+
+  QImage baseImg = reader.read();
+  if (baseImg.isNull())
+    return false;
+
+  bool allSuccess = true;
+  if (!writeScaledWebp(baseImg, targetBasename, 0, quality)) {
+    allSuccess = false;
+    qWarning() << "WebP Export failed for Original Size";
+  }
+  for (int size : imgStruct.webpSizes) {
+    if (!writeScaledWebp(baseImg, targetBasename, size, quality)) {
+      allSuccess = false;
+      qWarning() << "WebP Export failed for size:" << size;
+    }
+  }
+  return allSuccess;
+}
+
+const bool Photo::convertImage(const int &targetSize, const int &quality) {
+  if (!isValidImageType())
+    return false;
+  if (!createWebpPath())
+    return false;
+
+  // Name Logic (Timestamp Rename)
+  QString targetBasename = imgStruct.fileBasename;
+  if (renameToTimestamp_bool) {
+    QString ts = determineTimestamp();
+    if (!ts.isEmpty()) {
+      targetBasename = ts;
+    }
+  }
+
+  QImageReader reader(imgStruct.fileAbsolutePath);
+  reader.setAutoTransform(true);
+  if (!reader.canRead())
+    return false;
+
+  if (targetSize > 0) {
+    QSize originalSize = reader.size();
+    if (originalSize.width() > targetSize ||
+        originalSize.height() > targetSize) {
+      reader.setScaledSize(
+          originalSize.scaled(targetSize, targetSize, Qt::KeepAspectRatio));
+    }
+  }
+
+  QImage img = reader.read();
+  if (img.isNull())
+    return false;
+
+  return writeScaledWebp(img, targetBasename, targetSize, quality);
+}
+
+const bool Photo::convertImagesAvif(const int &quality) {
+  if (!isValidImageType())
+    return false;
+  if (!createExportPath("AVIF"))
+    return false;
+
+  QString targetBasename = imgStruct.fileBasename;
+  if (renameToTimestamp_bool) {
+    QString ts = determineTimestamp();
+    if (!ts.isEmpty()) {
+      targetBasename = ts;
+    }
+  }
+
+  QImageReader reader(imgStruct.fileAbsolutePath);
+  reader.setAutoTransform(true);
+  if (!reader.canRead())
+    return false;
+
+  QImage baseImg = reader.read();
+  if (baseImg.isNull())
+    return false;
+
+  bool allSuccess = true;
+  if (!writeScaledExport(baseImg, targetBasename, 0, quality, "AVIF", "avif")) {
+    allSuccess = false;
+    qWarning() << "AVIF Export failed for Original Size";
+  }
+  for (int size : imgStruct.webpSizes) {
+    if (!writeScaledExport(baseImg, targetBasename, size, quality, "AVIF",
+                           "avif")) {
+      allSuccess = false;
+      qWarning() << "AVIF Export failed for size:" << size;
+    }
+  }
+  return allSuccess;
+}
+
+const bool Photo::convertImageAvif(const int &targetSize, const int &quality) {
+  if (!isValidImageType())
+    return false;
+  if (!createExportPath("AVIF"))
+    return false;
+
+  QString targetBasename = imgStruct.fileBasename;
+  if (renameToTimestamp_bool) {
+    QString ts = determineTimestamp();
+    if (!ts.isEmpty()) {
+      targetBasename = ts;
+    }
+  }
+
+  QImageReader reader(imgStruct.fileAbsolutePath);
+  reader.setAutoTransform(true);
+  if (!reader.canRead())
+    return false;
+
+  if (targetSize > 0) {
+    QSize originalSize = reader.size();
+    if (originalSize.width() > targetSize ||
+        originalSize.height() > targetSize) {
+      reader.setScaledSize(
+          originalSize.scaled(targetSize, targetSize, Qt::KeepAspectRatio));
+    }
+  }
+
+  QImage img = reader.read();
+  if (img.isNull())
+    return false;
+
+  return writeScaledExport(img, targetBasename, targetSize, quality, "AVIF",
+                           "avif");
+}
+
+bool Photo::createExportPath(const QString &folderName) {
   QDir dir(QFileInfo(imgStruct.fileAbsolutePath).absolutePath());
-  if (!dir.exists(imgStruct.newFolder)) {
-    return dir.mkdir(imgStruct.newFolder);
+  if (!dir.exists(folderName)) {
+    return dir.mkdir(folderName);
   }
   return true;
 }
+
+bool Photo::createWebpPath() { return createExportPath(imgStruct.newFolder); }
 
 // --- RENAME SOURCE FILE ---
 
@@ -410,19 +560,18 @@ QString Photo::getCopyright() {
 bool Photo::writeToAllCopyrightOwner(const QString &owner) {
   if (!hasMetadataSupport())
     return false;
-  bool ok = true;
-  ok &= writeXmp("Xmp.plus.CopyrightOwner", owner);
-  ok &= writeXmp("Xmp.dc.creator", owner);
-  ok &= writeXmp("Xmp.dc.rights",
-                 owner); // Normal text, user can add © if they want
+  RzMetadata::DefaultMetaStruct meta;
+  meta.xmpDefault["Xmp.plus.CopyrightOwner"] = owner;
+  meta.xmpDefault["Xmp.dc.creator"] = owner;
+  meta.xmpDefault["Xmp.dc.rights"] = owner;
 
-  ok &= writeExif("Exif.Image.Artist", owner);
-  ok &= writeExif("Exif.Image.Copyright", owner);
+  meta.exifDefault["Exif.Image.Artist"] = owner;
+  meta.exifDefault["Exif.Image.Copyright"] = owner;
 
-  ok &= writeIptc("Iptc.Application2.Byline", owner);
-  ok &= writeIptc("Iptc.Application2.Copyright", owner);
+  meta.iptcDefault["Iptc.Application2.Byline"] = owner;
+  meta.iptcDefault["Iptc.Application2.Copyright"] = owner;
 
-  return ok;
+  return writeAllMetadata(meta);
 }
 
 // --- GPS UTILS ---
@@ -553,6 +702,69 @@ QString Photo::getGpsDecimalString() {
   } catch (...) {
     return "";
   }
+}
+
+Photo::BasicSummary Photo::readSummary() {
+  BasicSummary summary;
+  if (!hasMetadataSupport())
+    return summary;
+  try {
+    auto image =
+        Exiv2::ImageFactory::open(imgStruct.fileAbsolutePath.toStdString());
+    image->readMetadata();
+
+    // 1. Copyright (XMP -> IPTC -> EXIF priority)
+    const Exiv2::XmpData &xmpData = image->xmpData();
+    if (auto it = xmpData.findKey(Exiv2::XmpKey("Xmp.plus.CopyrightOwner"));
+        it != xmpData.end()) {
+      summary.copyright = QString::fromStdString(it->toString());
+    } else if (auto it = xmpData.findKey(Exiv2::XmpKey("Xmp.dc.rights"));
+               it != xmpData.end()) {
+      summary.copyright = QString::fromStdString(it->toString());
+    } else if (auto it = xmpData.findKey(Exiv2::XmpKey("Xmp.dc.creator"));
+               it != xmpData.end()) {
+      summary.copyright = QString::fromStdString(it->toString());
+    }
+
+    if (summary.copyright.isEmpty()) {
+      const Exiv2::IptcData &iptcData = image->iptcData();
+      if (auto it =
+              iptcData.findKey(Exiv2::IptcKey("Iptc.Application2.Copyright"));
+          it != iptcData.end()) {
+        summary.copyright = QString::fromStdString(it->toString());
+      } else if (auto it = iptcData.findKey(
+                     Exiv2::IptcKey("Iptc.Application2.Byline"));
+                 it != iptcData.end()) {
+        summary.copyright = QString::fromStdString(it->toString());
+      }
+    }
+
+    const Exiv2::ExifData &exifData = image->exifData();
+    if (summary.copyright.isEmpty() && !exifData.empty()) {
+      if (auto it = exifData.findKey(Exiv2::ExifKey("Exif.Image.Copyright"));
+          it != exifData.end()) {
+        summary.copyright = QString::fromStdString(it->toString());
+      } else if (auto it =
+                     exifData.findKey(Exiv2::ExifKey("Exif.Image.Artist"));
+                 it != exifData.end()) {
+        summary.copyright = QString::fromStdString(it->toString());
+      }
+    }
+
+    // 2. GPS Decimal
+    if (!exifData.empty()) {
+      double lat = convertToDecimal(exifData, "Exif.GPSInfo.GPSLatitude",
+                                    "Exif.GPSInfo.GPSLatitudeRef");
+      double lon = convertToDecimal(exifData, "Exif.GPSInfo.GPSLongitude",
+                                    "Exif.GPSInfo.GPSLongitudeRef");
+      if (lat != 0.0 || lon != 0.0) {
+        summary.gpsDecimal =
+            QString::number(lat, 'f', 5) + ", " + QString::number(lon, 'f', 5);
+      }
+    }
+  } catch (...) {
+  }
+  return summary;
 }
 
 bool Photo::rotateImage(const int &turn) {

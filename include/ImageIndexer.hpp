@@ -19,6 +19,7 @@
 #include <QObject>
 #include <QRunnable>
 #include <QString>
+#include <atomic>
 
 /**
  * @class ImageIndexer
@@ -42,6 +43,11 @@ public:
    */
   void run() override;
 
+  /**
+   * @brief Request cooperative cancellation of the running indexing task.
+   */
+  void cancel() noexcept { m_abort.store(true, std::memory_order_relaxed); }
+
 signals:
   /**
    * @brief Signal emitted to report progress.
@@ -56,4 +62,5 @@ signals:
 
 private:
   QString m_folderPath;
+  std::atomic<bool> m_abort{false};
 };

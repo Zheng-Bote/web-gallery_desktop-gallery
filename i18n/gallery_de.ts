@@ -391,6 +391,30 @@
         <translation>Auswahl in alle WebP-Größen exportieren</translation>
     </message>
     <message>
+        <source>AVIF Export</source>
+        <translation>AVIF Export</translation>
+    </message>
+    <message>
+        <source>Overwrite existing AVIF</source>
+        <translation>Vorhandene AVIF überschreiben</translation>
+    </message>
+    <message>
+        <source>Watermark AVIF</source>
+        <translation>AVIF mit Wasserzeichen</translation>
+    </message>
+    <message>
+        <source>Export selected to all AVIF sizes</source>
+        <translation>Auswahl in alle AVIF-Größen exportieren</translation>
+    </message>
+    <message>
+        <source>Export to AVIF...</source>
+        <translation>Nach AVIF exportieren...</translation>
+    </message>
+    <message>
+        <source>Exporting %1 images to AVIF...</source>
+        <translation>Exportiere %1 Bilder nach AVIF...</translation>
+    </message>
+    <message>
         <location filename="../src/MainWindow.cpp" line="328"/>
         <source>Select all Pictures</source>
         <translation>Alle Bilder auswählen</translation>
@@ -719,6 +743,10 @@ Keine Konfiguration erforderlich.</translation>
         <translation>Nach WebP exportieren</translation>
     </message>
     <message>
+        <source>export to AVIF</source>
+        <translation>Nach AVIF exportieren</translation>
+    </message>
+    <message>
         <location filename="../src/picture_widget.ui" line="154"/>
         <source>save</source>
         <translation>Speichern</translation>
@@ -848,6 +876,22 @@ Keine Konfiguration erforderlich.</translation>
         <location filename="../src/picture_widget.cpp" line="723"/>
         <source>WebP export</source>
         <translation>WebP Export</translation>
+    </message>
+    <message>
+        <source>overwrite existing AVIF</source>
+        <translation>Vorhandene AVIF überschreiben</translation>
+    </message>
+    <message>
+        <source>watermark AVIF</source>
+        <translation>AVIF mit Wasserzeichen</translation>
+    </message>
+    <message>
+        <source>AVIF export to subfolder AVIF</source>
+        <translation>AVIF Export in Unterordner AVIF</translation>
+    </message>
+    <message>
+        <source>AVIF export</source>
+        <translation>AVIF Export</translation>
     </message>
     <message>
         <location filename="../src/picture_widget.cpp" line="740"/>

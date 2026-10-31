@@ -1,0 +1,35 @@
+Spec: Feature PictureWidget Thread-Safe Metadata Loading (1.1 / STAB-01)
+
+Purpose:
+  Eliminate undefined behavior and race conditions in PictureWidget by decoupling background Exiv2 metadata parsing from Qt GUI widget updates (QTableWidget / QTabWidget), while reading EXIF, IPTC, and XMP metadata in a single Exiv2 file pass.
+
+Platform: C++26 (Linux) / C++23 (Windows, macOS), Qt6
+
+References:
+  ../../../desktop-gallery.sdd
+
+Owns:
+  ./**
+
+Can modify:
+  /include/picture_widget.h
+  /src/picture_widget.cpp
+  /data/Prioritaetenliste.md
+
+Must:
+  Parse EXIF, IPTC, and XMP metadata asynchronously in a worker thread without touching any QWidget, QTableWidget, or QTabWidget instances outside the GUI thread.
+  Open and read the image file only once per setImage() call via Exiv2::ImageFactory::open() inside a try/catch block to prevent unhandled Exiv2 exceptions from terminating the worker thread.
+  Marshal parsed key/value pairs back to the GUI thread using QMetaObject::invokeMethod(this, ..., Qt::QueuedConnection) so widget updates are safely cancelled if PictureWidget is closed before parsing finishes.
+  Ensure include/picture_widget.h has a compliant SPDX & Doxygen MIT header and English documentation comments.
+
+Must not:
+  Access or mutate ui->exifTableWidget, ui->iptcTableWidget, ui->xmpTableWidget, or ui->tabWidget from a background thread.
+  Block the Qt GUI main thread with synchronous Exiv2 file parsing.
+
+Tasks:
+  [x] #1 Update include/picture_widget.h with SPDX MIT header, English Doxygen comments, and helper declaration for GUI-thread table population.
+  [x] #2 Refactor metadata loading in src/picture_widget.cpp to parse EXIF/IPTC/XMP in a single background pass with exception handling and populate the QTableWidgets on the GUI thread.
+  [x] #3 Verify compilation via CMake and mark item 1.1 as completed in data/Prioritaetenliste.md.
+
+Done when:
+  cmake --build build succeeds without errors and PictureWidget populates EXIF, IPTC, and XMP tables exclusively on the GUI thread after a single asynchronous Exiv2 read pass.

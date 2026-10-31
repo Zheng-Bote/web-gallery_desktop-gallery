@@ -25,6 +25,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QPixmapCache>
+#include <QPointer>
 #include <QThreadPool> // Fix: Warning in previous versions
 
 ThumbnailDelegate::ThumbnailDelegate(QObject *parent)
@@ -77,39 +78,50 @@ void ThumbnailDelegate::paint(QPainter *painter,
     painter->drawText(option.rect.adjusted(0, -20, 0, 0), Qt::AlignCenter,
                       "Loading...");
 
-    QWidget *viewport = const_cast<QWidget *>(option.widget);
+    if (!m_loadingCacheKeys.contains(cacheKey)) {
+      m_loadingCacheKeys.insert(cacheKey);
+      QPointer<QWidget> safeViewport(const_cast<QWidget *>(option.widget));
+      QPointer<const ThumbnailDelegate> safeSelf(this);
 
-    QThreadPool::globalInstance()->start([filePath, cacheKey, viewport]() {
-      QFileInfo fi(filePath);
-      if (!fi.exists())
-        return;
+      QThreadPool::globalInstance()->start(
+          [filePath, cacheKey, safeViewport, safeSelf]() {
+            QImage img;
+            QFileInfo fi(filePath);
+            if (fi.exists()) {
+              QImageReader reader(filePath);
+              reader.setAutoTransform(true);
+              if (reader.canRead()) {
+                QSize originalSize = reader.size();
+                QSize targetSize(300, 300);
 
-      QImageReader reader(filePath);
-      if (!reader.canRead())
-        return;
+                if (originalSize.isValid() &&
+                    (originalSize.width() > targetSize.width() ||
+                     originalSize.height() > targetSize.height())) {
+                  reader.setScaledSize(
+                      originalSize.scaled(targetSize, Qt::KeepAspectRatio));
+                }
 
-      QSize originalSize = reader.size();
-      QSize targetSize(300, 300);
+                img = reader.read();
+              }
+            }
 
-      if (originalSize.isValid() &&
-          (originalSize.width() > targetSize.width() ||
-           originalSize.height() > targetSize.height())) {
-        reader.setScaledSize(
-            originalSize.scaled(targetSize, Qt::KeepAspectRatio));
-      }
-
-      QImage img = reader.read();
-      if (img.isNull())
-        return;
-
-      if (viewport) {
-        QMetaObject::invokeMethod(viewport, [viewport, cacheKey, img]() {
-          QPixmap pm = QPixmap::fromImage(img);
-          QPixmapCache::insert(cacheKey, pm);
-          viewport->update();
-        });
-      }
-    });
+            QMetaObject::invokeMethod(
+                qApp,
+                [safeViewport, safeSelf, cacheKey, img = std::move(img)]() {
+                  if (safeSelf) {
+                    safeSelf->m_loadingCacheKeys.remove(cacheKey);
+                  }
+                  if (!img.isNull()) {
+                    QPixmap pm = QPixmap::fromImage(img);
+                    QPixmapCache::insert(cacheKey, pm);
+                    if (safeViewport) {
+                      safeViewport->update();
+                    }
+                  }
+                },
+                Qt::QueuedConnection);
+          });
+    }
   }
 
   const int COL_COPYRIGHT = 8;

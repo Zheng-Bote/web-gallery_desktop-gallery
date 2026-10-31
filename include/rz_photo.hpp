@@ -63,6 +63,8 @@ public:
 
   const bool convertImage(const int &targetSize, const int &quality = 75);
   const bool convertImages(const int &quality = 75);
+  const bool convertImageAvif(const int &targetSize, const int &quality = 75);
+  const bool convertImagesAvif(const int &quality = 75);
   bool rotateImage(const int &turn);
   const std::tuple<bool, QString> renameImageToTimestamp();
 
@@ -77,6 +79,12 @@ public:
 
   QString getCopyright();
   bool writeToAllCopyrightOwner(const QString &owner);
+
+  struct BasicSummary {
+    QString copyright;
+    QString gpsDecimal;
+  };
+  BasicSummary readSummary();
 
   // --- GPS Utils ---
   struct ExifGpsStruct {
@@ -128,6 +136,12 @@ private:
   bool renameToTimestamp_bool{false};
 
   bool createWebpPath();
+  bool createExportPath(const QString &folderName);
   // Determines timestamp (from Exif or file) without renaming
   QString determineTimestamp();
+  bool writeScaledWebp(const QImage &sourceImg, const QString &targetBasename,
+                       int targetSize, int quality);
+  bool writeScaledExport(const QImage &sourceImg, const QString &targetBasename,
+                         int targetSize, int quality, const QString &folderName,
+                         const QString &formatSuffix);
 };

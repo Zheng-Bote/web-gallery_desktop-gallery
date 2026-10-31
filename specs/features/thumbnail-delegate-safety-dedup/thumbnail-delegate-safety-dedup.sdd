@@ -1,0 +1,35 @@
+Spec: Feature ThumbnailDelegate Pointer Safety & In-Flight Deduplication (1.2 / STAB-02 & PERF-03)
+
+Purpose:
+  Prevent use-after-free crashes when a view widget is destroyed during asynchronous thumbnail loading, eliminate redundant QThreadPool decoding tasks for the same image during scrolling/repainting, and respect EXIF orientation in thumbnails.
+
+Platform: C++26 (Linux) / C++23 (Windows, macOS), Qt6
+
+References:
+  ../../../desktop-gallery.sdd
+
+Owns:
+  ./**
+
+Can modify:
+  /include/ThumbnailDelegate.hpp
+  /src/ThumbnailDelegate.cpp
+  /data/Prioritaetenliste.md
+
+Must:
+  Guard the target viewport widget and ThumbnailDelegate instance with QPointer across asynchronous QThreadPool callbacks.
+  Deduplicate in-flight thumbnail requests using a GUI-thread-managed QSet<QString> (m_loadingCacheKeys) so each uncached image spawns at most one concurrent QImageReader task.
+  Always remove the cache key from m_loadingCacheKeys on completion (both on success and on read failure).
+  Enable QImageReader::setAutoTransform(true) when decoding thumbnails.
+
+Must not:
+  Dereference raw QWidget pointers inside asynchronous worker callbacks without lifetime verification.
+  Convert QImage to QPixmap outside the Qt GUI main thread.
+
+Tasks:
+  [x] #1 Add m_loadingCacheKeys to include/ThumbnailDelegate.hpp.
+  [x] #2 Implement QPointer lifetime guards, in-flight task deduplication, and EXIF auto-transform in src/ThumbnailDelegate.cpp.
+  [x] #3 Verify compilation via cmake --build build and mark item 1.2 as completed in data/Prioritaetenliste.md.
+
+Done when:
+  cmake --build build succeeds without errors and ThumbnailDelegate deduplicates in-flight thumbnail loads while guarding widget lifetimes with QPointer.
