@@ -1,3 +1,33 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Sourcecode-Analyse: Sicherheit, Stabilität & Performance (`desktop-gallery`)](#sourcecode-analyse-sicherheit-stabilit%C3%A4t--performance-desktop-gallery)
+  - [Management Summary](#management-summary)
+    - [Übersicht nach Kritikalität](#%C3%9Cbersicht-nach-kritikalit%C3%A4t)
+  - [1. Stabilität & Thread-Safety (Stability)](#1-stabilit%C3%A4t--thread-safety-stability)
+    - [STAB-01 (🔴 Kritisch): Direkte UI-Manipulation aus Hintergrund-Threads in `PictureWidget`](#stab-01--kritisch-direkte-ui-manipulation-aus-hintergrund-threads-in-picturewidget)
+    - [STAB-02 (🔴 Kritisch): Dangling-Pointer-Risiko & Task-Flutung in `ThumbnailDelegate::paint()`](#stab-02--kritisch-dangling-pointer-risiko--task-flutung-in-thumbnaildelegatepaint)
+    - [STAB-03 (🟠 Hoch): Blockierender GUI-Thread, Ressourcen-Overhead & unendliche Rekursion in `processNextRegeocodeLookup()`](#stab-03--hoch-blockierender-gui-thread-ressourcen-overhead--unendliche-rekursion-in-processnextregeocodelookup)
+    - [STAB-04 (🟠 Hoch): SQLite Journal-Mode-Konflikt zwischen `DatabaseManager` und `ImageIndexer`](#stab-04--hoch-sqlite-journal-mode-konflikt-zwischen-databasemanager-und-imageindexer)
+    - [STAB-05 (🟡 Mittel): Synchrones Blockieren durch `future.result()` in `PictureWidget::exportSrcImgToWebpThread()`](#stab-05--mittel-synchrones-blockieren-durch-futureresult-in-picturewidgetexportsrcimgtowebpthread)
+    - [STAB-06 (🟡 Mittel): Fehlende `curl_global_init()`-Initialisierung & nicht-threadsicheres `std::localtime`](#stab-06--mittel-fehlende-curl_global_init-initialisierung--nicht-threadsicheres-stdlocaltime)
+    - [STAB-07 (🟢 Niedrig): Memory-Leaks bei `QMenu`-Objekten in `PictureWidget`](#stab-07--niedrig-memory-leaks-bei-qmenu-objekten-in-picturewidget)
+  - [2. Sicherheit (Security)](#2-sicherheit-security)
+    - [SEC-01 (🟠 Hoch): DOM-XSS / HTML- & JavaScript-Injection in `MapWindow` und `PictureWidget`](#sec-01--hoch-dom-xss--html---javascript-injection-in-mapwindow-und-picturewidget)
+    - [SEC-02 (🟠 Hoch): Unverschlüsselte Übertragung bei HTTP-URLs & unnötige Passwort-Speicherung im RAM](#sec-02--hoch-unverschl%C3%BCsselte-%C3%9Cbertragung-bei-http-urls--unn%C3%B6tige-passwort-speicherung-im-ram)
+    - [SEC-03 (🟡 Mittel): Supply-Chain-Sicherheit in `CMakeLists.txt` & fehlendes SRI beim Leaflet-CDN](#sec-03--mittel-supply-chain-sicherheit-in-cmakeliststxt--fehlendes-sri-beim-leaflet-cdn)
+    - [SEC-04 (🟡 Mittel): Multipart-Header-Formatierung & SQL-Filter-Konstruktion](#sec-04--mittel-multipart-header-formatierung--sql-filter-konstruktion)
+  - [3. Performance & Ressourceneffizienz](#3-performance--ressourceneffizienz)
+    - [PERF-01 (🔴 Kritisch): Massiv redundante Datei- und Exiv2-Zugriffe in `Photo` und `ImageIndexer`](#perf-01--kritisch-massiv-redundante-datei--und-exiv2-zugriffe-in-photo-und-imageindexer)
+    - [PERF-02 (🟠 Hoch): Löschen der gesamten SQLite-Datenbank bei jedem Programmstart](#perf-02--hoch-l%C3%B6schen-der-gesamten-sqlite-datenbank-bei-jedem-programmstart)
+    - [PERF-03 (🟠 Hoch): Ungedrosselte `QImageReader`-Tasks in `ThumbnailDelegate::paint()`](#perf-03--hoch-ungedrosselte-qimagereader-tasks-in-thumbnaildelegatepaint)
+    - [PERF-04 (🟡 Mittel): Synchrone Bulk-Schreiboperationen im GUI-Thread & Einzel-SQL-Queries](#perf-04--mittel-synchrone-bulk-schreiboperationen-im-gui-thread--einzel-sql-queries)
+    - [PERF-05 (🟡 Mittel): Speichern und wiederholtes Skalieren des vollauflösenden Bildes in `PictureWidget`](#perf-05--mittel-speichern-und-wiederholtes-skalieren-des-vollaufl%C3%B6senden-bildes-in-picturewidget)
+  - [4. Empfohlene Priorisierung (Roadmap für Spec Kit Tasks)](#4-empfohlene-priorisierung-roadmap-f%C3%BCr-spec-kit-tasks)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Sourcecode-Analyse: Sicherheit, Stabilität & Performance (`desktop-gallery`)
 
 **Projekt:** `desktop-gallery` (`web-gallery_desktop-gallery`)  

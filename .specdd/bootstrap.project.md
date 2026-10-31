@@ -1,3 +1,12 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [SpecDD project specific overrides](#specdd-project-specific-overrides)
+  - [Spec Kit Integration](#spec-kit-integration)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # SpecDD project specific overrides
 
 ## Spec Kit Integration

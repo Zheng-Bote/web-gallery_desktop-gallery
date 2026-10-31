@@ -1,3 +1,14 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Feature Intent](#feature-intent)
+- [Scope](#scope)
+- [SpecDD Architecture Alignment (Drift Control)](#specdd-architecture-alignment-drift-control)
+- [Acceptance Criteria](#acceptance-criteria)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ---
 name: Feature Specification (Spec Kit)
 about: Propose a new feature, geocoding adapter, metadata mapping rule, or UI enhancement.

@@ -1,3 +1,16 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Prioritätenliste: Optimierung von Sicherheit, Stabilität & Performance (`desktop-gallery`)](#priorit%C3%A4tenliste-optimierung-von-sicherheit-stabilit%C3%A4t--performance-desktop-gallery)
+  - [🔴 Priorität 1: Kritische Absturzursachen & Thread-Safety (Sofortmaßnahmen)](#-priorit%C3%A4t-1-kritische-absturzursachen--thread-safety-sofortma%C3%9Fnahmen)
+  - [🟠 Priorität 2: Hohe Sicherheitsrisiken & massive I/O-Engpässe](#-priorit%C3%A4t-2-hohe-sicherheitsrisiken--massive-io-engp%C3%A4sse)
+  - [🟡 Priorität 3: Mittlere Performance-, Sicherheits- & Architektur-Optimierungen](#-priorit%C3%A4t-3-mittlere-performance--sicherheits---architektur-optimierungen)
+  - [🟢 Priorität 4: Feinschliff & Ressourcen-Hygiene (Quick Wins)](#-priorit%C3%A4t-4-feinschliff--ressourcen-hygiene-quick-wins)
+  - [Empfohlene Reihenfolge für Spec Kit Features (`/speckit.specify`)](#empfohlene-reihenfolge-f%C3%BCr-spec-kit-features-speckitspecify)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Prioritätenliste: Optimierung von Sicherheit, Stabilität & Performance (`desktop-gallery`)
 
 **Referenz-Analyse:** `data/Code_Analysis_Security_Stability_Performance.md`  

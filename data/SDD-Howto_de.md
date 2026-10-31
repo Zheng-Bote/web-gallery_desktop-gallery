@@ -1,3 +1,21 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Entwickler-Guide: SpecDD & GitHub Spec Kit](#entwickler-guide-specdd--github-spec-kit)
+  - [Warum zwei Frameworks?](#warum-zwei-frameworks)
+  - [Der Flow-Forward Workflow (Agentic SDD)](#der-flow-forward-workflow-agentic-sdd)
+    - [1. Rahmenbedingungen checken (SpecDD lesen)](#1-rahmenbedingungen-checken-specdd-lesen)
+    - [2. Spezifizieren & Planen (Design-Phase)](#2-spezifizieren--planen-design-phase)
+    - [3. Aufteilung & Vorbereitung (Work Breakdown)](#3-aufteilung--vorbereitung-work-breakdown)
+    - [4. Implementierung & Konvergenz (Die iterative Loop)](#4-implementierung--konvergenz-die-iterative-loop)
+    - [5. Qualitätssicherung & Abschluss](#5-qualit%C3%A4tssicherung--abschluss)
+  - [🛠️ Beispiele aus der Praxis](#-beispiele-aus-der-praxis)
+    - [Beispiel 1: Einen neuen Reverse-Geocoding-Adapter hinzufügen](#beispiel-1-einen-neuen-reverse-geocoding-adapter-hinzuf%C3%BCgen)
+    - [Beispiel 2: Ein neues EXIF/IPTC/XMP-Metadatenfeld (Schichtübergreifend)](#beispiel-2-ein-neues-exifiptcxmp-metadatenfeld-schicht%C3%BCbergreifend)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Entwickler-Guide: SpecDD & GitHub Spec Kit
 
 Willkommen im `desktop-gallery` (`web-gallery_desktop-gallery`) Projekt! Wir nutzen eine Kombination aus **SpecDD** (Architektur-Wahrheit) und **GitHub Spec Kit** (Feature-Entwicklung), um unsere **C++26**- und **Qt6**-Desktop-Anwendung robust, reaktionsschnell und wartbar zu halten und gleichzeitig zügig neue Funktionen zu entwickeln.
