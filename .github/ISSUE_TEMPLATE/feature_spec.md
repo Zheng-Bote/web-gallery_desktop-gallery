@@ -2,6 +2,11 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
+- [name: Feature Specification (Spec Kit)
+about: Propose a new feature, geocoding adapter, metadata mapping rule, or UI enhancement.
+title: 'Feature: '
+labels: 'feature, spec-kit'
+assignees: ''](#name-feature-specification-spec-kit%0Aabout-propose-a-new-feature-geocoding-adapter-metadata-mapping-rule-or-ui-enhancement%0Atitle-feature-%0Alabels-feature-spec-kit%0Aassignees-)
 - [Feature Intent](#feature-intent)
 - [Scope](#scope)
 - [SpecDD Architecture Alignment (Drift Control)](#specdd-architecture-alignment-drift-control)
