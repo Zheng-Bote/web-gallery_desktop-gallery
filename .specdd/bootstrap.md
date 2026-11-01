@@ -1,3 +1,43 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [SpecDD Bootstrap](#specdd-bootstrap)
+  - [Execution Contract](#execution-contract)
+  - [Operating Rules](#operating-rules)
+  - [Planning Mode](#planning-mode)
+  - [Core Model](#core-model)
+    - [Relevance Gate](#relevance-gate)
+  - [Spec Files](#spec-files)
+  - [Common Spec Roles](#common-spec-roles)
+  - [Path-Based Resolution](#path-based-resolution)
+  - [Constraint Inheritance](#constraint-inheritance)
+  - [Write Authority](#write-authority)
+    - [Spec Edit Authority](#spec-edit-authority)
+    - [Non-Spec Write Authority](#non-spec-write-authority)
+  - [Universal Spec Language](#universal-spec-language)
+    - [File And Line Rules](#file-and-line-rules)
+    - [Indentation And Comments](#indentation-and-comments)
+    - [Sections](#sections)
+    - [Body Entries](#body-entries)
+    - [Inline Code And Symbols](#inline-code-and-symbols)
+    - [Paths, Globs, And Key-Value Lines](#paths-globs-and-key-value-lines)
+    - [Section Meanings](#section-meanings)
+    - [Tasks, Scenarios, And Examples](#tasks-scenarios-and-examples)
+    - [Minimal Complete File](#minimal-complete-file)
+  - [Spec Guidance](#spec-guidance)
+  - [Working Procedure](#working-procedure)
+  - [Effective Spec Resolution](#effective-spec-resolution)
+  - [Tool Context Discovery](#tool-context-discovery)
+  - [Report And Compliance Check](#report-and-compliance-check)
+  - [Conflict Handling](#conflict-handling)
+  - [Compactness Rules](#compactness-rules)
+  - [Minimal Valuable Spec](#minimal-valuable-spec)
+  - [Comprehensive Syntax Example (Not A Template)](#comprehensive-syntax-example-not-a-template)
+  - [Prime Directive](#prime-directive)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ---
 Version: 1.5
 Website: https://specdd.ai

@@ -1,3 +1,15 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [General instructions](#general-instructions)
+  - [Rules](#rules)
+    - [1. Think Before Coding](#1-think-before-coding)
+    - [2. Simplicity First](#2-simplicity-first)
+    - [3. Surgical Changes](#3-surgical-changes)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # General instructions
 
 Before working on this project, read `.specdd/bootstrap.md`.

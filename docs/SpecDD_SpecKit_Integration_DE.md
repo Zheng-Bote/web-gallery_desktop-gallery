@@ -1,3 +1,17 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Integrationsmatrix: SpecDD × GitHub Spec Kit für Desktop-Gallery](#integrationsmatrix-specdd-%C3%97-github-spec-kit-f%C3%BCr-desktop-gallery)
+  - [1. System-Ebene (SpecDD) vs. Feature-Ebene (Spec Kit)](#1-system-ebene-specdd-vs-feature-ebene-spec-kit)
+  - [2. Integrationslogik (Wer überschreibt wen?)](#2-integrationslogik-wer-%C3%BCberschreibt-wen)
+  - [3. Synchronisationsregeln (Drift vermeiden)](#3-synchronisationsregeln-drift-vermeiden)
+  - [4. Artefakt-Mapping für Desktop-Gallery](#4-artefakt-mapping-f%C3%BCr-desktop-gallery)
+  - [5. Integrationsmatrix](#5-integrationsmatrix)
+  - [6. Code-Qualität & Standard-Baseline](#6-code-qualit%C3%A4t--standard-baseline)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Integrationsmatrix: SpecDD × GitHub Spec Kit für Desktop-Gallery
 
 Dieses Dokument definiert, wie im `desktop-gallery` (`web-gallery_desktop-gallery`) Projekt – entwickelt mit **C++26** und **Qt6** – die Architekturspezifikation (SpecDD) und die Featurespezifikation (GitHub Spec Kit) zusammenarbeiten.

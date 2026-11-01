@@ -1,3 +1,14 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Spec Kit Constitution for desktop-gallery](#spec-kit-constitution-for-desktop-gallery)
+  - [1. System Intent & Single Source of Truth (SpecDD)](#1-system-intent--single-source-of-truth-specdd)
+  - [2. Role of Spec Kit (Feature Intent)](#2-role-of-spec-kit-feature-intent)
+  - [3. Integration Reference](#3-integration-reference)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Spec Kit Constitution for desktop-gallery
 
 **IMPORTANT: This project uses a hybrid SpecDD & Spec Kit architecture.**

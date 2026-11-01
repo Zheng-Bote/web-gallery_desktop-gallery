@@ -1,3 +1,20 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [AI-Agent Instruktionen: SpecDD × GitHub Spec Kit Workflow](#ai-agent-instruktionen-specdd-%C3%97-github-spec-kit-workflow)
+  - [1. Rollenverteilung & Hierarchie](#1-rollenverteilung--hierarchie)
+  - [2. Der Agentic Workflow (Flow-Forward)](#2-der-agentic-workflow-flow-forward)
+    - [Schritt 1: Specify (Requirements)](#schritt-1-specify-requirements)
+    - [Schritt 2: Plan (Design & Architektur-Check)](#schritt-2-plan-design--architektur-check)
+    - [Schritt 3: Tasks (Arbeitspakete definieren)](#schritt-3-tasks-arbeitspakete-definieren)
+    - [Schritt 4: Implement (Code generieren)](#schritt-4-implement-code-generieren)
+    - [Schritt 5: Converge (Überprüfung & Iteration)](#schritt-5-converge-%C3%9Cberpr%C3%BCfung--iteration)
+    - [Schritt 6: Release (Abschluss)](#schritt-6-release-abschluss)
+  - [3. Artefakt- und Lifecycle-Übersicht](#3-artefakt--und-lifecycle-%C3%9Cbersicht)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # AI-Agent Instruktionen: SpecDD × GitHub Spec Kit Workflow
 
 Dieses Dokument bricht die Vorgaben aus `docs/SDD-Howto_en.md` und `docs/SpecDD_SpecKit_Integration_EN.md` in konkrete, ausführbare Prozessschritte für KI-Agenten herunter. Es dient als Handlungsleitfaden für die Feature-Entwicklung im `desktop-gallery` (`web-gallery_desktop-gallery`) Projekt.

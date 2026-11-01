@@ -1,3 +1,16 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Feature: [Feature Name]](#feature-feature-name)
+  - [1. Feature Intent](#1-feature-intent)
+  - [2. Affected Components](#2-affected-components)
+  - [3. SpecDD Constraints & Architecture Impact](#3-specdd-constraints--architecture-impact)
+  - [4. Implementation Tasks (AI-Friendly)](#4-implementation-tasks-ai-friendly)
+  - [5. Acceptance Criteria](#5-acceptance-criteria)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Feature: [Feature Name]
 
 **Status:** Draft | In Progress | Done

@@ -1,3 +1,20 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [AI Agent Instructions: SpecDD × GitHub Spec Kit Workflow](#ai-agent-instructions-specdd-%C3%97-github-spec-kit-workflow)
+  - [1. Role Distribution & Hierarchy](#1-role-distribution--hierarchy)
+  - [2. The Agentic Workflow (Flow-Forward)](#2-the-agentic-workflow-flow-forward)
+    - [Step 1: Specify (Requirements)](#step-1-specify-requirements)
+    - [Step 2: Plan (Design & Architecture Check)](#step-2-plan-design--architecture-check)
+    - [Step 3: Tasks (Define Work Packages)](#step-3-tasks-define-work-packages)
+    - [Step 4: Implement (Generate Code)](#step-4-implement-generate-code)
+    - [Step 5: Converge (Review & Iteration)](#step-5-converge-review--iteration)
+    - [Step 6: Release (Completion)](#step-6-release-completion)
+  - [3. Artifact and Lifecycle Overview](#3-artifact-and-lifecycle-overview)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # AI Agent Instructions: SpecDD × GitHub Spec Kit Workflow
 
 This document breaks down the guidelines from `docs/SDD-Howto_en.md` and `docs/SpecDD_SpecKit_Integration_EN.md` into concrete, executable process steps for AI agents. It serves as a practical guide for feature development in the `desktop-gallery` (`web-gallery_desktop-gallery`) project.
