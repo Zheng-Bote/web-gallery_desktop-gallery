@@ -4,7 +4,9 @@ set -e # Abbruch bei Fehlern
 # --- 1. Konfiguration ---
 # Passe diesen Pfad an, falls dein Qt woanders liegt!
 # WICHTIG: Es muss das 'qmake' von Qt6 sein.
-export QMAKE=/usr/lib/qt6/bin/qmake 
+export Qt6_DIR="/home/zb_bamboo/Qt/6.12.0/gcc_64/lib/cmake/Qt6"
+export QMAKE=/home/zb_bamboo/Qt/6.12.0/gcc_64/bin/qmake
+export LD_LIBRARY_PATH="/home/zb_bamboo/Qt/6.12.0/gcc_64/lib:${LD_LIBRARY_PATH}"
 
 # Falls du Qt über den Online-Installer installiert hast, sieht der Pfad eher so aus:
 # export QMAKE=$HOME/Qt/6.9.0/gcc_64/bin/qmake
@@ -14,7 +16,7 @@ BUILD_DIR=build_appimage
 APP_DIR=AppDir
 
 # Aufräumen
-rm -rf $BUILD_DIR $APP_DIR *.AppImage
+rm -rf $APP_DIR Desktop-Gallery*.AppImage
 
 # --- 2. Tools herunterladen (linuxdeploy) ---
 if [ ! -f linuxdeploy-x86_64.AppImage ]; then
@@ -65,6 +67,7 @@ echo "Generating AppImage..."
 # Umgebungsvariablen für das Qt-Plugin
 # KORREKTUR: Wir fordern explizit Styles, IconEngines und PlatformThemes an
 export EXTRA_QT_PLUGINS="webengine,styles,iconengines,platformthemes,platforms"
+export LINUXDEPLOY_EXCLUDED_LIBRARIES="libqsqlodbc.so;libqsqlmysql.so;libqsqlpsql.so;libqsqlibase.so;libqsqlmimer.so;libqsqloci.so"
 
 # linuxdeploy aufrufen
 # --appdir: Wo liegt unser installiertes Programm?
