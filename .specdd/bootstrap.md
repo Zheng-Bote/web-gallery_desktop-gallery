@@ -2,6 +2,10 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
+  - [Version: 1.5
+Website: https://specdd.ai
+Changelog: https://specdd.ai/changelog/
+Copyright: 2026 Matiss Treinis and SpecDD contributors](#version-15%0Awebsite-httpsspecddai%0Achangelog-httpsspecddaichangelog%0Acopyright-2026-matiss-treinis-and-specdd-contributors)
 - [SpecDD Bootstrap](#specdd-bootstrap)
   - [Execution Contract](#execution-contract)
   - [Operating Rules](#operating-rules)
